@@ -1,1334 +1,1308 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kit2Help — Ayuda cuando más se necesita</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --green-50: #E1F5EE;
-            --green-100: #9FE1CB;
-            --green-200: #5DCAA5;
-            --green-400: #1D9E75;
-            --green-600: #0F6E56;
-            --green-800: #085041;
-            --green-900: #04342C;
-            --teal: #1D9E75;
-            --teal-light: #E1F5EE;
-            --bg: #F7FAF8;
-            --white: #FFFFFF;
-            --dark: #0E1A16;
-            --text: #1A2E25;
-            --muted: #5A7A6A;
-            --border: rgba(29,158,117,0.15);
-          }
-          * { margin:0; padding:0; box-sizing:border-box; }
-          html { scroll-behavior:smooth; }
-          body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden; }
-        
-          /* ── NAV ── */
-          nav {
-            position:fixed; top:0; left:0; right:0; z-index:100;
-            display:flex; align-items:center; justify-content:space-between;
-            padding:12px 48px;
-            background:rgba(247,250,248,0.92);
-            backdrop-filter:blur(16px);
-            border-bottom:1px solid var(--border);
-          }
-          .nav-logo { display:flex; align-items:center; gap:10px; font-family:'Syne',sans-serif; font-weight:700; font-size:18px; color:var(--text); text-decoration:none; }
-          .nav-logo img { width:38px; height:38px; }
-          .nav-links { display:flex; gap:28px; }
-          .nav-links a { font-size:14px; color:var(--muted); text-decoration:none; font-weight:400; transition:color 0.18s; }
-          .nav-links a:hover { color:var(--teal); }
-          .nav-cta {
-            background:var(--teal); color:#fff; border:none; border-radius:12px;
-            padding:9px 20px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500;
-            cursor:pointer; transition:background 0.18s, transform 0.12s;
-          }
-          .nav-cta:hover { background:var(--green-600); transform:translateY(-1px); }
-          .nav-cta:active { transform:scale(0.97); }
-        
-          /* Mobile nav */
-          .nav-hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
-          .nav-hamburger span { width:22px; height:2px; background:var(--text); border-radius:2px; transition:all 0.2s; }
-          .mobile-menu {
-            display:none; position:fixed; top:64px; left:0; right:0; z-index:99;
-            background:rgba(247,250,248,0.97); backdrop-filter:blur(16px);
-            border-bottom:1px solid var(--border);
-            flex-direction:column; padding:16px 24px 24px;
-            gap:4px;
-          }
-          .mobile-menu.open { display:flex; }
-          .mobile-menu a { font-size:15px; color:var(--text); text-decoration:none; padding:12px 0; border-bottom:1px solid var(--border); }
-          .mobile-menu a:last-of-type { border-bottom:none; }
-          .mobile-menu .mob-cta {
-            margin-top:12px; background:var(--teal); color:#fff; border:none; border-radius:12px;
-            padding:12px; font-size:15px; font-weight:500; cursor:pointer; text-align:center;
-            font-family:'DM Sans',sans-serif;
-          }
-        
-          @media(max-width:768px) {
-            /* NAV */
-            nav { padding:12px 20px; }
-            .nav-links { display:none; }
-            .nav-cta { display:none; }
-            .nav-hamburger { display:flex; }
-        
-            /* HERO */
-            #hero { padding:100px 20px 60px; min-height:auto; }
-            #hero img[alt="Kit2Help"] { width:72px; height:72px; }
-            .hero-title { font-size:clamp(34px,9vw,52px); letter-spacing:-1px; }
-            .hero-sub { font-size:15px; margin-bottom:36px; }
-            .hero-actions { flex-direction:column; align-items:stretch; gap:12px; padding:0 8px; }
-            .btn-primary, .btn-ghost { text-align:center; padding:14px 20px; font-size:15px; }
-            .hero-stats { gap:20px; margin-top:40px; }
-            .stat-num { font-size:28px; }
-        
-            /* SECTIONS */
-            section { padding:64px 20px; }
-            #story { padding:64px 20px; }
-            #story .story-highlight { padding:28px 20px; }
-            .section-title { font-size:clamp(26px,7vw,40px); }
-            .section-sub { font-size:15px; }
-        
-            /* STORY CARDS */
-            .story-cards { grid-template-columns:1fr; gap:16px; margin-top:36px; }
-            .story-card { padding:24px; }
-        
-            /* FEATURES */
-            .features-grid { grid-template-columns:1fr; gap:16px; }
-            .feature-card { padding:24px; }
-        
-            /* DEMO */
-            #demo { padding:64px 16px; }
-            .demo-shell { border-radius:20px; margin-top:36px; }
-            .demo-topbar { padding:10px 16px; }
-            .demo-tab { padding:12px 14px; font-size:13px; gap:5px; }
-            .demo-panel { padding:16px; }
-        
-            /* EMERGENCY - stack vertically on mobile */
-            .emergency-layout { grid-template-columns:1fr; gap:16px; }
-            .emergency-map-col { min-height:260px; }
-            .emergency-form { padding:18px; }
-        
-            /* KIT builder */
-            .kit-builder { padding:18px; }
-            .kit-item-name { font-size:13px; }
-        
-            /* CHAT */
-            .chat-wrap { height:360px; }
-        
-            /* LIVE MAP */
-            #liveMap { padding:64px 16px; }
-            .map-shell { border-radius:20px; margin-top:32px; }
-            .needs-panel { display:none; }
-            .map-filters { flex-wrap:wrap; max-width:calc(100% - 32px); gap:6px; }
-            .filter-btn { font-size:11px; padding:5px 10px; }
-            .map-stats-bar { gap:16px; padding:14px 16px; flex-wrap:wrap; }
-            .map-stat-num { font-size:18px; }
-            .map-live-badge { margin-left:0; width:100%; justify-content:center; }
-        
-            /* CTA */
-            #cta { padding:48px 20px; }
-            #cta h2 { font-size:22px; }
-        
-            /* FOOTER */
-            footer { padding:24px 20px; font-size:12px; }
-          }
-        
-          @media(max-width:420px) {
-            .demo-tab { padding:11px 10px; font-size:12px; }
-            .demo-tab span { display:none; } /* hide emoji on tiny screens if needed */
-            .hero-title { font-size:32px; }
-            .type-chips { gap:6px; }
-            .chip { font-size:12px; padding:6px 10px; }
-          }
-        
-          /* ── KEYFRAMES ── */
-          @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.75)} }
-          @keyframes pulseRing { 0%{r:14;opacity:0.7} 100%{r:32;opacity:0} }
-          @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-          @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-          @keyframes needPulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
-          @keyframes markerBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
-        
-          /* ── HERO ── */
-          #hero {
-            min-height:100vh;
-            display:flex; flex-direction:column; align-items:center; justify-content:center;
-            text-align:center; padding:120px 24px 80px;
-            position:relative; overflow:hidden;
-          }
-          .hero-bg {
-            position:absolute; inset:0; z-index:0;
-            background:radial-gradient(ellipse 60% 40% at 50% 15%, rgba(29,158,117,0.05) 0%, transparent 65%);
-          }
-          .hero-tag {
-            display:inline-flex; align-items:center; gap:8px;
-            background:var(--green-50); border:1px solid rgba(29,158,117,0.2);
-            border-radius:12px; padding:7px 16px;
-            font-size:13px; color:var(--green-600); font-weight:500;
-            margin-bottom:28px; position:relative; z-index:1;
-            animation:fadeUp 0.6s ease both;
-          }
-          .dot-pulse { width:8px; height:8px; border-radius:50%; background:var(--teal); animation:pulse 2s infinite; }
-          .hero-title {
-            font-family:'Syne',sans-serif; font-size:clamp(40px,6.5vw,72px);
-            font-weight:800; line-height:1.05; color:var(--dark);
-            margin-bottom:24px; position:relative; z-index:1;
-            animation:fadeUp 0.6s 0.1s ease both; letter-spacing:-1.5px;
-          }
-          .hero-title .accent { color:var(--teal); }
-          .hero-sub {
-            font-size:17px; color:var(--muted); max-width:520px;
-            line-height:1.7; margin:0 auto 48px;
-            position:relative; z-index:1; animation:fadeUp 0.6s 0.2s ease both;
-          }
-          .hero-actions {
-            display:flex; gap:16px; flex-wrap:wrap; justify-content:center;
-            position:relative; z-index:1; animation:fadeUp 0.6s 0.3s ease both;
-          }
-          .btn-primary {
-            background:var(--teal); color:#fff; border:none; border-radius:14px; padding:14px 32px;
-            font-family:'DM Sans',sans-serif; font-size:15px; font-weight:500;
-            cursor:pointer; transition:background 0.18s, transform 0.12s;
-            text-decoration:none; display:inline-block;
-          }
-          .btn-primary:hover { background:var(--green-600); transform:translateY(-1px); }
-          .btn-primary:active { transform:scale(0.97); }
-          .btn-ghost {
-            background:transparent; color:var(--muted); border:1px solid rgba(0,0,0,0.12);
-            border-radius:14px; padding:14px 32px;
-            font-family:'DM Sans',sans-serif; font-size:15px; font-weight:400;
-            cursor:pointer; transition:border-color 0.18s, color 0.18s, transform 0.12s;
-            text-decoration:none; display:inline-block;
-          }
-          .btn-ghost:hover { border-color:var(--teal); color:var(--teal); transform:translateY(-1px); }
-          .btn-ghost:active { transform:scale(0.97); }
-          .hero-stats {
-            display:flex; gap:48px; justify-content:center; margin-top:64px; flex-wrap:wrap;
-            position:relative; z-index:1; animation:fadeUp 0.6s 0.4s ease both;
-          }
-          .stat { text-align:center; }
-          .stat-num { font-family:'Syne',sans-serif; font-size:36px; font-weight:700; color:var(--dark); }
-          .stat-label { font-size:13px; color:var(--muted); margin-top:4px; }
-        
-          /* ── SECTIONS ── */
-          section { padding:100px 24px; max-width:1200px; margin:0 auto; }
-          .label { font-size:12px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--teal); margin-bottom:16px; }
-          .section-title { font-family:'Syne',sans-serif; font-size:clamp(32px,5vw,52px); font-weight:700; line-height:1.1; letter-spacing:-1px; color:var(--dark); margin-bottom:20px; }
-          .section-sub { font-size:17px; color:var(--muted); max-width:560px; line-height:1.7; }
-        
-          /* ── STORY ── */
-          #story { background:var(--dark); color:#fff; max-width:100%; padding:100px 24px; }
-          #story .inner { max-width:1100px; margin:0 auto; }
-          #story .label { color:#5DCAA5; }
-          #story .section-title { color:#fff; }
-          #story .section-sub { color:rgba(255,255,255,0.6); }
-          .story-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; margin-top:56px; }
-          .story-card {
-            background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
-            border-radius:24px; padding:32px; transition:border-color 0.22s, transform 0.22s;
-          }
-          .story-card:hover { border-color:rgba(93,202,165,0.35); transform:translateY(-3px); }
-          .story-icon { font-size:36px; margin-bottom:16px; }
-          .story-card h3 { font-family:'Syne',sans-serif; font-size:20px; font-weight:600; color:#fff; margin-bottom:12px; }
-          .story-card p { font-size:15px; color:rgba(255,255,255,0.55); line-height:1.6; }
-          .story-highlight {
-            background:rgba(29,158,117,0.15); border:1px solid rgba(93,202,165,0.3);
-            border-radius:24px; padding:clamp(24px,5vw,48px); margin-top:32px; text-align:center;
-          }
-          .story-highlight h2 { font-family:'Syne',sans-serif; font-size:clamp(24px,4vw,40px); font-weight:700; color:#fff; margin-bottom:16px; }
-          .story-highlight p { font-size:17px; color:rgba(255,255,255,0.6); max-width:600px; margin:0 auto; line-height:1.7; }
-        
-          /* ── FEATURES ── */
-          .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:24px; margin-top:56px; }
-          .feature-card {
-            background:var(--white); border:1px solid rgba(29,158,117,0.1);
-            border-radius:24px; padding:32px;
-            transition:transform 0.22s, box-shadow 0.22s, border-color 0.22s;
-            position:relative; overflow:hidden;
-          }
-          .feature-card::before {
-            content:''; position:absolute; top:0; left:0; right:0;
-            height:2px; background:var(--teal);
-            transform:scaleX(0); transform-origin:left; transition:transform 0.25s ease;
-          }
-          .feature-card:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(29,158,117,0.08); border-color:rgba(29,158,117,0.2); }
-          .feature-card:hover::before { transform:scaleX(1); }
-          .feature-icon {
-            width:48px; height:48px; background:var(--green-50); border-radius:14px;
-            display:flex; align-items:center; justify-content:center;
-            font-size:22px; margin-bottom:20px; border:1px solid rgba(29,158,117,0.12);
-          }
-          .feature-card h3 { font-family:'Syne',sans-serif; font-size:20px; font-weight:600; color:var(--dark); margin-bottom:12px; }
-          .feature-card p { font-size:15px; color:var(--muted); line-height:1.65; }
-        
-          /* ── DEMO SHELL ── */
-          #demo { background:var(--white); max-width:100%; padding:100px 24px; }
-          #demo .inner { max-width:1200px; margin:0 auto; }
-        
-          .demo-shell {
-            border-radius:28px; margin-top:56px; overflow:hidden;
-            box-shadow:0 20px 56px rgba(0,0,0,0.12);
-            border:1px solid rgba(0,0,0,0.08);
-          }
-          .demo-topbar {
-            background:#2E3D35;
-            padding:12px 20px; display:flex; align-items:center; gap:8px;
-          }
-          .dot { width:12px; height:12px; border-radius:50%; }
-          .dot-red { background:#FF5F57; }
-          .dot-yellow { background:#FEBC2E; }
-          .dot-green { background:#28C840; }
-          .demo-url { margin-left:16px; font-size:12px; color:rgba(255,255,255,0.5); font-family:monospace; }
-        
-          .demo-tabs {
-            display:flex; background:#243B2E;
-            border-bottom:2px solid rgba(255,255,255,0.07);
-            overflow-x:auto; scrollbar-width:none;
-          }
-          .demo-tabs::-webkit-scrollbar { display:none; }
-          .demo-tab {
-            padding:14px 24px; font-size:14px; cursor:pointer;
-            color:rgba(255,255,255,0.55); border-bottom:3px solid transparent; margin-bottom:-2px;
-            transition:all 0.18s; font-family:'DM Sans',sans-serif;
-            display:flex; align-items:center; gap:8px; font-weight:400;
-            user-select:none;
-          }
-          .demo-tab.active { color:#5DCAA5; border-bottom-color:#5DCAA5; background:rgba(93,202,165,0.07); font-weight:500; }
-          .demo-tab:hover:not(.active) { color:rgba(255,255,255,0.85); background:rgba(255,255,255,0.05); }
-        
-          .demo-content { background:#F2F6F3; min-height:480px; overflow:hidden; }
-          .demo-panel { display:none; padding:24px; }
-          .demo-panel.active { display:block; }
-        
-          /* ── EMERGENCY PANEL — 2 cols ── */
-          .emergency-layout {
-            display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start;
-          }
-          @media(max-width:700px) { .emergency-layout { grid-template-columns:1fr; } }
-        
-          .emergency-form {
-            background:#fff; border-radius:20px; padding:24px;
-            border:1px solid rgba(29,158,117,0.1);
-          }
-          .emergency-map-col {
-            background:#1A2820; border-radius:20px; overflow:hidden;
-            position:relative; min-height:420px;
-          }
-          .emap-header {
-            position:absolute; top:12px; left:12px; right:12px; z-index:10;
-            display:flex; align-items:center; justify-content:space-between;
-          }
-          .emap-badge {
-            background:rgba(14,26,22,0.85); backdrop-filter:blur(8px);
-            border:1px solid rgba(255,255,255,0.12); border-radius:10px;
-            padding:7px 12px; font-size:12px; color:rgba(255,255,255,0.8);
-            display:flex; align-items:center; gap:6px;
-          }
-          .emap-badge .rdot { width:7px; height:7px; border-radius:50%; background:#E24B4A; animation:pulse 1.4s infinite; }
-          .emap-zoom {
-            background:rgba(14,26,22,0.85); backdrop-filter:blur(8px);
-            border:1px solid rgba(255,255,255,0.12); border-radius:8px;
-            display:flex; flex-direction:column; overflow:hidden;
-          }
-          .emap-zoom button {
-            background:none; border:none; color:rgba(255,255,255,0.7);
-            font-size:16px; cursor:pointer; padding:6px 10px; transition:background 0.15s;
-          }
-          .emap-zoom button:hover { background:rgba(255,255,255,0.1); }
-          .emap-zoom .zdivider { height:1px; background:rgba(255,255,255,0.1); }
-        
-          /* new-point marker that appears after activate */
-          .new-point-marker {
-            position:absolute; z-index:20; pointer-events:none;
-            display:none;
-          }
-          .new-point-marker .npm-dot {
-            width:16px; height:16px; border-radius:50%; background:#E24B4A;
-            position:relative; display:flex; align-items:center; justify-content:center;
-          }
-          .new-point-marker .npm-dot::after {
-            content:'!'; font-size:9px; font-weight:700; color:#fff;
-          }
-          .new-point-marker .npm-ring {
-            position:absolute; inset:-8px; border-radius:50%;
-            border:2px solid #E24B4A; animation:npmPulse 1.2s ease-out infinite;
-          }
-          .new-point-marker .npm-label {
-            position:absolute; top:22px; left:50%; transform:translateX(-50%);
-            background:rgba(14,26,22,0.9); border-radius:6px; padding:4px 8px;
-            font-size:11px; color:#fff; white-space:nowrap; border:1px solid rgba(226,75,74,0.4);
-          }
-          @keyframes npmPulse { 0%{opacity:0.8;transform:scale(1)} 100%{opacity:0;transform:scale(2.5)} }
-        
-          .form-title { font-family:'Syne',sans-serif; font-size:19px; font-weight:600; color:var(--dark); margin-bottom:20px; }
-          .form-group { margin-bottom:16px; }
-          .form-group label { font-size:13px; font-weight:500; color:var(--muted); display:block; margin-bottom:7px; }
-          .form-group input, .form-group textarea {
-            width:100%; border:1px solid rgba(29,158,117,0.15); border-radius:12px;
-            padding:11px 14px; font-family:'DM Sans',sans-serif; font-size:14px;
-            color:var(--text); background:#fff; outline:none; transition:border-color 0.18s;
-          }
-          .form-group input:focus, .form-group textarea:focus { border-color:var(--teal); }
-          .type-chips { display:flex; gap:8px; flex-wrap:wrap; }
-          .chip {
-            padding:7px 14px; border-radius:10px; font-size:13px;
-            border:1px solid rgba(29,158,117,0.15); cursor:pointer; transition:all 0.18s;
-            background:#fff; color:var(--muted);
-          }
-          .chip.active { background:var(--teal); color:#fff; border-color:var(--teal); }
-          .chip:hover:not(.active) { border-color:var(--teal); color:var(--teal); background:var(--green-50); }
-          .priority-row { display:flex; gap:8px; }
-          .prio-btn {
-            flex:1; padding:10px; border-radius:12px; border:1px solid rgba(29,158,117,0.12);
-            font-size:13px; cursor:pointer; text-align:center; transition:all 0.18s;
-            background:#fff; color:var(--muted);
-          }
-          .prio-btn.active-low { background:#E1F5EE; border-color:#5DCAA5; color:#085041; }
-          .prio-btn.active-mid { background:#FAEEDA; border-color:#EF9F27; color:#633806; }
-          .prio-btn.active-high { background:#FCEBEB; border-color:#E24B4A; color:#501313; }
-          .btn-submit {
-            width:100%; padding:13px; border-radius:14px;
-            background:var(--teal); color:#fff; border:none;
-            font-size:15px; font-weight:500; cursor:pointer;
-            font-family:'DM Sans',sans-serif; transition:background 0.18s, transform 0.12s;
-            margin-top:8px;
-          }
-          .btn-submit:hover { background:var(--green-600); }
-          .btn-submit:active { transform:scale(0.98); }
-        
-          /* ── CHAT ── */
-          .chat-wrap { display:flex; flex-direction:column; height:420px; background:#fff; border-radius:20px; border:1px solid rgba(29,158,117,0.1); overflow:hidden; }
-          .chat-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
-          .chat-header-title { font-family:'Syne',sans-serif; font-weight:600; font-size:16px; color:var(--dark); }
-          .online-badge { font-size:12px; color:var(--teal); display:flex; align-items:center; gap:6px; }
-          .chat-messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:14px; }
-          .msg { display:flex; gap:10px; align-items:flex-start; }
-          .msg.own { flex-direction:row-reverse; }
-          .avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; flex-shrink:0; }
-          .bubble { background:var(--green-50); border-radius:12px; padding:10px 14px; max-width:70%; }
-          .bubble p { font-size:14px; color:var(--text); line-height:1.5; }
-          .bubble small { font-size:11px; color:var(--muted); margin-top:4px; display:block; }
-          .msg.own .bubble { background:var(--teal); }
-          .msg.own .bubble p { color:#fff; }
-          .msg.own .bubble small { color:rgba(255,255,255,0.6); }
-          .chat-input-row { padding:12px 16px; border-top:1px solid var(--border); display:flex; gap:10px; align-items:center; }
-          .chat-input { flex:1; border:1px solid var(--border); border-radius:100px; padding:10px 16px; font-family:'DM Sans',sans-serif; font-size:14px; outline:none; }
-          .chat-input:focus { border-color:var(--teal); }
-          .chat-send { background:var(--teal); color:#fff; border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:16px; transition:background 0.18s; }
-          .chat-send:hover { background:var(--green-600); }
-        
-          /* ── KIT ── */
-          .kit-builder { background:#fff; border-radius:20px; padding:24px; border:1px solid rgba(29,158,117,0.1); }
-          .kit-items { margin-top:20px; display:flex; flex-direction:column; gap:10px; }
-          .kit-item { display:flex; align-items:center; justify-content:space-between; padding:11px 14px; background:var(--bg); border-radius:12px; }
-          .kit-item-info { display:flex; align-items:center; gap:12px; }
-          .kit-item-icon { font-size:20px; }
-          .kit-item-name { font-size:14px; font-weight:500; color:var(--dark); }
-          .qty-ctrl { display:flex; align-items:center; gap:10px; }
-          .qty-btn { width:28px; height:28px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:all 0.18s; }
-          .qty-btn:hover { border-color:var(--teal); color:var(--teal); background:var(--green-50); }
-          .qty-btn:active { transform:scale(0.92); }
-          .qty-num { font-family:'Syne',sans-serif; font-weight:600; font-size:16px; min-width:24px; text-align:center; }
-          .kit-total { margin-top:16px; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
-          .kit-total-label { font-size:14px; color:var(--muted); }
-          .kit-total-num { font-family:'Syne',sans-serif; font-size:24px; font-weight:700; color:var(--teal); }
-        
-          /* ── LIVE MAP ── */
-          #liveMap { background:#0E1A16; max-width:100%; padding:100px 24px; }
-          #liveMap .inner { max-width:1200px; margin:0 auto; }
-          #liveMap .label { color:#5DCAA5; }
-          #liveMap .section-title { color:#fff; }
-          #liveMap .section-sub { color:rgba(255,255,255,0.5); }
-        
-          .map-shell {
-            background:#1A2820; border-radius:28px; margin-top:48px;
-            overflow:hidden; border:1px solid rgba(255,255,255,0.06);
-            box-shadow:0 20px 48px rgba(0,0,0,0.2);
-          }
-          .map-filters {
-            position:absolute; top:16px; left:16px; z-index:10;
-            display:flex; gap:8px; flex-wrap:wrap;
-          }
-          .filter-btn {
-            padding:6px 14px; border-radius:100px; border:1px solid rgba(255,255,255,0.18);
-            font-size:12px; cursor:pointer; transition:all 0.18s;
-            background:rgba(14,26,22,0.8); color:rgba(255,255,255,0.55);
-            backdrop-filter:blur(8px); display:flex; align-items:center; gap:6px;
-          }
-          .filter-btn.active { background:rgba(29,158,117,0.22); border-color:#5DCAA5; color:#5DCAA5; }
-          .filter-dot { width:7px; height:7px; border-radius:50%; }
-        
-          /* Needs panel with pulsing bars */
-          .needs-panel {
-            position:absolute; right:16px; top:16px; z-index:10;
-            background:rgba(14,26,22,0.92); backdrop-filter:blur(12px);
-            border:1px solid rgba(255,255,255,0.1); border-radius:16px;
-            padding:18px; width:220px;
-          }
-          .needs-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:600; color:#fff; margin-bottom:14px; }
-          .need-row { margin-bottom:11px; }
-          .need-label { display:flex; justify-content:space-between; margin-bottom:5px; font-size:12px; }
-          .need-name { color:rgba(255,255,255,0.65); }
-          .need-pct { font-weight:600; font-size:11px; }
-          .need-bar { height:5px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:visible; position:relative; }
-          .need-fill {
-            height:100%; border-radius:3px;
-            position:relative;
-            transition:width 1.5s ease;
-          }
-          /* Individual pulsing on each bar */
-          .need-fill.pulse-red { animation:needPulse 1.8s ease-in-out infinite; }
-          .need-fill.pulse-orange { animation:needPulse 2.2s ease-in-out infinite 0.4s; }
-          .need-fill.pulse-green { animation:needPulse 2.6s ease-in-out infinite 0.8s; }
-          .need-fill.pulse-red2 { animation:needPulse 1.9s ease-in-out infinite 0.2s; }
-          .need-fill.pulse-orange2 { animation:needPulse 2.4s ease-in-out infinite 1s; }
-        
-          .map-stats-bar {
-            background:rgba(14,26,22,0.95); backdrop-filter:blur(12px);
-            padding:16px 24px; border-top:1px solid rgba(255,255,255,0.07);
-            display:flex; gap:32px; flex-wrap:wrap; align-items:center;
-          }
-          .map-stat { display:flex; flex-direction:column; gap:3px; }
-          .map-stat-num { font-family:'Syne',sans-serif; font-size:22px; font-weight:700; color:#fff; }
-          .map-stat-label { font-size:11px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.5px; }
-          .map-live-badge { margin-left:auto; display:flex; align-items:center; gap:8px; font-size:12px; color:#5DCAA5; }
-        
-          /* ── CTA ── */
-          #cta { background:var(--teal); max-width:100%; padding:56px 24px; text-align:center; }
-          #cta .inner { max-width:640px; margin:0 auto; }
-          #cta h2 { font-family:'Syne',sans-serif; font-size:clamp(22px,3vw,32px); font-weight:700; color:#fff; margin-bottom:10px; letter-spacing:-0.5px; }
-          #cta p { font-size:15px; color:rgba(255,255,255,0.72); margin-bottom:28px; line-height:1.6; }
-          #cta .btn-white { background:#fff; color:var(--teal); border:none; border-radius:12px; padding:12px 28px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500; cursor:pointer; transition:all 0.18s; }
-          #cta .btn-white:hover { transform:translateY(-1px); box-shadow:0 8px 20px rgba(0,0,0,0.12); }
-          #cta .btn-white:active { transform:scale(0.97); }
-        
-          /* ── FOOTER ── */
-          footer { background:var(--dark); color:rgba(255,255,255,0.4); padding:28px 48px; text-align:center; font-size:13px; }
-          footer strong { color:rgba(255,255,255,0.7); }
-        
-          /* ── SCROLL REVEAL ── */
-          .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s ease, transform 0.7s ease; }
-          .reveal.visible { opacity:1; transform:translateY(0); }
-          .reveal-delay-1 { transition-delay:0.1s; }
-          .reveal-delay-2 { transition-delay:0.2s; }
-          .reveal-delay-3 { transition-delay:0.3s; }
-        
-          @media(max-width:768px) {
-            .needs-panel { display:none; }
-            .map-filters { flex-wrap:wrap; max-width:calc(100% - 32px); }
-            #liveMap { padding:64px 16px; }
-            .map-stats-bar { gap:20px; padding:14px 16px; }
-            .map-live-badge { margin-left:0; width:100%; }
-            section { padding:64px 20px; }
-            .hero-stats { gap:28px; margin-top:48px; }
-          }
-          
-          /*formulario contacto*/
-        	 .k2-modal {
-        	  position: fixed;
-        	  inset: 0;
-        	  background: rgba(14,26,22,0.65);
-        	  backdrop-filter: blur(8px);
-        	  display: none;
-        	  align-items: center;
-        	  justify-content: center;
-        	  z-index: 999;
-        	}
-        
-        	.k2-modal-box {
-        	  background: #fff;
-        	  border-radius: 24px;
-        	  padding: 36px;
-        	  width: 100%;
-        	  max-width: 420px;
-        	  position: relative;
-        	  box-shadow: 0 40px 80px rgba(0,0,0,0.15);
-        	  animation: fadeUp 0.4s ease;
-        	}
-        
-        	.k2-close {
-        	  position: absolute;
-        	  top: 16px;
-        	  right: 18px;
-        	  font-size: 18px;
-        	  cursor: pointer;
-        	  color: var(--muted);
-        	}
-        
-        	.k2-close:hover {
-        	  color: var(--teal);
-        	}
-        
-        	.k2-title {
-        	  font-family: 'Syne', sans-serif;
-        	  font-size: 22px;
-        	  margin-bottom: 10px;
-        	  color: var(--dark);
-        	}
-        
-        	.k2-sub {
-        	  font-size: 14px;
-        	  color: var(--muted);
-        	  margin-bottom: 24px;
-        	}
-        
-        	.k2-form {
-        	  display: flex;
-        	  flex-direction: column;
-        	  gap: 14px;
-        	}
-        
-        	.k2-form input,
-        	.k2-form select {
-        	  border: 1px solid var(--border);
-        	  border-radius: 12px;
-        	  padding: 12px;
-        	  font-family: 'DM Sans';
-        	  font-size: 14px;
-        	}
-        
-        	.k2-form input:focus,
-        	.k2-form select:focus {
-        	  border-color: var(--teal);
-        	  outline: none;
-        	}
-        
-        	.k2-submit {
-        	  margin-top: 10px;
-        	  padding: 14px;
-        	  border-radius: 100px;
-        	  border: none;
-        	  background: var(--teal);
-        	  color: white;
-        	  font-weight: 500;
-        	  cursor: pointer;
-        	}
-        
-        	.k2-submit:hover {
-        	  background: var(--green-600);
-        	}
-    </style>
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kit2Help — Ayuda cuando más se necesita</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-50: #E1F5EE;
+    --green-100: #9FE1CB;
+    --green-200: #5DCAA5;
+    --green-400: #1D9E75;
+    --green-600: #0F6E56;
+    --green-800: #085041;
+    --green-900: #04342C;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --bg: #F7FAF8;
+    --white: #FFFFFF;
+    --dark: #0E1A16;
+    --text: #1A2E25;
+    --muted: #5A7A6A;
+    --border: rgba(29,158,117,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden; }
 
+  /* ── NAV ── */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 48px;
+    background:rgba(247,250,248,0.92);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-logo { display:flex; align-items:center; gap:10px; font-family:'Syne',sans-serif; font-weight:700; font-size:18px; color:var(--text); text-decoration:none; }
+  .nav-logo img { width:38px; height:38px; }
+  .nav-links { display:flex; gap:28px; }
+  .nav-links a { font-size:14px; color:var(--muted); text-decoration:none; font-weight:400; transition:color 0.18s; }
+  .nav-links a:hover { color:var(--teal); }
+  .nav-cta {
+    background:var(--teal); color:#fff; border:none; border-radius:12px;
+    padding:9px 20px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500;
+    cursor:pointer; transition:background 0.18s, transform 0.12s;
+  }
+  .nav-cta:hover { background:var(--green-600); transform:translateY(-1px); }
+  .nav-cta:active { transform:scale(0.97); }
+
+  /* Mobile nav */
+  .nav-hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+  .nav-hamburger span { width:22px; height:2px; background:var(--text); border-radius:2px; transition:all 0.2s; }
+  .mobile-menu {
+    display:none; position:fixed; top:64px; left:0; right:0; z-index:99;
+    background:rgba(247,250,248,0.97); backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);
+    flex-direction:column; padding:16px 24px 24px;
+    gap:4px;
+  }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { font-size:15px; color:var(--text); text-decoration:none; padding:12px 0; border-bottom:1px solid var(--border); }
+  .mobile-menu a:last-of-type { border-bottom:none; }
+  .mobile-menu .mob-cta {
+    margin-top:12px; background:var(--teal); color:#fff; border:none; border-radius:12px;
+    padding:12px; font-size:15px; font-weight:500; cursor:pointer; text-align:center;
+    font-family:'DM Sans',sans-serif;
+  }
+
+  @media(max-width:768px) {
+    /* NAV */
+    nav { padding:12px 20px; }
+    .nav-links { display:none; }
+    .nav-cta { display:none; }
+    .nav-hamburger { display:flex; }
+
+    /* HERO */
+    #hero { padding:100px 20px 60px; min-height:auto; }
+    #hero img[alt="Kit2Help"] { width:72px; height:72px; }
+    .hero-title { font-size:clamp(34px,9vw,52px); letter-spacing:-1px; }
+    .hero-sub { font-size:15px; margin-bottom:36px; }
+    .hero-actions { flex-direction:column; align-items:stretch; gap:12px; padding:0 8px; }
+    .btn-primary, .btn-ghost { text-align:center; padding:14px 20px; font-size:15px; }
+    .hero-stats { gap:20px; margin-top:40px; }
+    .stat-num { font-size:28px; }
+
+    /* SECTIONS */
+    section { padding:64px 20px; }
+    #story { padding:64px 20px; }
+    #story .story-highlight { padding:28px 20px; }
+    .section-title { font-size:clamp(26px,7vw,40px); }
+    .section-sub { font-size:15px; }
+
+    /* STORY CARDS */
+    .story-cards { grid-template-columns:1fr; gap:16px; margin-top:36px; }
+    .story-card { padding:24px; }
+
+    /* FEATURES */
+    .features-grid { grid-template-columns:1fr; gap:16px; }
+    .feature-card { padding:24px; }
+
+    /* DEMO */
+    #demo { padding:64px 16px; }
+    .demo-shell { border-radius:20px; margin-top:36px; }
+    .demo-topbar { padding:10px 16px; }
+    .demo-tab { padding:12px 14px; font-size:13px; gap:5px; }
+    .demo-panel { padding:16px; }
+
+    /* EMERGENCY - stack vertically on mobile */
+    .emergency-layout { grid-template-columns:1fr; gap:16px; }
+    .emergency-map-col { min-height:260px; }
+    .emergency-form { padding:18px; }
+
+    /* KIT builder */
+    .kit-builder { padding:18px; }
+    .kit-item-name { font-size:13px; }
+
+    /* CHAT */
+    .chat-wrap { height:360px; }
+
+    /* LIVE MAP */
+    #liveMap { padding:64px 16px; }
+    .map-shell { border-radius:20px; margin-top:32px; }
+    .needs-panel { display:none; }
+    .map-filters { flex-wrap:wrap; max-width:calc(100% - 32px); gap:6px; }
+    .filter-btn { font-size:11px; padding:5px 10px; }
+    .map-stats-bar { gap:16px; padding:14px 16px; flex-wrap:wrap; }
+    .map-stat-num { font-size:18px; }
+    .map-live-badge { margin-left:0; width:100%; justify-content:center; }
+
+    /* CTA */
+    #cta { padding:48px 20px; }
+    #cta h2 { font-size:22px; }
+
+    /* FOOTER */
+    footer { padding:24px 20px; font-size:12px; }
+  }
+
+  @media(max-width:420px) {
+    .demo-tab { padding:11px 10px; font-size:12px; }
+    .demo-tab span { display:none; } /* hide emoji on tiny screens if needed */
+    .hero-title { font-size:32px; }
+    .type-chips { gap:6px; }
+    .chip { font-size:12px; padding:6px 10px; }
+  }
+
+  /* ── KEYFRAMES ── */
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.75)} }
+  @keyframes pulseRing { 0%{r:14;opacity:0.7} 100%{r:32;opacity:0} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes needPulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
+  @keyframes markerBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+  /* ── HERO ── */
+  #hero {
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:120px 24px 80px;
+    position:relative; overflow:hidden;
+  }
+  .hero-bg {
+    position:absolute; inset:0; z-index:0;
+    background:radial-gradient(ellipse 60% 40% at 50% 15%, rgba(29,158,117,0.05) 0%, transparent 65%);
+  }
+  .hero-tag {
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--green-50); border:1px solid rgba(29,158,117,0.2);
+    border-radius:12px; padding:7px 16px;
+    font-size:13px; color:var(--green-600); font-weight:500;
+    margin-bottom:28px; position:relative; z-index:1;
+    animation:fadeUp 0.6s ease both;
+  }
+  .dot-pulse { width:8px; height:8px; border-radius:50%; background:var(--teal); animation:pulse 2s infinite; }
+  .hero-title {
+    font-family:'Syne',sans-serif; font-size:clamp(40px,6.5vw,72px);
+    font-weight:800; line-height:1.05; color:var(--dark);
+    margin-bottom:24px; position:relative; z-index:1;
+    animation:fadeUp 0.6s 0.1s ease both; letter-spacing:-1.5px;
+  }
+  .hero-title .accent { color:var(--teal); }
+  .hero-sub {
+    font-size:17px; color:var(--muted); max-width:520px;
+    line-height:1.7; margin:0 auto 48px;
+    position:relative; z-index:1; animation:fadeUp 0.6s 0.2s ease both;
+  }
+  .hero-actions {
+    display:flex; gap:16px; flex-wrap:wrap; justify-content:center;
+    position:relative; z-index:1; animation:fadeUp 0.6s 0.3s ease both;
+  }
+  .btn-primary {
+    background:var(--teal); color:#fff; border:none; border-radius:14px; padding:14px 32px;
+    font-family:'DM Sans',sans-serif; font-size:15px; font-weight:500;
+    cursor:pointer; transition:background 0.18s, transform 0.12s;
+    text-decoration:none; display:inline-block;
+  }
+  .btn-primary:hover { background:var(--green-600); transform:translateY(-1px); }
+  .btn-primary:active { transform:scale(0.97); }
+  .btn-ghost {
+    background:transparent; color:var(--muted); border:1px solid rgba(0,0,0,0.12);
+    border-radius:14px; padding:14px 32px;
+    font-family:'DM Sans',sans-serif; font-size:15px; font-weight:400;
+    cursor:pointer; transition:border-color 0.18s, color 0.18s, transform 0.12s;
+    text-decoration:none; display:inline-block;
+  }
+  .btn-ghost:hover { border-color:var(--teal); color:var(--teal); transform:translateY(-1px); }
+  .btn-ghost:active { transform:scale(0.97); }
+  .hero-stats {
+    display:flex; gap:48px; justify-content:center; margin-top:64px; flex-wrap:wrap;
+    position:relative; z-index:1; animation:fadeUp 0.6s 0.4s ease both;
+  }
+  .stat { text-align:center; }
+  .stat-num { font-family:'Syne',sans-serif; font-size:36px; font-weight:700; color:var(--dark); }
+  .stat-label { font-size:13px; color:var(--muted); margin-top:4px; }
+
+  /* ── SECTIONS ── */
+  section { padding:100px 24px; max-width:1200px; margin:0 auto; }
+  .label { font-size:12px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--teal); margin-bottom:16px; }
+  .section-title { font-family:'Syne',sans-serif; font-size:clamp(32px,5vw,52px); font-weight:700; line-height:1.1; letter-spacing:-1px; color:var(--dark); margin-bottom:20px; }
+  .section-sub { font-size:17px; color:var(--muted); max-width:560px; line-height:1.7; }
+
+  /* ── STORY ── */
+  #story { background:var(--dark); color:#fff; max-width:100%; padding:100px 24px; }
+  #story .inner { max-width:1100px; margin:0 auto; }
+  #story .label { color:#5DCAA5; }
+  #story .section-title { color:#fff; }
+  #story .section-sub { color:rgba(255,255,255,0.6); }
+  .story-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; margin-top:56px; }
+  .story-card {
+    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+    border-radius:24px; padding:32px; transition:border-color 0.22s, transform 0.22s;
+  }
+  .story-card:hover { border-color:rgba(93,202,165,0.35); transform:translateY(-3px); }
+  .story-icon { font-size:36px; margin-bottom:16px; }
+  .story-card h3 { font-family:'Syne',sans-serif; font-size:20px; font-weight:600; color:#fff; margin-bottom:12px; }
+  .story-card p { font-size:15px; color:rgba(255,255,255,0.55); line-height:1.6; }
+  .story-highlight {
+    background:rgba(29,158,117,0.15); border:1px solid rgba(93,202,165,0.3);
+    border-radius:24px; padding:clamp(24px,5vw,48px); margin-top:32px; text-align:center;
+  }
+  .story-highlight h2 { font-family:'Syne',sans-serif; font-size:clamp(24px,4vw,40px); font-weight:700; color:#fff; margin-bottom:16px; }
+  .story-highlight p { font-size:17px; color:rgba(255,255,255,0.6); max-width:600px; margin:0 auto; line-height:1.7; }
+
+  /* ── FEATURES ── */
+  .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:24px; margin-top:56px; }
+  .feature-card {
+    background:var(--white); border:1px solid rgba(29,158,117,0.1);
+    border-radius:24px; padding:32px;
+    transition:transform 0.22s, box-shadow 0.22s, border-color 0.22s;
+    position:relative; overflow:hidden;
+  }
+  .feature-card::before {
+    content:''; position:absolute; top:0; left:0; right:0;
+    height:2px; background:var(--teal);
+    transform:scaleX(0); transform-origin:left; transition:transform 0.25s ease;
+  }
+  .feature-card:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(29,158,117,0.08); border-color:rgba(29,158,117,0.2); }
+  .feature-card:hover::before { transform:scaleX(1); }
+  .feature-icon {
+    width:48px; height:48px; background:var(--green-50); border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; margin-bottom:20px; border:1px solid rgba(29,158,117,0.12);
+  }
+  .feature-card h3 { font-family:'Syne',sans-serif; font-size:20px; font-weight:600; color:var(--dark); margin-bottom:12px; }
+  .feature-card p { font-size:15px; color:var(--muted); line-height:1.65; }
+
+  /* ── DEMO SHELL ── */
+  #demo { background:var(--white); max-width:100%; padding:100px 24px; }
+  #demo .inner { max-width:1200px; margin:0 auto; }
+
+  .demo-shell {
+    border-radius:28px; margin-top:56px; overflow:hidden;
+    box-shadow:0 20px 56px rgba(0,0,0,0.12);
+    border:1px solid rgba(0,0,0,0.08);
+  }
+  .demo-topbar {
+    background:#2E3D35;
+    padding:12px 20px; display:flex; align-items:center; gap:8px;
+  }
+  .dot { width:12px; height:12px; border-radius:50%; }
+  .dot-red { background:#FF5F57; }
+  .dot-yellow { background:#FEBC2E; }
+  .dot-green { background:#28C840; }
+  .demo-url { margin-left:16px; font-size:12px; color:rgba(255,255,255,0.5); font-family:monospace; }
+
+  .demo-tabs {
+    display:flex; background:#243B2E;
+    border-bottom:2px solid rgba(255,255,255,0.07);
+    overflow-x:auto; scrollbar-width:none;
+  }
+  .demo-tabs::-webkit-scrollbar { display:none; }
+  .demo-tab {
+    padding:14px 24px; font-size:14px; cursor:pointer;
+    color:rgba(255,255,255,0.55); border-bottom:3px solid transparent; margin-bottom:-2px;
+    transition:all 0.18s; font-family:'DM Sans',sans-serif;
+    display:flex; align-items:center; gap:8px; font-weight:400;
+    user-select:none;
+  }
+  .demo-tab.active { color:#5DCAA5; border-bottom-color:#5DCAA5; background:rgba(93,202,165,0.07); font-weight:500; }
+  .demo-tab:hover:not(.active) { color:rgba(255,255,255,0.85); background:rgba(255,255,255,0.05); }
+
+  .demo-content { background:#F2F6F3; min-height:480px; overflow:hidden; }
+  .demo-panel { display:none; padding:24px; }
+  .demo-panel.active { display:block; }
+
+  /* ── EMERGENCY PANEL — 2 cols ── */
+  .emergency-layout {
+    display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start;
+  }
+  @media(max-width:700px) { .emergency-layout { grid-template-columns:1fr; } }
+
+  .emergency-form {
+    background:#fff; border-radius:20px; padding:24px;
+    border:1px solid rgba(29,158,117,0.1);
+  }
+  .emergency-map-col {
+    background:#1A2820; border-radius:20px; overflow:hidden;
+    position:relative; min-height:420px;
+  }
+  .emap-header {
+    position:absolute; top:12px; left:12px; right:12px; z-index:10;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .emap-badge {
+    background:rgba(14,26,22,0.85); backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,0.12); border-radius:10px;
+    padding:7px 12px; font-size:12px; color:rgba(255,255,255,0.8);
+    display:flex; align-items:center; gap:6px;
+  }
+  .emap-badge .rdot { width:7px; height:7px; border-radius:50%; background:#E24B4A; animation:pulse 1.4s infinite; }
+  .emap-zoom {
+    background:rgba(14,26,22,0.85); backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,0.12); border-radius:8px;
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  .emap-zoom button {
+    background:none; border:none; color:rgba(255,255,255,0.7);
+    font-size:16px; cursor:pointer; padding:6px 10px; transition:background 0.15s;
+  }
+  .emap-zoom button:hover { background:rgba(255,255,255,0.1); }
+  .emap-zoom .zdivider { height:1px; background:rgba(255,255,255,0.1); }
+
+  /* new-point marker that appears after activate */
+  .new-point-marker {
+    position:absolute; z-index:20; pointer-events:none;
+    display:none;
+  }
+  .new-point-marker .npm-dot {
+    width:16px; height:16px; border-radius:50%; background:#E24B4A;
+    position:relative; display:flex; align-items:center; justify-content:center;
+  }
+  .new-point-marker .npm-dot::after {
+    content:'!'; font-size:9px; font-weight:700; color:#fff;
+  }
+  .new-point-marker .npm-ring {
+    position:absolute; inset:-8px; border-radius:50%;
+    border:2px solid #E24B4A; animation:npmPulse 1.2s ease-out infinite;
+  }
+  .new-point-marker .npm-label {
+    position:absolute; top:22px; left:50%; transform:translateX(-50%);
+    background:rgba(14,26,22,0.9); border-radius:6px; padding:4px 8px;
+    font-size:11px; color:#fff; white-space:nowrap; border:1px solid rgba(226,75,74,0.4);
+  }
+  @keyframes npmPulse { 0%{opacity:0.8;transform:scale(1)} 100%{opacity:0;transform:scale(2.5)} }
+
+  .form-title { font-family:'Syne',sans-serif; font-size:19px; font-weight:600; color:var(--dark); margin-bottom:20px; }
+  .form-group { margin-bottom:16px; }
+  .form-group label { font-size:13px; font-weight:500; color:var(--muted); display:block; margin-bottom:7px; }
+  .form-group input, .form-group textarea {
+    width:100%; border:1px solid rgba(29,158,117,0.15); border-radius:12px;
+    padding:11px 14px; font-family:'DM Sans',sans-serif; font-size:14px;
+    color:var(--text); background:#fff; outline:none; transition:border-color 0.18s;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color:var(--teal); }
+  .type-chips { display:flex; gap:8px; flex-wrap:wrap; }
+  .chip {
+    padding:7px 14px; border-radius:10px; font-size:13px;
+    border:1px solid rgba(29,158,117,0.15); cursor:pointer; transition:all 0.18s;
+    background:#fff; color:var(--muted);
+  }
+  .chip.active { background:var(--teal); color:#fff; border-color:var(--teal); }
+  .chip:hover:not(.active) { border-color:var(--teal); color:var(--teal); background:var(--green-50); }
+  .priority-row { display:flex; gap:8px; }
+  .prio-btn {
+    flex:1; padding:10px; border-radius:12px; border:1px solid rgba(29,158,117,0.12);
+    font-size:13px; cursor:pointer; text-align:center; transition:all 0.18s;
+    background:#fff; color:var(--muted);
+  }
+  .prio-btn.active-low { background:#E1F5EE; border-color:#5DCAA5; color:#085041; }
+  .prio-btn.active-mid { background:#FAEEDA; border-color:#EF9F27; color:#633806; }
+  .prio-btn.active-high { background:#FCEBEB; border-color:#E24B4A; color:#501313; }
+  .btn-submit {
+    width:100%; padding:13px; border-radius:14px;
+    background:var(--teal); color:#fff; border:none;
+    font-size:15px; font-weight:500; cursor:pointer;
+    font-family:'DM Sans',sans-serif; transition:background 0.18s, transform 0.12s;
+    margin-top:8px;
+  }
+  .btn-submit:hover { background:var(--green-600); }
+  .btn-submit:active { transform:scale(0.98); }
+
+  /* ── CHAT ── */
+  .chat-wrap { display:flex; flex-direction:column; height:420px; background:#fff; border-radius:20px; border:1px solid rgba(29,158,117,0.1); overflow:hidden; }
+  .chat-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .chat-header-title { font-family:'Syne',sans-serif; font-weight:600; font-size:16px; color:var(--dark); }
+  .online-badge { font-size:12px; color:var(--teal); display:flex; align-items:center; gap:6px; }
+  .chat-messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:14px; }
+  .msg { display:flex; gap:10px; align-items:flex-start; }
+  .msg.own { flex-direction:row-reverse; }
+  .avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; flex-shrink:0; }
+  .bubble { background:var(--green-50); border-radius:12px; padding:10px 14px; max-width:70%; }
+  .bubble p { font-size:14px; color:var(--text); line-height:1.5; }
+  .bubble small { font-size:11px; color:var(--muted); margin-top:4px; display:block; }
+  .msg.own .bubble { background:var(--teal); }
+  .msg.own .bubble p { color:#fff; }
+  .msg.own .bubble small { color:rgba(255,255,255,0.6); }
+  .chat-input-row { padding:12px 16px; border-top:1px solid var(--border); display:flex; gap:10px; align-items:center; }
+  .chat-input { flex:1; border:1px solid var(--border); border-radius:100px; padding:10px 16px; font-family:'DM Sans',sans-serif; font-size:14px; outline:none; }
+  .chat-input:focus { border-color:var(--teal); }
+  .chat-send { background:var(--teal); color:#fff; border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:16px; transition:background 0.18s; }
+  .chat-send:hover { background:var(--green-600); }
+
+  /* ── KIT ── */
+  .kit-builder { background:#fff; border-radius:20px; padding:24px; border:1px solid rgba(29,158,117,0.1); }
+  .kit-items { margin-top:20px; display:flex; flex-direction:column; gap:10px; }
+  .kit-item { display:flex; align-items:center; justify-content:space-between; padding:11px 14px; background:var(--bg); border-radius:12px; }
+  .kit-item-info { display:flex; align-items:center; gap:12px; }
+  .kit-item-icon { font-size:20px; }
+  .kit-item-name { font-size:14px; font-weight:500; color:var(--dark); }
+  .qty-ctrl { display:flex; align-items:center; gap:10px; }
+  .qty-btn { width:28px; height:28px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:all 0.18s; }
+  .qty-btn:hover { border-color:var(--teal); color:var(--teal); background:var(--green-50); }
+  .qty-btn:active { transform:scale(0.92); }
+  .qty-num { font-family:'Syne',sans-serif; font-weight:600; font-size:16px; min-width:24px; text-align:center; }
+  .kit-total { margin-top:16px; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .kit-total-label { font-size:14px; color:var(--muted); }
+  .kit-total-num { font-family:'Syne',sans-serif; font-size:24px; font-weight:700; color:var(--teal); }
+
+  /* ── LIVE MAP ── */
+  #liveMap { background:#0E1A16; max-width:100%; padding:100px 24px; }
+  #liveMap .inner { max-width:1200px; margin:0 auto; }
+  #liveMap .label { color:#5DCAA5; }
+  #liveMap .section-title { color:#fff; }
+  #liveMap .section-sub { color:rgba(255,255,255,0.5); }
+
+  .map-shell {
+    background:#1A2820; border-radius:28px; margin-top:48px;
+    overflow:hidden; border:1px solid rgba(255,255,255,0.06);
+    box-shadow:0 20px 48px rgba(0,0,0,0.2);
+  }
+  .map-filters {
+    position:absolute; top:16px; left:16px; z-index:10;
+    display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .filter-btn {
+    padding:6px 14px; border-radius:100px; border:1px solid rgba(255,255,255,0.18);
+    font-size:12px; cursor:pointer; transition:all 0.18s;
+    background:rgba(14,26,22,0.8); color:rgba(255,255,255,0.55);
+    backdrop-filter:blur(8px); display:flex; align-items:center; gap:6px;
+  }
+  .filter-btn.active { background:rgba(29,158,117,0.22); border-color:#5DCAA5; color:#5DCAA5; }
+  .filter-dot { width:7px; height:7px; border-radius:50%; }
+
+  /* Needs panel with pulsing bars */
+  .needs-panel {
+    position:absolute; right:16px; top:16px; z-index:10;
+    background:rgba(14,26,22,0.92); backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.1); border-radius:16px;
+    padding:18px; width:220px;
+  }
+  .needs-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:600; color:#fff; margin-bottom:14px; }
+  .need-row { margin-bottom:11px; }
+  .need-label { display:flex; justify-content:space-between; margin-bottom:5px; font-size:12px; }
+  .need-name { color:rgba(255,255,255,0.65); }
+  .need-pct { font-weight:600; font-size:11px; }
+  .need-bar { height:5px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:visible; position:relative; }
+  .need-fill {
+    height:100%; border-radius:3px;
+    position:relative;
+    transition:width 1.5s ease;
+  }
+  /* Individual pulsing on each bar */
+  .need-fill.pulse-red { animation:needPulse 1.8s ease-in-out infinite; }
+  .need-fill.pulse-orange { animation:needPulse 2.2s ease-in-out infinite 0.4s; }
+  .need-fill.pulse-green { animation:needPulse 2.6s ease-in-out infinite 0.8s; }
+  .need-fill.pulse-red2 { animation:needPulse 1.9s ease-in-out infinite 0.2s; }
+  .need-fill.pulse-orange2 { animation:needPulse 2.4s ease-in-out infinite 1s; }
+
+  .map-stats-bar {
+    background:rgba(14,26,22,0.95); backdrop-filter:blur(12px);
+    padding:16px 24px; border-top:1px solid rgba(255,255,255,0.07);
+    display:flex; gap:32px; flex-wrap:wrap; align-items:center;
+  }
+  .map-stat { display:flex; flex-direction:column; gap:3px; }
+  .map-stat-num { font-family:'Syne',sans-serif; font-size:22px; font-weight:700; color:#fff; }
+  .map-stat-label { font-size:11px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.5px; }
+  .map-live-badge { margin-left:auto; display:flex; align-items:center; gap:8px; font-size:12px; color:#5DCAA5; }
+
+  /* ── CTA ── */
+  #cta { background:var(--teal); max-width:100%; padding:56px 24px; text-align:center; }
+  #cta .inner { max-width:640px; margin:0 auto; }
+  #cta h2 { font-family:'Syne',sans-serif; font-size:clamp(22px,3vw,32px); font-weight:700; color:#fff; margin-bottom:10px; letter-spacing:-0.5px; }
+  #cta p { font-size:15px; color:rgba(255,255,255,0.72); margin-bottom:28px; line-height:1.6; }
+  #cta .btn-white { background:#fff; color:var(--teal); border:none; border-radius:12px; padding:12px 28px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500; cursor:pointer; transition:all 0.18s; }
+  #cta .btn-white:hover { transform:translateY(-1px); box-shadow:0 8px 20px rgba(0,0,0,0.12); }
+  #cta .btn-white:active { transform:scale(0.97); }
+
+  /* ── FOOTER ── */
+  footer { background:var(--dark); color:rgba(255,255,255,0.4); padding:28px 48px; text-align:center; font-size:13px; }
+  footer strong { color:rgba(255,255,255,0.7); }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .reveal-delay-1 { transition-delay:0.1s; }
+  .reveal-delay-2 { transition-delay:0.2s; }
+  .reveal-delay-3 { transition-delay:0.3s; }
+
+  @media(max-width:768px) {
+    .needs-panel { display:none; }
+    .map-filters { flex-wrap:wrap; max-width:calc(100% - 32px); }
+    #liveMap { padding:64px 16px; }
+    .map-stats-bar { gap:20px; padding:14px 16px; }
+    .map-live-badge { margin-left:0; width:100%; }
+    section { padding:64px 20px; }
+    .hero-stats { gap:28px; margin-top:48px; }
+  }
+  
+  /*formulario contacto*/
+	 .k2-modal {
+	  position: fixed;
+	  inset: 0;
+	  background: rgba(14,26,22,0.65);
+	  backdrop-filter: blur(8px);
+	  display: none;
+	  align-items: center;
+	  justify-content: center;
+	  z-index: 999;
+	}
+
+	.k2-modal-box {
+	  background: #fff;
+	  border-radius: 24px;
+	  padding: 36px;
+	  width: 100%;
+	  max-width: 420px;
+	  position: relative;
+	  box-shadow: 0 40px 80px rgba(0,0,0,0.15);
+	  animation: fadeUp 0.4s ease;
+	}
+
+	.k2-close {
+	  position: absolute;
+	  top: 16px;
+	  right: 18px;
+	  font-size: 18px;
+	  cursor: pointer;
+	  color: var(--muted);
+	}
+
+	.k2-close:hover {
+	  color: var(--teal);
+	}
+
+	.k2-title {
+	  font-family: 'Syne', sans-serif;
+	  font-size: 22px;
+	  margin-bottom: 10px;
+	  color: var(--dark);
+	}
+
+	.k2-sub {
+	  font-size: 14px;
+	  color: var(--muted);
+	  margin-bottom: 24px;
+	}
+
+	.k2-form {
+	  display: flex;
+	  flex-direction: column;
+	  gap: 14px;
+	}
+
+	.k2-form input,
+	.k2-form select {
+	  border: 1px solid var(--border);
+	  border-radius: 12px;
+	  padding: 12px;
+	  font-family: 'DM Sans';
+	  font-size: 14px;
+	}
+
+	.k2-form input:focus,
+	.k2-form select:focus {
+	  border-color: var(--teal);
+	  outline: none;
+	}
+
+	.k2-submit {
+	  margin-top: 10px;
+	  padding: 14px;
+	  border-radius: 100px;
+	  border: none;
+	  background: var(--teal);
+	  color: white;
+	  font-weight: 500;
+	  cursor: pointer;
+	}
+
+	.k2-submit:hover {
+	  background: var(--green-600);
+	}
+
+</style>
+</head>
 <body>
 
-    <!-- NAV -->
-    <nav>
-        <a class="nav-logo" href="#">
-            <img src="logoKit2Help_reducido.png" alt="Kit2Help"> Kit2Help
-        </a>
-        <div class="nav-links">
-            <a href="#story">El problema</a>
-            <a href="#features">Solución</a>
-            <a href="#demo">Demo</a>
-            <a href="#liveMap">Impacto</a>
-        </div>
-        <button class="nav-cta">Empezar ahora</button>
-        <div class="nav-hamburger" onclick="toggleMenu()" id="hamburger">
-            <span></span><span></span><span></span>
-        </div>
-    </nav>
-    <div class="mobile-menu" id="mobileMenu">
-        <a href="#story" onclick="toggleMenu()">El problema</a>
-        <a href="#features" onclick="toggleMenu()">Solución</a>
-        <a href="#demo" onclick="toggleMenu()">Demo</a>
-        <a href="#liveMap" onclick="toggleMenu()">Impacto</a>
-        <button class="mob-cta">Empezar ahora</button>
-    </div>
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+   <img src="logoKit2Help_reducido.png" alt="Kit2Help">
+    Kit2Help
+  </a>
+  <div class="nav-links">
+    <a href="#story">El problema</a>
+    <a href="#features">Solución</a>
+    <a href="#demo">Demo</a>
+    <a href="#liveMap">Impacto</a>
+  </div>
+  <button class="nav-cta">Empezar ahora</button>
+  <div class="nav-hamburger" onclick="toggleMenu()" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#story" onclick="toggleMenu()">El problema</a>
+  <a href="#features" onclick="toggleMenu()">Solución</a>
+  <a href="#demo" onclick="toggleMenu()">Demo</a>
+  <a href="#liveMap" onclick="toggleMenu()">Impacto</a>
+  <button class="mob-cta">Empezar ahora</button>
+</div>
 
-    <!-- HERO -->
-    <div id="hero">
-        <div class="hero-bg"></div>
-        <div style="position:relative;z-index:1;margin-bottom:24px;animation:fadeUp 0.5s ease both;">
-            <img src="logoKit2Help_reducido.png" alt="Kit2Help" style="width:96px;height:96px;filter:drop-shadow(0 8px 20px rgba(29,158,117,0.18));">
-
-        </div>
-        <div class="hero-tag">
-            <div class="dot-pulse"></div>
-            Respuesta de emergencia en tiempo real
-        </div>
-        <h1 class="hero-title">
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-bg"></div>
+  <div style="position:relative;z-index:1;margin-bottom:24px;animation:fadeUp 0.5s ease both;">
+   <img src="logoKit2Help_reducido.png" alt="Kit2Help" style="width:96px;height:96px;filter:drop-shadow(0 8px 20px rgba(29,158,117,0.18));">
+  
+  </div>
+  <div class="hero-tag">
+    <div class="dot-pulse"></div>
+    Respuesta de emergencia en tiempo real
+  </div>
+  <h1 class="hero-title">
     La ayuda llega<br>cuando más<br><span class="accent">se necesita</span>
   </h1>
-        <p class="hero-sub">
-            Kit2Help conecta personas afectadas, voluntarios y puntos de recogida en una sola plataforma. Cuando el caos se instala, nosotros organizamos la respuesta.
-        </p>
-        <div class="hero-actions">
-            <a href="#demo" class="btn-primary">Ver demo interactiva</a>
-            <a href="#story" class="btn-ghost">Entender el problema</a>
-        </div>
-        <div class="hero-stats">
-            <div class="stat">
-                <div class="stat-num" data-target="128">0</div>
-                <div class="stat-label">Kits entregados hoy</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num" data-target="512">0</div>
-                <div class="stat-label">Personas ayudadas</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num" data-target="23">0</div>
-                <div class="stat-label">Voluntarios activos</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num" data-target="7">0</div>
-                <div class="stat-label">Puntos de recogida</div>
-            </div>
-        </div>
+  <p class="hero-sub">
+    Kit2Help conecta personas afectadas, voluntarios y puntos de recogida en una sola plataforma. Cuando el caos se instala, nosotros organizamos la respuesta.
+  </p>
+  <div class="hero-actions">
+    <a href="#demo" class="btn-primary">Ver demo interactiva</a>
+    <a href="#story" class="btn-ghost">Entender el problema</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num" data-target="128">0</div><div class="stat-label">Kits entregados hoy</div></div>
+    <div class="stat"><div class="stat-num" data-target="512">0</div><div class="stat-label">Personas ayudadas</div></div>
+    <div class="stat"><div class="stat-num" data-target="23">0</div><div class="stat-label">Voluntarios activos</div></div>
+    <div class="stat"><div class="stat-num" data-target="7">0</div><div class="stat-label">Puntos de recogida</div></div>
+  </div>
+</div>
+
+<!-- STORY -->
+<div id="story">
+  <div class="inner">
+    <div class="label reveal">01 — El problema</div>
+    <h2 class="section-title reveal reveal-delay-1">Cuando llega una emergencia,<br>el caos se apodera de todo</h2>
+    <p class="section-sub reveal reveal-delay-2">Las catástrofes naturales no avisan. La información se dispersa, los recursos se duplican y las necesidades reales quedan sin cubrir. ¿El resultado? Familias sin ayuda, voluntarios perdidos y kits acumulados en el lugar equivocado.</p>
+    <div class="story-cards">
+      <div class="story-card reveal">
+        <div class="story-icon">📡</div>
+        <h3>Información fragmentada</h3>
+        <p>Las necesidades se comunican por WhatsApp, llamadas y redes sociales. Nadie tiene el mapa completo de lo que falta y dónde.</p>
+      </div>
+      <div class="story-card reveal reveal-delay-1">
+        <div class="story-icon">🎯</div>
+        <h3>Recursos mal distribuidos</h3>
+        <p>Algunas zonas reciben más ayuda de la que pueden gestionar. Otras, a dos calles, no reciben nada. Sin coordinación, la desigualdad se amplifica.</p>
+      </div>
+      <div class="story-card reveal reveal-delay-2">
+        <div class="story-icon">🤝</div>
+        <h3>Voluntarios sin guía</h3>
+        <p>Miles de personas quieren ayudar pero no saben cómo. Sin un sistema de coordinación, su energía se pierde o se duplica con otros.</p>
+      </div>
     </div>
-
-    <!-- STORY -->
-    <div id="story">
-        <div class="inner">
-            <div class="label reveal">01 — El problema</div>
-            <h2 class="section-title reveal reveal-delay-1">Cuando llega una emergencia,<br>el caos se apodera de todo</h2>
-            <p class="section-sub reveal reveal-delay-2">Las catástrofes naturales no avisan. La información se dispersa, los recursos se duplican y las necesidades reales quedan sin cubrir. ¿El resultado? Familias sin ayuda, voluntarios perdidos y kits acumulados en el lugar equivocado.</p>
-            <div class="story-cards">
-                <div class="story-card reveal">
-                    <div class="story-icon">📡</div>
-                    <h3>Información fragmentada</h3>
-                    <p>Las necesidades se comunican por WhatsApp, llamadas y redes sociales. Nadie tiene el mapa completo de lo que falta y dónde.</p>
-                </div>
-                <div class="story-card reveal reveal-delay-1">
-                    <div class="story-icon">🎯</div>
-                    <h3>Recursos mal distribuidos</h3>
-                    <p>Algunas zonas reciben más ayuda de la que pueden gestionar. Otras, a dos calles, no reciben nada. Sin coordinación, la desigualdad se amplifica.</p>
-                </div>
-                <div class="story-card reveal reveal-delay-2">
-                    <div class="story-icon">🤝</div>
-                    <h3>Voluntarios sin guía</h3>
-                    <p>Miles de personas quieren ayudar pero no saben cómo. Sin un sistema de coordinación, su energía se pierde o se duplica con otros.</p>
-                </div>
-            </div>
-            <div class="story-highlight reveal">
-                <h2>La DANA de Valencia (2024) demostró que podemos hacerlo mejor</h2>
-                <p>Más de 100.000 voluntarios se movilizaron en 72 horas. Sin coordinación digital, muchos no llegaron donde se necesitaban. Kit2Help nació de esa experiencia.</p>
-            </div>
-        </div>
+    <div class="story-highlight reveal">
+      <h2>La DANA de Valencia (2024) demostró que podemos hacerlo mejor</h2>
+      <p>Más de 100.000 voluntarios se movilizaron en 72 horas. Sin coordinación digital, muchos no llegaron donde se necesitaban. Kit2Help nació de esa experiencia.</p>
     </div>
+  </div>
+</div>
 
-    <!-- FEATURES -->
-    <section id="features">
-        <div class="label reveal">02 — La solución</div>
-        <h2 class="section-title reveal reveal-delay-1">Seis funcionalidades que<br>organizan el caos</h2>
-        <p class="section-sub reveal reveal-delay-2">Una plataforma diseñada para actuar en los primeros minutos de una emergencia. Desde el aviso inicial hasta el kit entregado, todo coordinado en tiempo real.</p>
-        <div class="features-grid">
-            <div class="feature-card reveal">
-                <div class="feature-icon">🚨</div>
-                <h3>Activar emergencia</h3>
-                <p>Cualquier persona puede activar una alerta geolocalizáda en segundos. Tipo, prioridad y descripción para que los recursos lleguen al lugar correcto.</p>
+<!-- FEATURES -->
+<section id="features">
+  <div class="label reveal">02 — La solución</div>
+  <h2 class="section-title reveal reveal-delay-1">Seis funcionalidades que<br>organizan el caos</h2>
+  <p class="section-sub reveal reveal-delay-2">Una plataforma diseñada para actuar en los primeros minutos de una emergencia. Desde el aviso inicial hasta el kit entregado, todo coordinado en tiempo real.</p>
+  <div class="features-grid">
+    <div class="feature-card reveal"><div class="feature-icon">🚨</div><h3>Activar emergencia</h3><p>Cualquier persona puede activar una alerta geolocalizáda en segundos. Tipo, prioridad y descripción para que los recursos lleguen al lugar correcto.</p></div>
+    <div class="feature-card reveal reveal-delay-1"><div class="feature-icon">💬</div><h3>Chat comunitario</h3><p>Canal de comunicación abierto con fotos y mensajes en tiempo real. La comunidad coordina, informa y se apoya mutuamente.</p></div>
+    <div class="feature-card reveal reveal-delay-2"><div class="feature-icon">📦</div><h3>Crear kits de ayuda</h3><p>Define qué contiene tu kit, cuántas unidades de cada elemento. Los voluntarios saben exactamente qué preparar y cuánto.</p></div>
+    <div class="feature-card reveal"><div class="feature-icon">📍</div><h3>Añadir ubicaciones</h3><p>Marca puntos de recogida, checkpoints para voluntarios y zonas afectadas directamente en el mapa.</p></div>
+    <div class="feature-card reveal reveal-delay-1"><div class="feature-icon">🗺️</div><h3>Mapa de necesidades</h3><p>Visualización en tiempo real de zonas calientes, necesidades urgentes y recursos disponibles con filtros.</p></div>
+    <div class="feature-card reveal reveal-delay-2"><div class="feature-icon">✅</div><h3>Registrar kit recibido</h3><p>Confirma la recepción de kits en cada punto. Las estadísticas se actualizan automáticamente.</p></div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<div id="demo">
+  <div class="inner">
+    <div class="label reveal">03 — Demo interactiva</div>
+    <h2 class="section-title reveal reveal-delay-1">Pruébalo tú mismo</h2>
+    <p class="section-sub reveal reveal-delay-2">Explora las principales funcionalidades de Kit2Help sin crear ninguna cuenta.</p>
+
+    <div class="demo-shell reveal">
+      <!-- topbar -->
+      <div class="demo-topbar">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <span class="demo-url">kit2help.app / demo</span>
+      </div>
+      <!-- tabs -->
+      <div class="demo-tabs">
+        <div class="demo-tab active" onclick="switchTab('emergencia')">🚨 Emergencia</div>
+        <div class="demo-tab" onclick="switchTab('chat')">💬 Chat</div>
+        <div class="demo-tab" onclick="switchTab('kit')">📦 Kit</div>
+      </div>
+      <!-- content -->
+      <div class="demo-content">
+
+        <!-- TAB: EMERGENCIA -->
+        <div class="demo-panel active" id="tab-emergencia">
+          <div class="emergency-layout">
+            <!-- LEFT: form -->
+            <div class="emergency-form">
+              <div class="form-title">Nueva emergencia</div>
+              <div class="form-group">
+                <label>Ubicación detectada</label>
+                <input type="text" value="Plaça de l'Ajuntament, 1 — Valencia, 46002" readonly style="background:#f7faf8;color:var(--muted)">
+              </div>
+              <div class="form-group">
+                <label>Tipo de emergencia</label>
+                <div class="type-chips">
+                  <div class="chip active" onclick="selectChip(this)">🌊 Inundación</div>
+                  <div class="chip" onclick="selectChip(this)">🔥 Incendio</div>
+                  <div class="chip" onclick="selectChip(this)">🏔️ Terremoto</div>
+                  <div class="chip" onclick="selectChip(this)">⚡ Otro</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Descripción breve</label>
+                <textarea rows="2" placeholder="Describe la situación..." style="resize:none"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Nivel de prioridad</label>
+                <div class="priority-row">
+                  <div class="prio-btn" onclick="selectPrio(this,'low')">Baja</div>
+                  <div class="prio-btn" onclick="selectPrio(this,'mid')">Media</div>
+                  <div class="prio-btn active-high" onclick="selectPrio(this,'high')">Alta</div>
+                </div>
+              </div>
+              <button class="btn-submit" id="emergBtn" onclick="activarEmergencia()">Activar emergencia</button>
             </div>
-            <div class="feature-card reveal reveal-delay-1">
-                <div class="feature-icon">💬</div>
-                <h3>Chat comunitario</h3>
-                <p>Canal de comunicación abierto con fotos y mensajes en tiempo real. La comunidad coordina, informa y se apoya mutuamente.</p>
+            <!-- RIGHT: mini map -->
+            <div class="emergency-map-col" id="emergMap">
+              <div class="emap-header">
+                <div class="emap-badge"><div class="rdot"></div> Mapa en vivo</div>
+                <div class="emap-zoom">
+                  <button onclick="this.closest('.emergency-map-col').querySelector('svg').style.transform='scale('+(parseFloat(this.closest('.emergency-map-col').querySelector('svg').style.transform.replace(/[^0-9.]/g,''))||1)+0.15+')'">+</button>
+                  <div class="zdivider"></div>
+                  <button>−</button>
+                </div>
+              </div>
+              <!-- new point marker (hidden until activate) -->
+              <div class="new-point-marker" id="newPointMarker" style="top:42%;left:30%;">
+                <div class="npm-dot"></div>
+                <div class="npm-ring"></div>
+                <div class="npm-label">¡Nueva emergencia!</div>
+              </div>
+              <!-- SVG mini-map of Valencia -->
+              <svg id="emergSvg" viewBox="0 0 420 420" style="width:100%;height:100%;position:absolute;inset:0;transition:transform 0.5s ease;" xmlns="http://www.w3.org/2000/svg">
+                <!-- base fill -->
+                <rect width="420" height="420" fill="#1A2820"/>
+                <!-- district blocks -->
+                <rect x="20" y="20" width="90" height="70" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="120" y="20" width="80" height="50" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="210" y="20" width="100" height="80" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="320" y="20" width="80" height="60" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="20" y="110" width="70" height="90" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="100" y="90" width="110" height="100" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="220" y="110" width="90" height="80" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="320" y="90" width="80" height="100" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="20" y="220" width="80" height="90" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="110" y="200" width="100" height="110" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="220" y="200" width="90" height="90" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="320" y="200" width="80" height="100" rx="4" fill="rgba(255,255,255,0.04)"/>
+                <rect x="20" y="330" width="380" height="70" rx="4" fill="rgba(255,255,255,0.03)"/>
+                <!-- streets -->
+                <g stroke="rgba(255,255,255,0.09)" stroke-width="1" fill="none">
+                  <line x1="0" y1="80" x2="420" y2="80"/>
+                  <line x1="0" y1="180" x2="420" y2="180"/>
+                  <line x1="0" y1="310" x2="420" y2="310"/>
+                  <line x1="95" y1="0" x2="95" y2="420"/>
+                  <line x1="215" y1="0" x2="215" y2="420"/>
+                  <line x1="315" y1="0" x2="315" y2="420"/>
+                </g>
+                <!-- main avenues -->
+                <g stroke="rgba(255,255,255,0.16)" stroke-width="2.5" fill="none">
+                  <line x1="0" y1="195" x2="420" y2="195"/>
+                  <line x1="160" y1="0" x2="160" y2="420"/>
+                </g>
+                <!-- river hint -->
+                <path d="M 0 360 Q 80 340 160 360 Q 240 380 340 355 Q 380 348 420 355" stroke="rgba(100,180,255,0.2)" stroke-width="8" fill="none"/>
+                <!-- heat zones -->
+                <circle cx="125" cy="140" r="60" fill="rgba(226,75,74,0.15)"/>
+                <circle cx="125" cy="140" r="35" fill="rgba(226,75,74,0.25)"/>
+                <circle cx="280" cy="250" r="48" fill="rgba(226,75,74,0.12)"/>
+                <circle cx="280" cy="250" r="25" fill="rgba(226,75,74,0.2)"/>
+                <circle cx="60" cy="270" r="35" fill="rgba(239,159,39,0.18)"/>
+                <!-- kit points -->
+                <circle cx="200" cy="90" r="10" fill="#1D9E75" opacity="0.95"/>
+                <text x="200" y="94" text-anchor="middle" fill="white" font-size="9" font-weight="bold">K</text>
+                <circle cx="330" cy="160" r="10" fill="#1D9E75" opacity="0.95"/>
+                <text x="330" y="164" text-anchor="middle" fill="white" font-size="9" font-weight="bold">K</text>
+                <!-- volunteer points -->
+                <circle cx="170" cy="220" r="9" fill="#EF9F27" opacity="0.9"/>
+                <text x="170" y="224" text-anchor="middle" fill="white" font-size="8" font-weight="bold">V</text>
+                <circle cx="255" cy="130" r="9" fill="#EF9F27" opacity="0.9"/>
+                <text x="255" y="134" text-anchor="middle" fill="white" font-size="8" font-weight="bold">V</text>
+                <!-- existing emergencies -->
+                <circle cx="125" cy="140" r="7" fill="#E24B4A"/>
+                <text x="125" y="144" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
+                <circle cx="280" cy="250" r="7" fill="#E24B4A"/>
+                <text x="280" y="254" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
+                <!-- pulse on existing -->
+                <circle cx="125" cy="140" r="18" fill="none" stroke="#E24B4A" stroke-width="1.5">
+                  <animate attributeName="r" values="18;30;18" dur="2s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <!-- new emergency marker (hidden, revealed by JS) -->
+                <g id="svgNewPoint" opacity="0" style="transition:opacity 0.5s;">
+                  <circle cx="128" cy="178" r="35" fill="rgba(226,75,74,0.18)"/>
+                  <circle cx="128" cy="178" r="7" fill="#E24B4A"/>
+                  <text x="128" y="182" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
+                  <circle cx="128" cy="178" r="18" fill="none" stroke="#E24B4A" stroke-width="1.5">
+                    <animate attributeName="r" values="18;32;18" dur="1.5s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.7;0;0.7" dur="1.5s" repeatCount="indefinite"/>
+                  </circle>
+                </g>
+              </svg>
             </div>
-            <div class="feature-card reveal reveal-delay-2">
-                <div class="feature-icon">📦</div>
-                <h3>Crear kits de ayuda</h3>
-                <p>Define qué contiene tu kit, cuántas unidades de cada elemento. Los voluntarios saben exactamente qué preparar y cuánto.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">📍</div>
-                <h3>Añadir ubicaciones</h3>
-                <p>Marca puntos de recogida, checkpoints para voluntarios y zonas afectadas directamente en el mapa.</p>
-            </div>
-            <div class="feature-card reveal reveal-delay-1">
-                <div class="feature-icon">🗺️</div>
-                <h3>Mapa de necesidades</h3>
-                <p>Visualización en tiempo real de zonas calientes, necesidades urgentes y recursos disponibles con filtros.</p>
-            </div>
-            <div class="feature-card reveal reveal-delay-2">
-                <div class="feature-icon">✅</div>
-                <h3>Registrar kit recibido</h3>
-                <p>Confirma la recepción de kits en cada punto. Las estadísticas se actualizan automáticamente.</p>
-            </div>
+          </div>
         </div>
-    </section>
 
-    <!-- DEMO -->
-    <div id="demo">
-        <div class="inner">
-            <div class="label reveal">03 — Demo interactiva</div>
-            <h2 class="section-title reveal reveal-delay-1">Pruébalo tú mismo</h2>
-            <p class="section-sub reveal reveal-delay-2">Explora las principales funcionalidades de Kit2Help sin crear ninguna cuenta.</p>
-
-            <div class="demo-shell reveal">
-                <!-- topbar -->
-                <div class="demo-topbar">
-                    <div class="dot dot-red"></div>
-                    <div class="dot dot-yellow"></div>
-                    <div class="dot dot-green"></div>
-                    <span class="demo-url">kit2help.app / demo</span>
-                </div>
-                <!-- tabs -->
-                <div class="demo-tabs">
-                    <div class="demo-tab active" onclick="switchTab('emergencia')">🚨 Emergencia</div>
-                    <div class="demo-tab" onclick="switchTab('chat')">💬 Chat</div>
-                    <div class="demo-tab" onclick="switchTab('kit')">📦 Kit</div>
-                </div>
-                <!-- content -->
-                <div class="demo-content">
-
-                    <!-- TAB: EMERGENCIA -->
-                    <div class="demo-panel active" id="tab-emergencia">
-                        <div class="emergency-layout">
-                            <!-- LEFT: form -->
-                            <div class="emergency-form">
-                                <div class="form-title">Nueva emergencia</div>
-                                <div class="form-group">
-                                    <label>Ubicación detectada</label>
-                                    <input type="text" value="Plaça de l'Ajuntament, 1 — Valencia, 46002" readonly style="background:#f7faf8;color:var(--muted)">
-                                </div>
-                                <div class="form-group">
-                                    <label>Tipo de emergencia</label>
-                                    <div class="type-chips">
-                                        <div class="chip active" onclick="selectChip(this)">🌊 Inundación</div>
-                                        <div class="chip" onclick="selectChip(this)">🔥 Incendio</div>
-                                        <div class="chip" onclick="selectChip(this)">🏔️ Terremoto</div>
-                                        <div class="chip" onclick="selectChip(this)">⚡ Otro</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Descripción breve</label>
-                                    <textarea rows="2" placeholder="Describe la situación..." style="resize:none"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label>Nivel de prioridad</label>
-                                    <div class="priority-row">
-                                        <div class="prio-btn" onclick="selectPrio(this,'low')">Baja</div>
-                                        <div class="prio-btn" onclick="selectPrio(this,'mid')">Media</div>
-                                        <div class="prio-btn active-high" onclick="selectPrio(this,'high')">Alta</div>
-                                    </div>
-                                </div>
-                                <button class="btn-submit" id="emergBtn" onclick="activarEmergencia()">Activar emergencia</button>
-                            </div>
-                            <!-- RIGHT: mini map -->
-                            <div class="emergency-map-col" id="emergMap">
-                                <div class="emap-header">
-                                    <div class="emap-badge">
-                                        <div class="rdot"></div> Mapa en vivo</div>
-                                    <div class="emap-zoom">
-                                        <button onclick="this.closest('.emergency-map-col').querySelector('svg').style.transform='scale('+(parseFloat(this.closest('.emergency-map-col').querySelector('svg').style.transform.replace(/[^0-9.]/g,''))||1)+0.15+')'">+</button>
-                                        <div class="zdivider"></div>
-                                        <button>−</button>
-                                    </div>
-                                </div>
-                                <!-- new point marker (hidden until activate) -->
-                                <div class="new-point-marker" id="newPointMarker" style="top:42%;left:30%;">
-                                    <div class="npm-dot"></div>
-                                    <div class="npm-ring"></div>
-                                    <div class="npm-label">¡Nueva emergencia!</div>
-                                </div>
-                                <!-- SVG mini-map of Valencia -->
-                                <svg id="emergSvg" viewBox="0 0 420 420" style="width:100%;height:100%;position:absolute;inset:0;transition:transform 0.5s ease;" xmlns="http://www.w3.org/2000/svg">
-                                    <!-- base fill -->
-                                    <rect width="420" height="420" fill="#1A2820" />
-                                    <!-- district blocks -->
-                                    <rect x="20" y="20" width="90" height="70" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="120" y="20" width="80" height="50" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="210" y="20" width="100" height="80" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="320" y="20" width="80" height="60" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="20" y="110" width="70" height="90" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="100" y="90" width="110" height="100" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="220" y="110" width="90" height="80" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="320" y="90" width="80" height="100" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="20" y="220" width="80" height="90" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="110" y="200" width="100" height="110" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="220" y="200" width="90" height="90" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="320" y="200" width="80" height="100" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="20" y="330" width="380" height="70" rx="4" fill="rgba(255,255,255,0.03)" />
-                                    <!-- streets -->
-                                    <g stroke="rgba(255,255,255,0.09)" stroke-width="1" fill="none">
-                                        <line x1="0" y1="80" x2="420" y2="80" />
-                                        <line x1="0" y1="180" x2="420" y2="180" />
-                                        <line x1="0" y1="310" x2="420" y2="310" />
-                                        <line x1="95" y1="0" x2="95" y2="420" />
-                                        <line x1="215" y1="0" x2="215" y2="420" />
-                                        <line x1="315" y1="0" x2="315" y2="420" />
-                                    </g>
-                                    <!-- main avenues -->
-                                    <g stroke="rgba(255,255,255,0.16)" stroke-width="2.5" fill="none">
-                                        <line x1="0" y1="195" x2="420" y2="195" />
-                                        <line x1="160" y1="0" x2="160" y2="420" />
-                                    </g>
-                                    <!-- river hint -->
-                                    <path d="M 0 360 Q 80 340 160 360 Q 240 380 340 355 Q 380 348 420 355" stroke="rgba(100,180,255,0.2)" stroke-width="8" fill="none" />
-                                    <!-- heat zones -->
-                                    <circle cx="125" cy="140" r="60" fill="rgba(226,75,74,0.15)" />
-                                    <circle cx="125" cy="140" r="35" fill="rgba(226,75,74,0.25)" />
-                                    <circle cx="280" cy="250" r="48" fill="rgba(226,75,74,0.12)" />
-                                    <circle cx="280" cy="250" r="25" fill="rgba(226,75,74,0.2)" />
-                                    <circle cx="60" cy="270" r="35" fill="rgba(239,159,39,0.18)" />
-                                    <!-- kit points -->
-                                    <circle cx="200" cy="90" r="10" fill="#1D9E75" opacity="0.95" />
-                                    <text x="200" y="94" text-anchor="middle" fill="white" font-size="9" font-weight="bold">K</text>
-                                    <circle cx="330" cy="160" r="10" fill="#1D9E75" opacity="0.95" />
-                                    <text x="330" y="164" text-anchor="middle" fill="white" font-size="9" font-weight="bold">K</text>
-                                    <!-- volunteer points -->
-                                    <circle cx="170" cy="220" r="9" fill="#EF9F27" opacity="0.9" />
-                                    <text x="170" y="224" text-anchor="middle" fill="white" font-size="8" font-weight="bold">V</text>
-                                    <circle cx="255" cy="130" r="9" fill="#EF9F27" opacity="0.9" />
-                                    <text x="255" y="134" text-anchor="middle" fill="white" font-size="8" font-weight="bold">V</text>
-                                    <!-- existing emergencies -->
-                                    <circle cx="125" cy="140" r="7" fill="#E24B4A" />
-                                    <text x="125" y="144" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
-                                    <circle cx="280" cy="250" r="7" fill="#E24B4A" />
-                                    <text x="280" y="254" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
-                                    <!-- pulse on existing -->
-                                    <circle cx="125" cy="140" r="18" fill="none" stroke="#E24B4A" stroke-width="1.5">
-                                        <animate attributeName="r" values="18;30;18" dur="2s" repeatCount="indefinite" />
-                                        <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite" />
-                                    </circle>
-                                    <!-- new emergency marker (hidden, revealed by JS) -->
-                                    <g id="svgNewPoint" opacity="0" style="transition:opacity 0.5s;">
-                                        <circle cx="128" cy="178" r="35" fill="rgba(226,75,74,0.18)" />
-                                        <circle cx="128" cy="178" r="7" fill="#E24B4A" />
-                                        <text x="128" y="182" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
-                                        <circle cx="128" cy="178" r="18" fill="none" stroke="#E24B4A" stroke-width="1.5">
-                                            <animate attributeName="r" values="18;32;18" dur="1.5s" repeatCount="indefinite" />
-                                            <animate attributeName="opacity" values="0.7;0;0.7" dur="1.5s" repeatCount="indefinite" />
-                                        </circle>
-                                    </g>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB: CHAT -->
-                    <div class="demo-panel" id="tab-chat">
-                        <div class="chat-wrap">
-                            <div class="chat-header">
-                                <span class="chat-header-title">Chat general</span>
-                                <span class="online-badge"><div class="dot-pulse" style="width:6px;height:6px;"></div>&nbsp;345 en línea</span>
-                            </div>
-                            <div class="chat-messages" id="chatMsgs">
-                                <div class="msg">
-                                    <div class="avatar" style="background:#E1F5EE;color:#085041">LG</div>
-                                    <div class="bubble">
-                                        <p>Necesitamos mantas en la zona de Ruzafa, muchas familias afectadas.</p><small>Laura G. · hace 2 min</small></div>
-                                </div>
-                                <div class="msg">
-                                    <div class="avatar" style="background:#FAEEDA;color:#633806">CM</div>
-                                    <div class="bubble">
-                                        <p>¿Alguien puede ayudar con agua potable en el centro?</p><small>Carlos M. · hace 5 min</small></div>
-                                </div>
-                                <div class="msg">
-                                    <div class="avatar" style="background:#E6F1FB;color:#0C447C">AR</div>
-                                    <div class="bubble">
-                                        <p>Punto de recogida disponible en Calle Colón 23, abierto hasta las 20h.</p><small>Ana R. · hace 8 min</small></div>
-                                </div>
-                            </div>
-                            <div class="chat-input-row">
-                                <input class="chat-input" id="chatInput" type="text" placeholder="Escribe un mensaje...">
-                                <button class="chat-send" onclick="enviarMensaje()">→</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB: KIT -->
-                    <div class="demo-panel" id="tab-kit">
-                        <div class="kit-builder">
-                            <div class="form-title">Kit de emergencia — Básico</div>
-                            <div class="kit-items">
-                                <div class="kit-item">
-                                    <div class="kit-item-info"><span class="kit-item-icon">💧</span><span class="kit-item-name">Agua (1.5L)</span></div>
-                                    <div class="qty-ctrl">
-                                        <button class="qty-btn" onclick="changeQty(this,-1)">−</button><span class="qty-num">12</span>
-                                        <button class="qty-btn" onclick="changeQty(this,1)">+</button>
-                                    </div>
-                                </div>
-                                <div class="kit-item">
-                                    <div class="kit-item-info"><span class="kit-item-icon">🥫</span><span class="kit-item-name">Alimentos no perecederos</span></div>
-                                    <div class="qty-ctrl">
-                                        <button class="qty-btn" onclick="changeQty(this,-1)">−</button><span class="qty-num">8</span>
-                                        <button class="qty-btn" onclick="changeQty(this,1)">+</button>
-                                    </div>
-                                </div>
-                                <div class="kit-item">
-                                    <div class="kit-item-info"><span class="kit-item-icon">🧣</span><span class="kit-item-name">Mantas térmicas</span></div>
-                                    <div class="qty-ctrl">
-                                        <button class="qty-btn" onclick="changeQty(this,-1)">−</button><span class="qty-num">15</span>
-                                        <button class="qty-btn" onclick="changeQty(this,1)">+</button>
-                                    </div>
-                                </div>
-                                <div class="kit-item">
-                                    <div class="kit-item-info"><span class="kit-item-icon">🩺</span><span class="kit-item-name">Botiquín primeros auxilios</span></div>
-                                    <div class="qty-ctrl">
-                                        <button class="qty-btn" onclick="changeQty(this,-1)">−</button><span class="qty-num">5</span>
-                                        <button class="qty-btn" onclick="changeQty(this,1)">+</button>
-                                    </div>
-                                </div>
-                                <div class="kit-item">
-                                    <div class="kit-item-info"><span class="kit-item-icon">🔦</span><span class="kit-item-name">Linterna</span></div>
-                                    <div class="qty-ctrl">
-                                        <button class="qty-btn" onclick="changeQty(this,-1)">−</button><span class="qty-num">10</span>
-                                        <button class="qty-btn" onclick="changeQty(this,1)">+</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="kit-total"><span class="kit-total-label">Total elementos</span><span class="kit-total-num" id="kitTotal">50</span></div>
-                            <button class="btn-submit" style="margin-top:16px">Crear kit</button>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- /demo-content -->
+        <!-- TAB: CHAT -->
+        <div class="demo-panel" id="tab-chat">
+          <div class="chat-wrap">
+            <div class="chat-header">
+              <span class="chat-header-title">Chat general</span>
+              <span class="online-badge"><div class="dot-pulse" style="width:6px;height:6px;"></div>&nbsp;345 en línea</span>
             </div>
-            <!-- /demo-shell -->
+            <div class="chat-messages" id="chatMsgs">
+              <div class="msg"><div class="avatar" style="background:#E1F5EE;color:#085041">LG</div><div class="bubble"><p>Necesitamos mantas en la zona de Ruzafa, muchas familias afectadas.</p><small>Laura G. · hace 2 min</small></div></div>
+              <div class="msg"><div class="avatar" style="background:#FAEEDA;color:#633806">CM</div><div class="bubble"><p>¿Alguien puede ayudar con agua potable en el centro?</p><small>Carlos M. · hace 5 min</small></div></div>
+              <div class="msg"><div class="avatar" style="background:#E6F1FB;color:#0C447C">AR</div><div class="bubble"><p>Punto de recogida disponible en Calle Colón 23, abierto hasta las 20h.</p><small>Ana R. · hace 8 min</small></div></div>
+            </div>
+            <div class="chat-input-row">
+              <input class="chat-input" id="chatInput" type="text" placeholder="Escribe un mensaje...">
+              <button class="chat-send" onclick="enviarMensaje()">→</button>
+            </div>
+          </div>
         </div>
+
+        <!-- TAB: KIT -->
+        <div class="demo-panel" id="tab-kit">
+          <div class="kit-builder">
+            <div class="form-title">Kit de emergencia — Básico</div>
+            <div class="kit-items">
+              <div class="kit-item"><div class="kit-item-info"><span class="kit-item-icon">💧</span><span class="kit-item-name">Agua (1.5L)</span></div><div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(this,-1)">−</button><span class="qty-num">12</span><button class="qty-btn" onclick="changeQty(this,1)">+</button></div></div>
+              <div class="kit-item"><div class="kit-item-info"><span class="kit-item-icon">🥫</span><span class="kit-item-name">Alimentos no perecederos</span></div><div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(this,-1)">−</button><span class="qty-num">8</span><button class="qty-btn" onclick="changeQty(this,1)">+</button></div></div>
+              <div class="kit-item"><div class="kit-item-info"><span class="kit-item-icon">🧣</span><span class="kit-item-name">Mantas térmicas</span></div><div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(this,-1)">−</button><span class="qty-num">15</span><button class="qty-btn" onclick="changeQty(this,1)">+</button></div></div>
+              <div class="kit-item"><div class="kit-item-info"><span class="kit-item-icon">🩺</span><span class="kit-item-name">Botiquín primeros auxilios</span></div><div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(this,-1)">−</button><span class="qty-num">5</span><button class="qty-btn" onclick="changeQty(this,1)">+</button></div></div>
+              <div class="kit-item"><div class="kit-item-info"><span class="kit-item-icon">🔦</span><span class="kit-item-name">Linterna</span></div><div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(this,-1)">−</button><span class="qty-num">10</span><button class="qty-btn" onclick="changeQty(this,1)">+</button></div></div>
+            </div>
+            <div class="kit-total"><span class="kit-total-label">Total elementos</span><span class="kit-total-num" id="kitTotal">50</span></div>
+            <button class="btn-submit" style="margin-top:16px">Crear kit</button>
+          </div>
+        </div>
+
+      </div><!-- /demo-content -->
+    </div><!-- /demo-shell -->
+  </div>
+</div>
+
+<!-- LIVE MAP -->
+<div id="liveMap">
+  <div class="inner">
+    <div class="label reveal">04 — Impacto en tiempo real</div>
+    <h2 class="section-title reveal reveal-delay-1">El mapa que cambia vidas</h2>
+    <p class="section-sub reveal reveal-delay-2">Visualiza en tiempo real dónde se concentran las necesidades, qué recursos están disponibles y cuántas personas han recibido ayuda.</p>
+
+    <div class="map-shell reveal">
+      <div style="position:relative;height:clamp(280px,50vw,460px);background:#162019;overflow:hidden;">
+
+        <!-- Filters -->
+        <div class="map-filters">
+          <div class="filter-btn active" onclick="toggleFilter(this)"><div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
+          <div class="filter-btn active" onclick="toggleFilter(this)"><div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
+          <div class="filter-btn active" onclick="toggleFilter(this)"><div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
+          <div class="filter-btn active" onclick="toggleFilter(this)"><div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
+        </div>
+
+        <!-- Needs panel -->
+        <div class="needs-panel">
+          <div class="needs-title">Necesidades actuales</div>
+          <div class="need-row">
+            <div class="need-label"><span class="need-name">Agua potable</span><span class="need-pct" style="color:#E24B4A">Alta</span></div>
+            <div class="need-bar"><div class="need-fill pulse-red" id="need1" style="width:92%;background:#E24B4A"></div></div>
+          </div>
+          <div class="need-row">
+            <div class="need-label"><span class="need-name">Alimentos</span><span class="need-pct" style="color:#EF9F27">45%</span></div>
+            <div class="need-bar"><div class="need-fill pulse-orange" id="need2" style="width:45%;background:#EF9F27"></div></div>
+          </div>
+          <div class="need-row">
+            <div class="need-label"><span class="need-name">Mantas</span><span class="need-pct" style="color:#5DCAA5">80%</span></div>
+            <div class="need-bar"><div class="need-fill pulse-green" id="need3" style="width:80%;background:#5DCAA5"></div></div>
+          </div>
+          <div class="need-row">
+            <div class="need-label"><span class="need-name">Medicamentos</span><span class="need-pct" style="color:#E24B4A">Baja</span></div>
+            <div class="need-bar"><div class="need-fill pulse-red2" id="need4" style="width:20%;background:#E24B4A"></div></div>
+          </div>
+          <div class="need-row">
+            <div class="need-label"><span class="need-name">Refugio</span><span class="need-pct" style="color:#EF9F27">Media</span></div>
+            <div class="need-bar"><div class="need-fill pulse-orange2" id="need5" style="width:58%;background:#EF9F27"></div></div>
+          </div>
+          <button class="btn-submit" style="margin-top:14px;font-size:13px;padding:10px">Ver mapa completo</button>
+        </div>
+
+        <!-- FULL SVG map -->
+        <svg viewBox="0 0 900 460" style="width:100%;height:100%;position:absolute;inset:0;" xmlns="http://www.w3.org/2000/svg">
+          <rect width="900" height="460" fill="#162019"/>
+          <!-- district fills -->
+          <rect x="10" y="10" width="130" height="90" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="150" y="10" width="100" height="65" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="260" y="10" width="130" height="90" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="400" y="10" width="110" height="75" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="520" y="10" width="120" height="90" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="650" y="10" width="100" height="70" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="760" y="10" width="130" height="90" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="10" y="120" width="100" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="120" y="100" width="130" height="120" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="260" y="110" width="120" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="390" y="100" width="130" height="110" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="530" y="110" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="650" y="100" width="120" height="110" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="780" y="110" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="10" y="240" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="130" y="230" width="120" height="110" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="260" y="220" width="130" height="120" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="400" y="230" width="120" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="530" y="220" width="110" height="120" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="650" y="230" width="120" height="110" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="780" y="230" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
+          <rect x="10" y="360" width="880" height="90" rx="5" fill="rgba(255,255,255,0.02)"/>
+          <!-- grid streets -->
+          <g stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none">
+            <line x1="0" y1="100" x2="900" y2="100"/>
+            <line x1="0" y1="220" x2="900" y2="220"/>
+            <line x1="0" y1="350" x2="900" y2="350"/>
+            <line x1="140" y1="0" x2="140" y2="460"/>
+            <line x1="260" y1="0" x2="260" y2="460"/>
+            <line x1="395" y1="0" x2="395" y2="460"/>
+            <line x1="530" y1="0" x2="530" y2="460"/>
+            <line x1="650" y1="0" x2="650" y2="460"/>
+            <line x1="775" y1="0" x2="775" y2="460"/>
+          </g>
+          <!-- main avenues -->
+          <g stroke="rgba(255,255,255,0.13)" stroke-width="3" fill="none">
+            <line x1="0" y1="162" x2="900" y2="162"/>
+            <line x1="0" y1="290" x2="900" y2="290"/>
+            <line x1="320" y1="0" x2="320" y2="460"/>
+            <line x1="600" y1="0" x2="600" y2="460"/>
+          </g>
+          <!-- river Turia -->
+          <path d="M 0 420 Q 150 400 300 415 Q 450 430 600 408 Q 720 396 900 410" stroke="rgba(100,180,255,0.18)" stroke-width="10" fill="none"/>
+          <!-- heat zones -->
+          <circle cx="200" cy="160" r="80" fill="rgba(226,75,74,0.1)"/>
+          <circle cx="200" cy="160" r="50" fill="rgba(226,75,74,0.18)"/>
+          <circle cx="200" cy="160" r="25" fill="rgba(226,75,74,0.28)"/>
+          <circle cx="480" cy="270" r="65" fill="rgba(226,75,74,0.1)"/>
+          <circle cx="480" cy="270" r="38" fill="rgba(226,75,74,0.2)"/>
+          <circle cx="100" cy="300" r="50" fill="rgba(239,159,39,0.15)"/>
+          <circle cx="100" cy="300" r="28" fill="rgba(239,159,39,0.22)"/>
+          <circle cx="700" cy="180" r="40" fill="rgba(239,159,39,0.15)"/>
+          <!-- kit points -->
+          <circle cx="350" cy="90" r="13" fill="#1D9E75" opacity="0.95"/>
+          <text x="350" y="94.5" text-anchor="middle" fill="white" font-size="10" font-weight="bold">K</text>
+          <circle cx="570" cy="200" r="13" fill="#1D9E75" opacity="0.95"/>
+          <text x="570" y="204.5" text-anchor="middle" fill="white" font-size="10" font-weight="bold">K</text>
+          <circle cx="800" cy="300" r="13" fill="#1D9E75" opacity="0.95"/>
+          <text x="800" y="304.5" text-anchor="middle" fill="white" font-size="10" font-weight="bold">K</text>
+          <!-- volunteer checkpoints -->
+          <circle cx="280" cy="250" r="11" fill="#EF9F27" opacity="0.9"/>
+          <text x="280" y="254" text-anchor="middle" fill="white" font-size="9" font-weight="bold">V</text>
+          <circle cx="440" cy="140" r="11" fill="#EF9F27" opacity="0.9"/>
+          <text x="440" y="144" text-anchor="middle" fill="white" font-size="9" font-weight="bold">V</text>
+          <circle cx="660" cy="310" r="11" fill="#EF9F27" opacity="0.9"/>
+          <text x="660" y="314" text-anchor="middle" fill="white" font-size="9" font-weight="bold">V</text>
+          <!-- emergency markers -->
+          <circle cx="200" cy="160" r="9" fill="#E24B4A"/>
+          <text x="200" y="164" text-anchor="middle" fill="white" font-size="8" font-weight="bold">!</text>
+          <circle cx="480" cy="270" r="9" fill="#E24B4A"/>
+          <text x="480" y="274" text-anchor="middle" fill="white" font-size="8" font-weight="bold">!</text>
+          <circle cx="100" cy="300" r="9" fill="#E24B4A"/>
+          <text x="100" y="304" text-anchor="middle" fill="white" font-size="8" font-weight="bold">!</text>
+          <!-- PULSE RINGS — all emergencies -->
+          <circle cx="200" cy="160" r="22" fill="none" stroke="#E24B4A" stroke-width="1.5">
+            <animate attributeName="r" values="22;40;22" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="480" cy="270" r="22" fill="none" stroke="#E24B4A" stroke-width="1.5">
+            <animate attributeName="r" values="22;40;22" dur="2.3s" begin="0.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0;0.6" dur="2.3s" begin="0.4s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="100" cy="300" r="22" fill="none" stroke="#EF9F27" stroke-width="1.5">
+            <animate attributeName="r" values="22;38;22" dur="2.6s" begin="0.8s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0;0.6" dur="2.6s" begin="0.8s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="700" cy="180" r="20" fill="none" stroke="#EF9F27" stroke-width="1.5">
+            <animate attributeName="r" values="20;35;20" dur="2.8s" begin="1.2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.5;0;0.5" dur="2.8s" begin="1.2s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      </div>
+
+      <!-- Stats bar -->
+      <div class="map-stats-bar">
+        <div class="map-stat"><span class="map-stat-num" id="liveKits">128</span><span class="map-stat-label">Kits entregados</span></div>
+        <div class="map-stat"><span class="map-stat-num" id="livePeople">512</span><span class="map-stat-label">Personas ayudadas</span></div>
+        <div class="map-stat"><span class="map-stat-num" id="liveVols">23</span><span class="map-stat-label">Voluntarios activos</span></div>
+        <div class="map-stat"><span class="map-stat-num" id="livePoints">7</span><span class="map-stat-label">Puntos abiertos</span></div>
+        <div class="map-live-badge"><div class="dot-pulse" style="width:8px;height:8px;"></div>Actualizando en tiempo real</div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <!-- LIVE MAP -->
-    <div id="liveMap">
-        <div class="inner">
-            <div class="label reveal">04 — Impacto en tiempo real</div>
-            <h2 class="section-title reveal reveal-delay-1">El mapa que cambia vidas</h2>
-            <p class="section-sub reveal reveal-delay-2">Visualiza en tiempo real dónde se concentran las necesidades, qué recursos están disponibles y cuántas personas han recibido ayuda.</p>
+<!-- CTA -->
+<div id="cta">
+  <div class="inner">
+    <h2>Únete antes de que llegue la próxima emergencia</h2>
+    <p>Kit2Help es gratuita para ciudadanos, voluntarios. Configura tu comunidad en menos de 5 minutos.</p>
+	
+		<button class="btn-white" onclick="openModal()">
+		  Llevar Kit2Help a mi zona
+		</button>
+  </div>  
+</div>
 
-            <div class="map-shell reveal">
-                <div style="position:relative;height:clamp(280px,50vw,460px);background:#162019;overflow:hidden;">
+<div id="leadModal" class="k2-modal">
+  <div class="k2-modal-box">
+    <!-- cerrar -->
+    <div class="k2-close" onclick="closeModal()">✕</div>
 
-                    <!-- Filters -->
-                    <div class="map-filters">
-                        <div class="filter-btn active" onclick="toggleFilter(this)">
-                            <div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
-                        <div class="filter-btn active" onclick="toggleFilter(this)">
-                            <div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
-                        <div class="filter-btn active" onclick="toggleFilter(this)">
-                            <div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
-                        <div class="filter-btn active" onclick="toggleFilter(this)">
-                            <div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
-                    </div>
+    <h3 class="k2-title">Llevar Kit2Help a tu zona</h3>
+    <p class="k2-sub">Déjanos tus datos y te contactamos cuando esté disponible.</p>
 
-                    <!-- Needs panel -->
-                    <div class="needs-panel">
-                        <div class="needs-title">Necesidades actuales</div>
-                        <div class="need-row">
-                            <div class="need-label"><span class="need-name">Agua potable</span><span class="need-pct" style="color:#E24B4A">Alta</span></div>
-                            <div class="need-bar">
-                                <div class="need-fill pulse-red" id="need1" style="width:92%;background:#E24B4A"></div>
-                            </div>
-                        </div>
-                        <div class="need-row">
-                            <div class="need-label"><span class="need-name">Alimentos</span><span class="need-pct" style="color:#EF9F27">45%</span></div>
-                            <div class="need-bar">
-                                <div class="need-fill pulse-orange" id="need2" style="width:45%;background:#EF9F27"></div>
-                            </div>
-                        </div>
-                        <div class="need-row">
-                            <div class="need-label"><span class="need-name">Mantas</span><span class="need-pct" style="color:#5DCAA5">80%</span></div>
-                            <div class="need-bar">
-                                <div class="need-fill pulse-green" id="need3" style="width:80%;background:#5DCAA5"></div>
-                            </div>
-                        </div>
-                        <div class="need-row">
-                            <div class="need-label"><span class="need-name">Medicamentos</span><span class="need-pct" style="color:#E24B4A">Baja</span></div>
-                            <div class="need-bar">
-                                <div class="need-fill pulse-red2" id="need4" style="width:20%;background:#E24B4A"></div>
-                            </div>
-                        </div>
-                        <div class="need-row">
-                            <div class="need-label"><span class="need-name">Refugio</span><span class="need-pct" style="color:#EF9F27">Media</span></div>
-                            <div class="need-bar">
-                                <div class="need-fill pulse-orange2" id="need5" style="width:58%;background:#EF9F27"></div>
-                            </div>
-                        </div>
-                        <button class="btn-submit" style="margin-top:14px;font-size:13px;padding:10px">Ver mapa completo</button>
-                    </div>
+    <div class="k2-form">
+	
+	  <!-- Campo Honeypot (Trampa para bots) -->
+	<input type="text" id="k2-honeypot" style="display:none" tabindex="-1" autocomplete="off">
 
-                    <!-- FULL SVG map -->
-                    <svg viewBox="0 0 900 460" style="width:100%;height:100%;position:absolute;inset:0;" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="900" height="460" fill="#162019" />
-                        <!-- district fills -->
-                        <rect x="10" y="10" width="130" height="90" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="150" y="10" width="100" height="65" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="260" y="10" width="130" height="90" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="400" y="10" width="110" height="75" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="520" y="10" width="120" height="90" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="650" y="10" width="100" height="70" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="760" y="10" width="130" height="90" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="10" y="120" width="100" height="100" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="120" y="100" width="130" height="120" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="260" y="110" width="120" height="100" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="390" y="100" width="130" height="110" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="530" y="110" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="650" y="100" width="120" height="110" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="780" y="110" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="10" y="240" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="130" y="230" width="120" height="110" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="260" y="220" width="130" height="120" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="400" y="230" width="120" height="100" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="530" y="220" width="110" height="120" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="650" y="230" width="120" height="110" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="780" y="230" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)" />
-                        <rect x="10" y="360" width="880" height="90" rx="5" fill="rgba(255,255,255,0.02)" />
-                        <!-- grid streets -->
-                        <g stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none">
-                            <line x1="0" y1="100" x2="900" y2="100" />
-                            <line x1="0" y1="220" x2="900" y2="220" />
-                            <line x1="0" y1="350" x2="900" y2="350" />
-                            <line x1="140" y1="0" x2="140" y2="460" />
-                            <line x1="260" y1="0" x2="260" y2="460" />
-                            <line x1="395" y1="0" x2="395" y2="460" />
-                            <line x1="530" y1="0" x2="530" y2="460" />
-                            <line x1="650" y1="0" x2="650" y2="460" />
-                            <line x1="775" y1="0" x2="775" y2="460" />
-                        </g>
-                        <!-- main avenues -->
-                        <g stroke="rgba(255,255,255,0.13)" stroke-width="3" fill="none">
-                            <line x1="0" y1="162" x2="900" y2="162" />
-                            <line x1="0" y1="290" x2="900" y2="290" />
-                            <line x1="320" y1="0" x2="320" y2="460" />
-                            <line x1="600" y1="0" x2="600" y2="460" />
-                        </g>
-                        <!-- river Turia -->
-                        <path d="M 0 420 Q 150 400 300 415 Q 450 430 600 408 Q 720 396 900 410" stroke="rgba(100,180,255,0.18)" stroke-width="10" fill="none" />
-                        <!-- heat zones -->
-                        <circle cx="200" cy="160" r="80" fill="rgba(226,75,74,0.1)" />
-                        <circle cx="200" cy="160" r="50" fill="rgba(226,75,74,0.18)" />
-                        <circle cx="200" cy="160" r="25" fill="rgba(226,75,74,0.28)" />
-                        <circle cx="480" cy="270" r="65" fill="rgba(226,75,74,0.1)" />
-                        <circle cx="480" cy="270" r="38" fill="rgba(226,75,74,0.2)" />
-                        <circle cx="100" cy="300" r="50" fill="rgba(239,159,39,0.15)" />
-                        <circle cx="100" cy="300" r="28" fill="rgba(239,159,39,0.22)" />
-                        <circle cx="700" cy="180" r="40" fill="rgba(239,159,39,0.15)" />
-                        <!-- kit points -->
-                        <circle cx="350" cy="90" r="13" fill="#1D9E75" opacity="0.95" />
-                        <text x="350" y="94.5" text-anchor="middle" fill="white" font-size="10" font-weight="bold">K</text>
-                        <circle cx="570" cy="200" r="13" fill="#1D9E75" opacity="0.95" />
-                        <text x="570" y="204.5" text-anchor="middle" fill="white" font-size="10" font-weight="bold">K</text>
-                        <circle cx="800" cy="300" r="13" fill="#1D9E75" opacity="0.95" />
-                        <text x="800" y="304.5" text-anchor="middle" fill="white" font-size="10" font-weight="bold">K</text>
-                        <!-- volunteer checkpoints -->
-                        <circle cx="280" cy="250" r="11" fill="#EF9F27" opacity="0.9" />
-                        <text x="280" y="254" text-anchor="middle" fill="white" font-size="9" font-weight="bold">V</text>
-                        <circle cx="440" cy="140" r="11" fill="#EF9F27" opacity="0.9" />
-                        <text x="440" y="144" text-anchor="middle" fill="white" font-size="9" font-weight="bold">V</text>
-                        <circle cx="660" cy="310" r="11" fill="#EF9F27" opacity="0.9" />
-                        <text x="660" y="314" text-anchor="middle" fill="white" font-size="9" font-weight="bold">V</text>
-                        <!-- emergency markers -->
-                        <circle cx="200" cy="160" r="9" fill="#E24B4A" />
-                        <text x="200" y="164" text-anchor="middle" fill="white" font-size="8" font-weight="bold">!</text>
-                        <circle cx="480" cy="270" r="9" fill="#E24B4A" />
-                        <text x="480" y="274" text-anchor="middle" fill="white" font-size="8" font-weight="bold">!</text>
-                        <circle cx="100" cy="300" r="9" fill="#E24B4A" />
-                        <text x="100" y="304" text-anchor="middle" fill="white" font-size="8" font-weight="bold">!</text>
-                        <!-- PULSE RINGS — all emergencies -->
-                        <circle cx="200" cy="160" r="22" fill="none" stroke="#E24B4A" stroke-width="1.5">
-                            <animate attributeName="r" values="22;40;22" dur="2s" repeatCount="indefinite" />
-                            <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite" />
-                        </circle>
-                        <circle cx="480" cy="270" r="22" fill="none" stroke="#E24B4A" stroke-width="1.5">
-                            <animate attributeName="r" values="22;40;22" dur="2.3s" begin="0.4s" repeatCount="indefinite" />
-                            <animate attributeName="opacity" values="0.6;0;0.6" dur="2.3s" begin="0.4s" repeatCount="indefinite" />
-                        </circle>
-                        <circle cx="100" cy="300" r="22" fill="none" stroke="#EF9F27" stroke-width="1.5">
-                            <animate attributeName="r" values="22;38;22" dur="2.6s" begin="0.8s" repeatCount="indefinite" />
-                            <animate attributeName="opacity" values="0.6;0;0.6" dur="2.6s" begin="0.8s" repeatCount="indefinite" />
-                        </circle>
-                        <circle cx="700" cy="180" r="20" fill="none" stroke="#EF9F27" stroke-width="1.5">
-                            <animate attributeName="r" values="20;35;20" dur="2.8s" begin="1.2s" repeatCount="indefinite" />
-                            <animate attributeName="opacity" values="0.5;0;0.5" dur="2.8s" begin="1.2s" repeatCount="indefinite" />
-                        </circle>
-                    </svg>
-                </div>
 
-                <!-- Stats bar -->
-                <div class="map-stats-bar">
-                    <div class="map-stat"><span class="map-stat-num" id="liveKits">128</span><span class="map-stat-label">Kits entregados</span></div>
-                    <div class="map-stat"><span class="map-stat-num" id="livePeople">512</span><span class="map-stat-label">Personas ayudadas</span></div>
-                    <div class="map-stat"><span class="map-stat-num" id="liveVols">23</span><span class="map-stat-label">Voluntarios activos</span></div>
-                    <div class="map-stat"><span class="map-stat-num" id="livePoints">7</span><span class="map-stat-label">Puntos abiertos</span></div>
-                    <div class="map-live-badge">
-                        <div class="dot-pulse" style="width:8px;height:8px;"></div>Actualizando en tiempo real</div>
-                </div>
-            </div>
-        </div>
+      <input type="text" id="k2-name" placeholder="Nombre">
+      <input type="text" id="k2-city" placeholder="Ciudad">
+      
+      <!-- Campo Email Obligatorio -->
+      <input type="email" id="k2-email" placeholder="Correo electrónico (Obligatorio)" required>
+      
+      <!-- Campo Teléfono Opcional -->
+      <input type="tel" id="k2-phone" placeholder="Teléfono">
+      
+      <select id="k2-type">
+        <option value="">Tipo de perfil</option>
+        <option value="Voluntario">Voluntario</option>
+        <option value="Organización">Organización</option>
+        <option value="Administración">Administración</option>
+      </select>
+
+      <button onclick="submitLead()" class="k2-submit">
+        Enviar solicitud
+      </button>
     </div>
-
-    <!-- CTA -->
-    <div id="cta">
-        <div class="inner">
-            <h2>Únete antes de que llegue la próxima emergencia</h2>
-            <p>Kit2Help es gratuita para ciudadanos, voluntarios. Configura tu comunidad en menos de 5 minutos.</p>
-
-            <button class="btn-white" onclick="openModal()">
-                Llevar Kit2Help a mi zona
-            </button>
-        </div>
-    </div>
-
-    <div id="leadModal" class="k2-modal">
-        <div class="k2-modal-box">
-
-            <!-- cerrar -->
-            <div class="k2-close" onclick="closeModal()">✕</div>
-
-            <h3 class="k2-title">Llevar Kit2Help a tu zona</h3>
-            <p class="k2-sub">Déjanos tus datos y te contactamos cuando esté disponible.</p>
-
-            <div class="k2-form">
-                <input type="text" placeholder="Nombre">
-                <input type="text" placeholder="Ciudad">
-
-                <select>
-                    <option>Tipo de perfil</option>
-                    <option>Voluntario</option>
-                    <option>Organización</option>
-                    <option>Administración</option>
-                </select>
-
-                <button onclick="submitLead()" class="k2-submit">
-                    Enviar solicitud
-                </button>
-            </div>
-
-        </div>
-    </div>
+  </div>
+</div>
 
 
-    <!-- FOOTER -->
-    <footer>
-        <strong>Kit2Help</strong> — Coordinación de ayuda en emergencias — 2026
-    </footer>
 
-    <script>
-        // -- correo form contacto --
-        
-        function openModal() {
-          document.getElementById('leadModal').style.display = 'flex';
-        }
-        
-        function closeModal() {
-          document.getElementById('leadModal').style.display = 'none';
-        }
-        
-        function submitLead() {
-          const btn = document.querySelector('.k2-submit');
-          btn.textContent = "✓ Enviado";
-          btn.style.background = "#085041";
-        
-          setTimeout(() => {
-            closeModal();
-            btn.textContent = "Enviar solicitud";
-            btn.style.background = "";
-          }, 2000);
-        }
-        
-        // ── Mobile menu ──
-        function toggleMenu() {
-          document.getElementById('mobileMenu').classList.toggle('open');
-        }
-        document.addEventListener('click', e => {
-          if(!e.target.closest('nav') && !e.target.closest('.mobile-menu'))
-            document.getElementById('mobileMenu').classList.remove('open');
-        });
-        
-        // ── Scroll reveal ──
-        const reveals = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-        }, { threshold:0.12 });
-        reveals.forEach(el => observer.observe(el));
-        
-        // ── Counter animation ──
-        function animateCounter(el, target) {
-          let cur = 0; const step = Math.ceil(target/40);
-          const t = setInterval(() => {
-            cur = Math.min(cur+step, target); el.textContent = cur;
-            if(cur >= target) clearInterval(t);
-          }, 40);
-        }
-        const statsObs = new IntersectionObserver(entries => {
-          entries.forEach(e => {
-            if(e.isIntersecting) {
-              document.querySelectorAll('[data-target]').forEach(el => animateCounter(el, parseInt(el.dataset.target)));
-              statsObs.disconnect();
-            }
-          });
-        }, { threshold:0.5 });
-        const heroEl = document.querySelector('.hero-stats');
-        if(heroEl) statsObs.observe(heroEl);
-        
-        // ── Demo tabs ──
-        function switchTab(name) {
-          const panels = ['emergencia','chat','kit'];
-          document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', panels[i]===name));
-          document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
-          document.getElementById('tab-'+name).classList.add('active');
-        }
-        
-        // ── Type chips ──
-        function selectChip(el) {
-          el.closest('.type-chips').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-          el.classList.add('active');
-        }
-        
-        // ── Priority ──
-        function selectPrio(el, level) {
-          el.closest('.priority-row').querySelectorAll('.prio-btn').forEach(b => b.className='prio-btn');
-          el.classList.add('active-'+level);
-        }
-        
-        // ── Activate emergency → reveal new hot point on map ──
-        function activarEmergencia() {
-          const btn = document.getElementById('emergBtn');
-          btn.textContent = '✓ Emergencia activada';
-          btn.style.background = '#085041';
-          // Show new SVG point
-          const np = document.getElementById('svgNewPoint');
-          if(np) np.style.opacity = '1';
-          // Zoom map slightly
-          const svg = document.getElementById('emergSvg');
-          if(svg) svg.style.transform = 'scale(1.08)';
-          setTimeout(() => {
-            btn.textContent = 'Activar emergencia';
-            btn.style.background = '';
-          }, 3000);
-        }
-        
-        // ── Chat ──
-        function enviarMensaje() {
-          const input = document.getElementById('chatInput');
-          const text = input.value.trim(); if(!text) return;
-          const msgs = document.getElementById('chatMsgs');
-          const div = document.createElement('div');
-          div.className = 'msg own';
-          div.innerHTML = `<div class="avatar" style="background:var(--teal);color:#fff">Yo</div><div class="bubble"><p>${text}</p><small>ahora</small></div>`;
-          msgs.appendChild(div); msgs.scrollTop = msgs.scrollHeight; input.value = '';
-        }
-        document.getElementById('chatInput').addEventListener('keydown', e => { if(e.key==='Enter') enviarMensaje(); });
-        
-        // ── Kit qty ──
-        function changeQty(btn, delta) {
-          const qEl = btn.closest('.qty-ctrl').querySelector('.qty-num');
-          let val = Math.max(0, parseInt(qEl.textContent)+delta);
-          qEl.textContent = val; updateKitTotal();
-        }
-        function updateKitTotal() {
-          const total = Array.from(document.querySelectorAll('.qty-num')).reduce((s,el) => s+parseInt(el.textContent), 0);
-          document.getElementById('kitTotal').textContent = total;
-        }
-        
-        // ── Map filters ──
-        function toggleFilter(el) { el.classList.toggle('active'); }
-        
-        // ── Live counters ──
-        setInterval(() => {
-          [['liveKits',1],['livePeople',3]].forEach(([id,d]) => {
-            if(Math.random()>0.55) {
-              const el = document.getElementById(id);
-              if(el) el.textContent = parseInt(el.textContent)+d;
-            }
-          });
-        }, 3200);
-    </script>
+<!-- FOOTER -->
+<footer>
+  <strong>Kit2Help</strong> — Coordinación de ayuda en emergencias  —  2026
+</footer>
+
+<script>
+
+// -- correo form contacto --
+
+function openModal() {
+  document.getElementById('leadModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('leadModal').style.display = 'none';
+}
+
+
+async function submitLead() {
+  // 1. Verificar Honeypot inmediatamente
+  const honey = document.getElementById('k2-honeypot').value;
+  if (honey !== "") {
+    console.warn("Spam detectado");
+    return; // Detiene la ejecución si un bot llenó el campo oculto
+  }
+
+  // 2. Capturar valores
+  const name = document.getElementById('k2-name').value.trim();
+  const email = document.getElementById('k2-email').value.trim();
+  const city = document.getElementById('k2-city').value.trim();
+  const phone = document.getElementById('k2-phone').value.trim();
+  const type = document.getElementById('k2-type').value;
+
+  // 3. Validaciones de formato
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!name) {
+    alert("Por favor, dinos tu nombre.");
+    return;
+  }
+  if (!emailRegex.test(email)) {
+    alert("Por favor, introduce un correo electrónico válido.");
+    return;
+  }
+
+  // 4. Envío de datos
+  const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbwCNRCqioHrJOVEdKGayVEWTYB889V4aupiBpidTMHtaaJzphhcTQGtAEyXl95hDvYa/exec"; // Pega aquí la URL de la implementación
+  const btn = document.querySelector('.k2-submit');
+
+  try {
+    // Cambiamos el texto para dar feedback de carga
+    btn.textContent = "Enviando...";
+    btn.disabled = true;
+
+    await fetch(URL_APPS_SCRIPT, {
+      method: "POST",
+      mode: "no-cors", 
+      body: JSON.stringify({ 
+        name, city, email, phone: phone || "No proporcionado", type 
+      })
+    });
+
+    // Éxito
+    btn.textContent = "✓ Enviado";
+    btn.style.background = "#085041";
+
+    setTimeout(() => {
+      closeModal();
+      btn.textContent = "Enviar solicitud";
+      btn.style.background = "";
+      btn.disabled = false;
+      // Limpiar campos
+      document.getElementById('k2-name').value = "";
+      document.getElementById('k2-email').value = "";
+      document.getElementById('k2-city').value = "";
+      document.getElementById('k2-phone').value = "";
+    }, 2000);
+
+  } catch (error) {
+    alert("Hubo un problema. Revisa tu conexión.");
+    btn.disabled = false;
+    btn.textContent = "Enviar solicitud";
+  }
+}
+
+
+
+
+
+// ── Mobile menu ──
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if(!e.target.closest('nav') && !e.target.closest('.mobile-menu'))
+    document.getElementById('mobileMenu').classList.remove('open');
+});
+
+// ── Scroll reveal ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold:0.12 });
+reveals.forEach(el => observer.observe(el));
+
+// ── Counter animation ──
+function animateCounter(el, target) {
+  let cur = 0; const step = Math.ceil(target/40);
+  const t = setInterval(() => {
+    cur = Math.min(cur+step, target); el.textContent = cur;
+    if(cur >= target) clearInterval(t);
+  }, 40);
+}
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      document.querySelectorAll('[data-target]').forEach(el => animateCounter(el, parseInt(el.dataset.target)));
+      statsObs.disconnect();
+    }
+  });
+}, { threshold:0.5 });
+const heroEl = document.querySelector('.hero-stats');
+if(heroEl) statsObs.observe(heroEl);
+
+// ── Demo tabs ──
+function switchTab(name) {
+  const panels = ['emergencia','chat','kit'];
+  document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', panels[i]===name));
+  document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// ── Type chips ──
+function selectChip(el) {
+  el.closest('.type-chips').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── Priority ──
+function selectPrio(el, level) {
+  el.closest('.priority-row').querySelectorAll('.prio-btn').forEach(b => b.className='prio-btn');
+  el.classList.add('active-'+level);
+}
+
+// ── Activate emergency → reveal new hot point on map ──
+function activarEmergencia() {
+  const btn = document.getElementById('emergBtn');
+  btn.textContent = '✓ Emergencia activada';
+  btn.style.background = '#085041';
+  // Show new SVG point
+  const np = document.getElementById('svgNewPoint');
+  if(np) np.style.opacity = '1';
+  // Zoom map slightly
+  const svg = document.getElementById('emergSvg');
+  if(svg) svg.style.transform = 'scale(1.08)';
+  setTimeout(() => {
+    btn.textContent = 'Activar emergencia';
+    btn.style.background = '';
+  }, 3000);
+}
+
+// ── Chat ──
+function enviarMensaje() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim(); if(!text) return;
+  const msgs = document.getElementById('chatMsgs');
+  const div = document.createElement('div');
+  div.className = 'msg own';
+  div.innerHTML = `<div class="avatar" style="background:var(--teal);color:#fff">Yo</div><div class="bubble"><p>${text}</p><small>ahora</small></div>`;
+  msgs.appendChild(div); msgs.scrollTop = msgs.scrollHeight; input.value = '';
+}
+document.getElementById('chatInput').addEventListener('keydown', e => { if(e.key==='Enter') enviarMensaje(); });
+
+// ── Kit qty ──
+function changeQty(btn, delta) {
+  const qEl = btn.closest('.qty-ctrl').querySelector('.qty-num');
+  let val = Math.max(0, parseInt(qEl.textContent)+delta);
+  qEl.textContent = val; updateKitTotal();
+}
+function updateKitTotal() {
+  const total = Array.from(document.querySelectorAll('.qty-num')).reduce((s,el) => s+parseInt(el.textContent), 0);
+  document.getElementById('kitTotal').textContent = total;
+}
+
+// ── Map filters ──
+function toggleFilter(el) { el.classList.toggle('active'); }
+
+// ── Live counters ──
+setInterval(() => {
+  [['liveKits',1],['livePeople',3]].forEach(([id,d]) => {
+    if(Math.random()>0.55) {
+      const el = document.getElementById(id);
+      if(el) el.textContent = parseInt(el.textContent)+d;
+    }
+  });
+}, 3200);
+</script>
 </body>
-
 </html>
