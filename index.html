@@ -153,6 +153,50 @@
   @keyframes needPulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
   @keyframes markerBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
 
+
+
+  /* ── QUIÉNES SOMOS MODAL ── */
+  .qs-modal {
+    position:fixed; inset:0; z-index:500;
+    background:rgba(14,26,22,0.6); backdrop-filter:blur(8px);
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .qs-modal.open { display:flex; }
+  .qs-box {
+    background:#fff; border-radius:24px; padding:36px;
+    max-width:420px; width:100%; position:relative;
+    box-shadow:0 32px 80px rgba(0,0,0,0.18);
+    animation:fadeUp 0.3s ease both;
+  }
+  .qs-close {
+    position:absolute; top:14px; right:18px;
+    background:none; border:none; font-size:20px;
+    cursor:pointer; color:var(--muted); line-height:1;
+  }
+  .qs-close:hover { color:var(--teal); }
+  .qs-avatar {
+    width:72px; height:72px; border-radius:50%;
+    background:var(--green-50); border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:32px; margin-bottom:16px;
+  }
+  .qs-name { font-family:'Syne',sans-serif; font-size:20px; font-weight:700; color:var(--dark); margin-bottom:4px; }
+  .qs-role { font-size:13px; color:var(--teal); font-weight:500; margin-bottom:16px; }
+  .qs-bio { font-size:14px; color:var(--muted); line-height:1.7; margin-bottom:20px; }
+  .qs-linkedin {
+    display:inline-flex; align-items:center; gap:8px;
+    background:#0A66C2; color:#fff; text-decoration:none;
+    border-radius:10px; padding:10px 18px; font-size:14px; font-weight:500;
+    font-family:'DM Sans',sans-serif; transition:background 0.18s, transform 0.12s;
+	  display: flex;
+  justify-content: center;
+  }
+  .qs-linkedin:hover { background:#084d93; transform:translateY(-1px); }
+  .qs-linkedin svg { width:16px; height:16px; fill:#fff; }
+
+  /* ── KIT confirm card animation ── */
+  @keyframes kitSlideIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .kit-confirm { animation:kitSlideIn 0.3s ease both; }
   /* ── HERO ── */
   #hero {
     min-height:100vh;
@@ -507,9 +551,56 @@
   #cta .btn-white:active { transform:scale(0.97); }
 
   /* ── FOOTER ── */
-  footer { background:var(--dark); color:rgba(255,255,255,0.4); padding:28px 48px; text-align:center; font-size:13px; }
-  footer strong { color:rgba(255,255,255,0.7); }
+ .footer {
+  background: var(--dark);
+  color: rgba(255,255,255,0.5);
+  padding: 28px 40px;
+}
 
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-left {
+  font-size: 13px;
+}
+
+.footer-left strong {
+  color: #fff;
+  margin-right: 6px;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+}
+
+/* BOTÓN LINKEDIN */
+.linkedin-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.linkedin-btn:hover {
+  background: #0A66C2; /* color LinkedIn */
+  color: #fff;
+  border-color: #0A66C2;
+}
   /* ── SCROLL REVEAL ── */
   .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity:1; transform:translateY(0); }
@@ -628,7 +719,7 @@
     <a href="#demo">Demo</a>
     <a href="#liveMap">Impacto</a>
   </div>
-  <button class="nav-cta">Empezar ahora</button>
+  <button class="nav-cta" onclick="abrirQuienesSomos();">¿Quiénes somos?</button>
   <div class="nav-hamburger" onclick="toggleMenu()" id="hamburger">
     <span></span><span></span><span></span>
   </div>
@@ -638,9 +729,29 @@
   <a href="#features" onclick="toggleMenu()">Solución</a>
   <a href="#demo" onclick="toggleMenu()">Demo</a>
   <a href="#liveMap" onclick="toggleMenu()">Impacto</a>
-  <button class="mob-cta">Empezar ahora</button>
+  <button class="mob-cta" onclick="abrirQuienesSomos();toggleMenu()">¿Quiénes somos?</button>
 </div>
 
+
+<!-- MODAL QUIÉNES SOMOS -->
+<div class="qs-modal" id="qsModal">
+  <div class="qs-box">
+    <button class="qs-close" onclick="cerrarQuienesSomos()">×</button>
+    <div class="qs-avatar">🤝</div>
+    <div class="qs-name">Sandra González Fortea </div> 
+ 
+    <div class="qs-role">Fundadora &amp; Directora de Kit2Help</div>
+    <p class="qs-bio">       
+      Tras ver el caso de la DANA de Valencia en 2024, decidió crear Kit2Help 
+      para que ninguna comunidad volviera a quedarse sin coordinación cuando más lo necesita.    
+     <br> <br> | Donde surge la necesidad, empieza la acción	|  
+    </p>
+    <a class="qs-linkedin" href="https://www.linkedin.com/in/kit2help" target="_blank" rel="noopener" >
+     
+      Ver perfil en LinkedIn
+    </a>
+  </div>
+</div>
 <!-- HERO -->
 <div id="hero">
   <div class="hero-bg"></div>
@@ -894,7 +1005,7 @@
               <div class="kit-item"><div class="kit-item-info"><span class="kit-item-icon">🔦</span><span class="kit-item-name">Linterna</span></div><div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(this,-1)">−</button><span class="qty-num">10</span><button class="qty-btn" onclick="changeQty(this,1)">+</button></div></div>
             </div>
             <div class="kit-total"><span class="kit-total-label">Total elementos</span><span class="kit-total-num" id="kitTotal">50</span></div>
-            <button class="btn-submit" style="margin-top:16px">Crear kit</button>
+            <button class="btn-submit" id="kitBtn" style="margin-top:16px" onclick="crearKit()">Crear kit</button>
           </div>
         </div>
 
@@ -1077,11 +1188,6 @@
     <p class="k2-sub">Déjanos tus datos y te contactamos cuando esté disponible.</p>
 
     <div class="k2-form">
-	
-	  <!-- Campo Honeypot (Trampa para bots) -->
-	<input type="text" id="k2-honeypot" style="display:none" tabindex="-1" autocomplete="off">
-
-
       <input type="text" id="k2-name" placeholder="Nombre">
       <input type="text" id="k2-city" placeholder="Ciudad">
       
@@ -1108,11 +1214,45 @@
 
 
 <!-- FOOTER -->
-<footer>
-  <strong>Kit2Help</strong> — Coordinación de ayuda en emergencias  —  2026
+<footer class="footer">
+  <div class="footer-inner">
+    
+    <div class="footer-left">
+      <strong>Kit2Help</strong>
+      <span>— Coordinación de ayuda en emergencias · 2026</span>
+    </div>
+
+    <div class="footer-right">
+      <a href="https://www.linkedin.com/in/kit2help" target="_blank" rel="noopener" class="linkedin-btn">
+        
+        <!-- Icono LinkedIn -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4.98 3.5C4.98 4.88 3.87 6 2.49 6 1.11 6 0 4.88 0 3.5 0 2.12 1.11 1 2.49 1c1.38 0 2.49 1.12 2.49 2.5zM.21 8.98h4.56V24H.21V8.98zM7.98 8.98h4.37v2.05h.06c.61-1.16 2.11-2.38 4.35-2.38 4.65 0 5.5 3.06 5.5 7.04V24h-4.56v-6.9c0-1.64-.03-3.75-2.29-3.75-2.29 0-2.64 1.79-2.64 3.63V24H7.98V8.98z"/>
+        </svg>
+
+        <span>LinkedIn</span>
+      </a>
+    </div>
+
+  </div>
 </footer>
 
 <script>
+
+
+// ── Quiénes somos modal ──
+function abrirQuienesSomos() {
+  document.getElementById('qsModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function cerrarQuienesSomos() {
+  document.getElementById('qsModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('qsModal');
+  if (modal && e.target === modal) cerrarQuienesSomos();
+});
 
 // -- correo form contacto --
 
@@ -1126,50 +1266,36 @@ function closeModal() {
 
 
 async function submitLead() {
-  // 1. Verificar Honeypot inmediatamente
-  const honey = document.getElementById('k2-honeypot').value;
-  if (honey !== "") {
-    console.warn("Spam detectado");
-    return; // Detiene la ejecución si un bot llenó el campo oculto
-  }
-
-  // 2. Capturar valores
-  const name = document.getElementById('k2-name').value.trim();
-  const email = document.getElementById('k2-email').value.trim();
-  const city = document.getElementById('k2-city').value.trim();
-  const phone = document.getElementById('k2-phone').value.trim();
+  // Captura de valores por ID
+  const name = document.getElementById('k2-name').value;
+  const city = document.getElementById('k2-city').value;
+  const email = document.getElementById('k2-email').value;
+  const phone = document.getElementById('k2-phone').value;
   const type = document.getElementById('k2-type').value;
 
-  // 3. Validaciones de formato
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!name) {
-    alert("Por favor, dinos tu nombre.");
-    return;
-  }
-  if (!emailRegex.test(email)) {
-    alert("Por favor, introduce un correo electrónico válido.");
+  // Validación básica del email obligatorio
+  if (!email) {
+    alert("Por favor, introduce tu correo electrónico.");
     return;
   }
 
-  // 4. Envío de datos
   const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbwCNRCqioHrJOVEdKGayVEWTYB889V4aupiBpidTMHtaaJzphhcTQGtAEyXl95hDvYa/exec"; // Pega aquí la URL de la implementación
   const btn = document.querySelector('.k2-submit');
 
   try {
-    // Cambiamos el texto para dar feedback de carga
-    btn.textContent = "Enviando...";
-    btn.disabled = true;
-
-    await fetch(URL_APPS_SCRIPT, {
+    const response = await fetch(URL_APPS_SCRIPT, {
       method: "POST",
-      mode: "no-cors", 
+      mode: "no-cors", // Para evitar problemas de CORS en local
       body: JSON.stringify({ 
-        name, city, email, phone: phone || "No proporcionado", type 
+        name: name || "No proporcionado", 
+        city: city || "No proporcionado",  
+        email: email, 
+        phone: phone || "No proporcionado", // Valor por defecto si está vacío
+        type: type 
       })
     });
 
-    // Éxito
+    // Feedback visual
     btn.textContent = "✓ Enviado";
     btn.style.background = "#085041";
 
@@ -1177,22 +1303,67 @@ async function submitLead() {
       closeModal();
       btn.textContent = "Enviar solicitud";
       btn.style.background = "";
-      btn.disabled = false;
-      // Limpiar campos
-      document.getElementById('k2-name').value = "";
-      document.getElementById('k2-email').value = "";
-      document.getElementById('k2-city').value = "";
-      document.getElementById('k2-phone').value = "";
+      // Opcional: Limpiar formulario
+      document.querySelectorAll('.k2-form input').forEach(i => i.value = "");
     }, 2000);
 
   } catch (error) {
-    alert("Hubo un problema. Revisa tu conexión.");
-    btn.disabled = false;
-    btn.textContent = "Enviar solicitud";
+    alert("Error al enviar. Inténtalo de nuevo.");
+    console.error(error);
   }
 }
 
 
+// ── Crear kit ──
+function crearKit() {
+  const btn = document.getElementById('kitBtn');
+  const total = document.getElementById('kitTotal').textContent;
+  const nombre = document.querySelector('#tab-kit .form-title').textContent;
+
+  btn.textContent = '✓ Kit creado';
+  btn.style.background = '#085041';
+  btn.disabled = true;
+
+  // Remove previous confirm card if exists
+  const old = document.getElementById('kitConfirm');
+  if (old) old.remove();
+
+  const card = document.createElement('div');
+  card.id = 'kitConfirm';
+  card.className = 'kit-confirm';
+  card.style.cssText = 'margin-top:14px;padding:14px 18px;background:var(--green-50);border-radius:14px;border:1px solid var(--border);display:flex;align-items:center;gap:14px;';
+  card.innerHTML =
+    '<span style="font-size:28px;">📦</span>' +
+    '<div>' +
+      '<div style="font-family:Syne,sans-serif;font-weight:600;font-size:14px;color:var(--dark);">' + nombre + '</div>' +
+      '<div style="font-size:13px;color:var(--muted);margin-top:3px;">' + total + ' elementos · Listo para distribuir</div>' +
+      '<div style="font-size:12px;color:var(--teal);margin-top:4px;font-weight:500;">✓ Añadido a kits activos</div>' +
+    '</div>';
+  btn.insertAdjacentElement('afterend', card);
+
+  setTimeout(() => {
+    btn.textContent = 'Crear otro kit';
+    btn.style.background = '';
+    btn.disabled = false;
+  }, 2000);
+
+  btn.onclick = function() {
+    if (btn.textContent === 'Crear otro kit') {
+      // Reset quantities to defaults
+      const defaults = [12, 8, 15, 5, 10];
+      document.querySelectorAll('#tab-kit .qty-num').forEach((el, i) => {
+        el.textContent = defaults[i] !== undefined ? defaults[i] : 5;
+      });
+      updateKitTotal();
+      const c = document.getElementById('kitConfirm');
+      if (c) c.remove();
+      btn.textContent = 'Crear kit';
+      btn.onclick = crearKit;
+    } else {
+      crearKit();
+    }
+  };
+}
 
 
 
@@ -1287,7 +1458,8 @@ function changeQty(btn, delta) {
   qEl.textContent = val; updateKitTotal();
 }
 function updateKitTotal() {
-  const total = Array.from(document.querySelectorAll('.qty-num')).reduce((s,el) => s+parseInt(el.textContent), 0);
+  //const total = Array.from(document.querySelectorAll('.qty-num')).reduce((s,el) => s+parseInt(el.textContent), 0);
+  const total = Array.from(document.querySelectorAll('#tab-kit .qty-num')).reduce((s,el) => s+parseInt(el.textContent), 0);
   document.getElementById('kitTotal').textContent = total;
 }
 
