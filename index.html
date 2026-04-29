@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kit2Help — Ayuda cuando más se necesita</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -153,50 +154,6 @@
   @keyframes needPulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
   @keyframes markerBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
 
-
-
-  /* ── QUIÉNES SOMOS MODAL ── */
-  .qs-modal {
-    position:fixed; inset:0; z-index:500;
-    background:rgba(14,26,22,0.6); backdrop-filter:blur(8px);
-    display:none; align-items:center; justify-content:center; padding:20px;
-  }
-  .qs-modal.open { display:flex; }
-  .qs-box {
-    background:#fff; border-radius:24px; padding:36px;
-    max-width:420px; width:100%; position:relative;
-    box-shadow:0 32px 80px rgba(0,0,0,0.18);
-    animation:fadeUp 0.3s ease both;
-  }
-  .qs-close {
-    position:absolute; top:14px; right:18px;
-    background:none; border:none; font-size:20px;
-    cursor:pointer; color:var(--muted); line-height:1;
-  }
-  .qs-close:hover { color:var(--teal); }
-  .qs-avatar {
-    width:72px; height:72px; border-radius:50%;
-    background:var(--green-50); border:2px solid var(--border);
-    display:flex; align-items:center; justify-content:center;
-    font-size:32px; margin-bottom:16px;
-  }
-  .qs-name { font-family:'Syne',sans-serif; font-size:20px; font-weight:700; color:var(--dark); margin-bottom:4px; }
-  .qs-role { font-size:13px; color:var(--teal); font-weight:500; margin-bottom:16px; }
-  .qs-bio { font-size:14px; color:var(--muted); line-height:1.7; margin-bottom:20px; }
-  .qs-linkedin {
-    display:inline-flex; align-items:center; gap:8px;
-    background:#0A66C2; color:#fff; text-decoration:none;
-    border-radius:10px; padding:10px 18px; font-size:14px; font-weight:500;
-    font-family:'DM Sans',sans-serif; transition:background 0.18s, transform 0.12s;
-	  display: flex;
-  justify-content: center;
-  }
-  .qs-linkedin:hover { background:#084d93; transform:translateY(-1px); }
-  .qs-linkedin svg { width:16px; height:16px; fill:#fff; }
-
-  /* ── KIT confirm card animation ── */
-  @keyframes kitSlideIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-  .kit-confirm { animation:kitSlideIn 0.3s ease both; }
   /* ── HERO ── */
   #hero {
     min-height:100vh;
@@ -508,7 +465,7 @@
 
   /* Needs panel with pulsing bars */
   .needs-panel {
-    position:absolute; right:16px; top:16px; z-index:10;
+    position:absolute; right:16px; top:16px; z-index:10; pointer-events:none;
     background:rgba(14,26,22,0.92); backdrop-filter:blur(12px);
     border:1px solid rgba(255,255,255,0.1); border-radius:16px;
     padding:18px; width:220px;
@@ -601,6 +558,8 @@
   color: #fff;
   border-color: #0A66C2;
 }
+ 
+
   /* ── SCROLL REVEAL ── */
   .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity:1; transform:translateY(0); }
@@ -703,6 +662,78 @@
 	  background: var(--green-600);
 	}
 
+
+  /* ── QUIÉNES SOMOS MODAL ── */
+  .qs-modal {
+    position:fixed; inset:0; z-index:500;
+    background:rgba(14,26,22,0.6); backdrop-filter:blur(8px);
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .qs-modal.open { display:flex; }
+  .qs-box {
+    background:#fff; border-radius:24px; padding:36px;
+    max-width:420px; width:100%; position:relative;
+    box-shadow:0 32px 80px rgba(0,0,0,0.18);
+    animation:fadeUp 0.3s ease both;
+  }
+  .qs-close {
+    position:absolute; top:14px; right:18px;
+    background:none; border:none; font-size:20px;
+    cursor:pointer; color:var(--muted); line-height:1;
+  }
+  .qs-close:hover { color:var(--teal); }
+  .qs-avatar {
+    width:72px; height:72px; border-radius:50%;
+    background:var(--green-50); border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:32px; margin-bottom:16px;
+  }
+  .qs-name { font-family:'Syne',sans-serif; font-size:20px; font-weight:700; color:var(--dark); margin-bottom:4px; }
+  .qs-role { font-size:13px; color:var(--teal); font-weight:500; margin-bottom:16px; }
+  .qs-bio { font-size:14px; color:var(--muted); line-height:1.7; margin-bottom:20px; }
+  .qs-linkedin {
+       display:inline-flex; align-items:center; gap:8px;
+    background:#0A66C2; color:#fff; text-decoration:none;
+    border-radius:10px; padding:10px 18px; font-size:14px; font-weight:500;
+    font-family:'DM Sans',sans-serif; transition:background 0.18s, transform 0.12s;
+	  display: flex;
+  justify-content: center;
+  }
+  .qs-linkedin:hover { background:#084d93; transform:translateY(-1px); }
+  .qs-linkedin svg { width:16px; height:16px; fill:#fff; }
+
+  /* ── KIT confirm card animation ── */
+  @keyframes kitSlideIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .kit-confirm { animation:kitSlideIn 0.3s ease both; }
+
+
+  /* Filter OFF state */
+  .filter-btn:not(.active) {
+    opacity: 0.45;
+    text-decoration: line-through;
+    text-decoration-color: rgba(255,255,255,0.4);
+  }
+  .filter-btn:not(.active) .filter-dot {
+    opacity: 0.3;
+  }
+
+
+  /* Leaflet popup styling */
+  .k2-popup .leaflet-popup-content-wrapper {
+    background: #1A2820; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3); color: #fff; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; padding: 0;
+  }
+  .k2-popup .leaflet-popup-content { margin: 12px 16px; color: rgba(255,255,255,0.85); line-height: 1.6; }
+  .k2-popup .leaflet-popup-tip { background: #1A2820; }
+  .k2-popup .leaflet-popup-close-button { color: rgba(255,255,255,0.5) !important; }
+  /* needs-panel absolute relative to map container */
+  #liveMap .map-shell > div:nth-child(2) { position: relative; }
+  #liveMap .needs-panel { position: absolute; right: 16px; top: 16px; }
+  /* Filter off state */
+  .filter-btn:not(.active) { opacity: 0.4; text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.4); }
+  .filter-btn:not(.active) .filter-dot { opacity: 0.3; }
+
 </style>
 </head>
 <body>
@@ -719,7 +750,7 @@
     <a href="#demo">Demo</a>
     <a href="#liveMap">Impacto</a>
   </div>
-  <button class="nav-cta" onclick="abrirQuienesSomos();">¿Quiénes somos?</button>
+  <button class="nav-cta" onclick="abrirQuienesSomos()">¿Quiénes somos?</button>
   <div class="nav-hamburger" onclick="toggleMenu()" id="hamburger">
     <span></span><span></span><span></span>
   </div>
@@ -732,26 +763,6 @@
   <button class="mob-cta" onclick="abrirQuienesSomos();toggleMenu()">¿Quiénes somos?</button>
 </div>
 
-
-<!-- MODAL QUIÉNES SOMOS -->
-<div class="qs-modal" id="qsModal">
-  <div class="qs-box">
-    <button class="qs-close" onclick="cerrarQuienesSomos()">×</button>
-    <div class="qs-avatar">🤝</div>
-    <div class="qs-name">Sandra González Fortea </div> 
- 
-    <div class="qs-role">Fundadora &amp; Directora de Kit2Help</div>
-    <p class="qs-bio">       
-      Tras ver el caso de la DANA de Valencia en 2024, decidió crear Kit2Help 
-      para que ninguna comunidad volviera a quedarse sin coordinación cuando más lo necesita.    
-     <br> <br> | Donde surge la necesidad, empieza la acción	|  
-    </p>
-    <a class="qs-linkedin" href="https://www.linkedin.com/in/kit2help" target="_blank" rel="noopener" >
-     
-      Ver perfil en LinkedIn
-    </a>
-  </div>
-</div>
 <!-- HERO -->
 <div id="hero">
   <div class="hero-bg"></div>
@@ -1022,137 +1033,46 @@
     <p class="section-sub reveal reveal-delay-2">Visualiza en tiempo real dónde se concentran las necesidades, qué recursos están disponibles y cuántas personas han recibido ayuda.</p>
 
     <div class="map-shell reveal">
-      <div style="position:relative;height:clamp(280px,50vw,460px);background:#162019;overflow:hidden;">
 
-        <!-- Filters -->
-        <div class="map-filters">
-          <div class="filter-btn active" onclick="toggleFilter(this)"><div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
-          <div class="filter-btn active" onclick="toggleFilter(this)"><div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
-          <div class="filter-btn active" onclick="toggleFilter(this)"><div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
-          <div class="filter-btn active" onclick="toggleFilter(this)"><div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
+      <!-- Filter bar -->
+      <div id="mapFilterBar" style="display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;background:#243B2E;border-bottom:2px solid rgba(255,255,255,0.07);">
+        <div class="filter-btn active" data-layer="necesidades" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
+        <div class="filter-btn active" data-layer="kits"        onclick="toggleLayer(this)"><div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
+        <div class="filter-btn active" data-layer="voluntarios" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
+        <div class="filter-btn active" data-layer="puntos"      onclick="toggleLayer(this)"><div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
+        <div style="margin-left:auto;">
+          <button onclick="abrirMapaCompleto()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);border-radius:10px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:background 0.18s;" onmouseover="this.style.background='rgba(255,255,255,0.18)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">⛶ Ver mapa completo</button>
         </div>
+      </div>
 
-        <!-- Needs panel -->
-        <div class="needs-panel">
+      <!-- Leaflet map container -->
+      <div style="position:relative;overflow:hidden;background:#1A2820;">
+        <div id="mainMap" style="height:clamp(300px,45vw,440px);width:100%;z-index:1;"></div>
+
+        <!-- Needs panel overlay -->
+        <div class="needs-panel" style="z-index:10;">
           <div class="needs-title">Necesidades actuales</div>
           <div class="need-row">
             <div class="need-label"><span class="need-name">Agua potable</span><span class="need-pct" style="color:#E24B4A">Alta</span></div>
-            <div class="need-bar"><div class="need-fill pulse-red" id="need1" style="width:92%;background:#E24B4A"></div></div>
+            <div class="need-bar"><div class="need-fill pulse-red" style="width:92%;background:#E24B4A"></div></div>
           </div>
           <div class="need-row">
             <div class="need-label"><span class="need-name">Alimentos</span><span class="need-pct" style="color:#EF9F27">45%</span></div>
-            <div class="need-bar"><div class="need-fill pulse-orange" id="need2" style="width:45%;background:#EF9F27"></div></div>
+            <div class="need-bar"><div class="need-fill pulse-orange" style="width:45%;background:#EF9F27"></div></div>
           </div>
           <div class="need-row">
             <div class="need-label"><span class="need-name">Mantas</span><span class="need-pct" style="color:#5DCAA5">80%</span></div>
-            <div class="need-bar"><div class="need-fill pulse-green" id="need3" style="width:80%;background:#5DCAA5"></div></div>
+            <div class="need-bar"><div class="need-fill pulse-green" style="width:80%;background:#5DCAA5"></div></div>
           </div>
           <div class="need-row">
             <div class="need-label"><span class="need-name">Medicamentos</span><span class="need-pct" style="color:#E24B4A">Baja</span></div>
-            <div class="need-bar"><div class="need-fill pulse-red2" id="need4" style="width:20%;background:#E24B4A"></div></div>
+            <div class="need-bar"><div class="need-fill pulse-red2" style="width:20%;background:#E24B4A"></div></div>
           </div>
           <div class="need-row">
             <div class="need-label"><span class="need-name">Refugio</span><span class="need-pct" style="color:#EF9F27">Media</span></div>
-            <div class="need-bar"><div class="need-fill pulse-orange2" id="need5" style="width:58%;background:#EF9F27"></div></div>
+            <div class="need-bar"><div class="need-fill pulse-orange2" style="width:58%;background:#EF9F27"></div></div>
           </div>
-          <button class="btn-submit" style="margin-top:14px;font-size:13px;padding:10px">Ver mapa completo</button>
         </div>
-
-        <!-- FULL SVG map -->
-        <svg viewBox="0 0 900 460" style="width:100%;height:100%;position:absolute;inset:0;" xmlns="http://www.w3.org/2000/svg">
-          <rect width="900" height="460" fill="#162019"/>
-          <!-- district fills -->
-          <rect x="10" y="10" width="130" height="90" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="150" y="10" width="100" height="65" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="260" y="10" width="130" height="90" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="400" y="10" width="110" height="75" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="520" y="10" width="120" height="90" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="650" y="10" width="100" height="70" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="760" y="10" width="130" height="90" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="10" y="120" width="100" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="120" y="100" width="130" height="120" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="260" y="110" width="120" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="390" y="100" width="130" height="110" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="530" y="110" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="650" y="100" width="120" height="110" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="780" y="110" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="10" y="240" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="130" y="230" width="120" height="110" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="260" y="220" width="130" height="120" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="400" y="230" width="120" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="530" y="220" width="110" height="120" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="650" y="230" width="120" height="110" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="780" y="230" width="110" height="100" rx="5" fill="rgba(255,255,255,0.03)"/>
-          <rect x="10" y="360" width="880" height="90" rx="5" fill="rgba(255,255,255,0.02)"/>
-          <!-- grid streets -->
-          <g stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none">
-            <line x1="0" y1="100" x2="900" y2="100"/>
-            <line x1="0" y1="220" x2="900" y2="220"/>
-            <line x1="0" y1="350" x2="900" y2="350"/>
-            <line x1="140" y1="0" x2="140" y2="460"/>
-            <line x1="260" y1="0" x2="260" y2="460"/>
-            <line x1="395" y1="0" x2="395" y2="460"/>
-            <line x1="530" y1="0" x2="530" y2="460"/>
-            <line x1="650" y1="0" x2="650" y2="460"/>
-            <line x1="775" y1="0" x2="775" y2="460"/>
-          </g>
-          <!-- main avenues -->
-          <g stroke="rgba(255,255,255,0.13)" stroke-width="3" fill="none">
-            <line x1="0" y1="162" x2="900" y2="162"/>
-            <line x1="0" y1="290" x2="900" y2="290"/>
-            <line x1="320" y1="0" x2="320" y2="460"/>
-            <line x1="600" y1="0" x2="600" y2="460"/>
-          </g>
-          <!-- river Turia -->
-          <path d="M 0 420 Q 150 400 300 415 Q 450 430 600 408 Q 720 396 900 410" stroke="rgba(100,180,255,0.18)" stroke-width="10" fill="none"/>
-          <!-- heat zones -->
-          <circle cx="200" cy="160" r="80" fill="rgba(226,75,74,0.1)"/>
-          <circle cx="200" cy="160" r="50" fill="rgba(226,75,74,0.18)"/>
-          <circle cx="200" cy="160" r="25" fill="rgba(226,75,74,0.28)"/>
-          <circle cx="480" cy="270" r="65" fill="rgba(226,75,74,0.1)"/>
-          <circle cx="480" cy="270" r="38" fill="rgba(226,75,74,0.2)"/>
-          <circle cx="100" cy="300" r="50" fill="rgba(239,159,39,0.15)"/>
-          <circle cx="100" cy="300" r="28" fill="rgba(239,159,39,0.22)"/>
-          <circle cx="700" cy="180" r="40" fill="rgba(239,159,39,0.15)"/>
-          <!-- kit points -->
-          <circle cx="350" cy="90" r="13" fill="#1D9E75" opacity="0.95"/>
-          <text x="350" y="94.5" text-anchor="middle" fill="white" font-size="10" font-weight="bold">K</text>
-          <circle cx="570" cy="200" r="13" fill="#1D9E75" opacity="0.95"/>
-          <text x="570" y="204.5" text-anchor="middle" fill="white" font-size="10" font-weight="bold">K</text>
-          <circle cx="800" cy="300" r="13" fill="#1D9E75" opacity="0.95"/>
-          <text x="800" y="304.5" text-anchor="middle" fill="white" font-size="10" font-weight="bold">K</text>
-          <!-- volunteer checkpoints -->
-          <circle cx="280" cy="250" r="11" fill="#EF9F27" opacity="0.9"/>
-          <text x="280" y="254" text-anchor="middle" fill="white" font-size="9" font-weight="bold">V</text>
-          <circle cx="440" cy="140" r="11" fill="#EF9F27" opacity="0.9"/>
-          <text x="440" y="144" text-anchor="middle" fill="white" font-size="9" font-weight="bold">V</text>
-          <circle cx="660" cy="310" r="11" fill="#EF9F27" opacity="0.9"/>
-          <text x="660" y="314" text-anchor="middle" fill="white" font-size="9" font-weight="bold">V</text>
-          <!-- emergency markers -->
-          <circle cx="200" cy="160" r="9" fill="#E24B4A"/>
-          <text x="200" y="164" text-anchor="middle" fill="white" font-size="8" font-weight="bold">!</text>
-          <circle cx="480" cy="270" r="9" fill="#E24B4A"/>
-          <text x="480" y="274" text-anchor="middle" fill="white" font-size="8" font-weight="bold">!</text>
-          <circle cx="100" cy="300" r="9" fill="#E24B4A"/>
-          <text x="100" y="304" text-anchor="middle" fill="white" font-size="8" font-weight="bold">!</text>
-          <!-- PULSE RINGS — all emergencies -->
-          <circle cx="200" cy="160" r="22" fill="none" stroke="#E24B4A" stroke-width="1.5">
-            <animate attributeName="r" values="22;40;22" dur="2s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="480" cy="270" r="22" fill="none" stroke="#E24B4A" stroke-width="1.5">
-            <animate attributeName="r" values="22;40;22" dur="2.3s" begin="0.4s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.6;0;0.6" dur="2.3s" begin="0.4s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="100" cy="300" r="22" fill="none" stroke="#EF9F27" stroke-width="1.5">
-            <animate attributeName="r" values="22;38;22" dur="2.6s" begin="0.8s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.6;0;0.6" dur="2.6s" begin="0.8s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="700" cy="180" r="20" fill="none" stroke="#EF9F27" stroke-width="1.5">
-            <animate attributeName="r" values="20;35;20" dur="2.8s" begin="1.2s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.5;0;0.5" dur="2.8s" begin="1.2s" repeatCount="indefinite"/>
-          </circle>
-        </svg>
       </div>
 
       <!-- Stats bar -->
@@ -1163,6 +1083,37 @@
         <div class="map-stat"><span class="map-stat-num" id="livePoints">7</span><span class="map-stat-label">Puntos abiertos</span></div>
         <div class="map-live-badge"><div class="dot-pulse" style="width:8px;height:8px;"></div>Actualizando en tiempo real</div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MAPA COMPLETO -->
+<div id="mapaModal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(14,26,22,0.88);backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;">
+  <div style="background:#1A2820;border-radius:20px;width:100%;max-width:1000px;margin:0 auto;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.4);animation:fadeUp 0.3s ease both;">
+    <!-- header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(14,26,22,0.95);border-bottom:1px solid rgba(255,255,255,0.08);">
+      <div>
+        <div style="font-family:Syne,sans-serif;font-size:17px;font-weight:700;color:#fff;">Mapa completo · Valencia</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px;">OpenStreetMap · <span style="color:#5DCAA5;">● En vivo</span></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <!-- filters duplicated for modal -->
+        <div class="filter-btn active" data-layer="necesidades" data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
+        <div class="filter-btn active" data-layer="kits"        data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
+        <div class="filter-btn active" data-layer="voluntarios" data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
+        <div class="filter-btn active" data-layer="puntos"      data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
+        <button onclick="cerrarMapaCompleto()" style="background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.7);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;font-family:DM Sans,sans-serif;">✕</button>
+      </div>
+    </div>
+    <!-- full map -->
+    <div id="modalMap" style="height:520px;width:100%;"></div>
+    <!-- legend -->
+    <div style="padding:14px 20px;background:rgba(14,26,22,0.95);border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:20px;flex-wrap:wrap;align-items:center;">
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#E24B4A;"></span>Emergencia</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#1D9E75;"></span>Kit (K)</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#EF9F27;"></span>Voluntario (V)</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#B5D4F4;"></span>Punto recogida</div>
+      <div style="margin-left:auto;font-size:11px;color:rgba(255,255,255,0.35);">© OpenStreetMap contributors</div>
     </div>
   </div>
 </div>
@@ -1188,6 +1139,11 @@
     <p class="k2-sub">Déjanos tus datos y te contactamos cuando esté disponible.</p>
 
     <div class="k2-form">
+	
+	  <!-- Campo Honeypot (Trampa para bots) -->
+	<input type="text" id="k2-honeypot" style="display:none" tabindex="-1" autocomplete="off">
+
+
       <input type="text" id="k2-name" placeholder="Nombre">
       <input type="text" id="k2-city" placeholder="Ciudad">
       
@@ -1210,7 +1166,6 @@
     </div>
   </div>
 </div>
-
 
 
 <!-- FOOTER -->
@@ -1239,21 +1194,6 @@
 
 <script>
 
-
-// ── Quiénes somos modal ──
-function abrirQuienesSomos() {
-  document.getElementById('qsModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function cerrarQuienesSomos() {
-  document.getElementById('qsModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.addEventListener('click', function(e) {
-  const modal = document.getElementById('qsModal');
-  if (modal && e.target === modal) cerrarQuienesSomos();
-});
-
 // -- correo form contacto --
 
 function openModal() {
@@ -1266,36 +1206,50 @@ function closeModal() {
 
 
 async function submitLead() {
-  // Captura de valores por ID
-  const name = document.getElementById('k2-name').value;
-  const city = document.getElementById('k2-city').value;
-  const email = document.getElementById('k2-email').value;
-  const phone = document.getElementById('k2-phone').value;
+  // 1. Verificar Honeypot inmediatamente
+  const honey = document.getElementById('k2-honeypot').value;
+  if (honey !== "") {
+    console.warn("Spam detectado");
+    return; // Detiene la ejecución si un bot llenó el campo oculto
+  }
+
+  // 2. Capturar valores
+  const name = document.getElementById('k2-name').value.trim();
+  const email = document.getElementById('k2-email').value.trim();
+  const city = document.getElementById('k2-city').value.trim();
+  const phone = document.getElementById('k2-phone').value.trim();
   const type = document.getElementById('k2-type').value;
 
-  // Validación básica del email obligatorio
-  if (!email) {
-    alert("Por favor, introduce tu correo electrónico.");
+  // 3. Validaciones de formato
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!name) {
+    alert("Por favor, dinos tu nombre.");
+    return;
+  }
+  if (!emailRegex.test(email)) {
+    alert("Por favor, introduce un correo electrónico válido.");
     return;
   }
 
+  // 4. Envío de datos
   const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbwCNRCqioHrJOVEdKGayVEWTYB889V4aupiBpidTMHtaaJzphhcTQGtAEyXl95hDvYa/exec"; // Pega aquí la URL de la implementación
   const btn = document.querySelector('.k2-submit');
 
   try {
-    const response = await fetch(URL_APPS_SCRIPT, {
+    // Cambiamos el texto para dar feedback de carga
+    btn.textContent = "Enviando...";
+    btn.disabled = true;
+
+    await fetch(URL_APPS_SCRIPT, {
       method: "POST",
-      mode: "no-cors", // Para evitar problemas de CORS en local
+      mode: "no-cors", 
       body: JSON.stringify({ 
-        name: name || "No proporcionado", 
-        city: city || "No proporcionado",  
-        email: email, 
-        phone: phone || "No proporcionado", // Valor por defecto si está vacío
-        type: type 
+        name, city, email, phone: phone || "No proporcionado", type 
       })
     });
 
-    // Feedback visual
+    // Éxito
     btn.textContent = "✓ Enviado";
     btn.style.background = "#085041";
 
@@ -1303,67 +1257,22 @@ async function submitLead() {
       closeModal();
       btn.textContent = "Enviar solicitud";
       btn.style.background = "";
-      // Opcional: Limpiar formulario
-      document.querySelectorAll('.k2-form input').forEach(i => i.value = "");
+      btn.disabled = false;
+      // Limpiar campos
+      document.getElementById('k2-name').value = "";
+      document.getElementById('k2-email').value = "";
+      document.getElementById('k2-city').value = "";
+      document.getElementById('k2-phone').value = "";
     }, 2000);
 
   } catch (error) {
-    alert("Error al enviar. Inténtalo de nuevo.");
-    console.error(error);
+    alert("Hubo un problema. Revisa tu conexión.");
+    btn.disabled = false;
+    btn.textContent = "Enviar solicitud";
   }
 }
 
 
-// ── Crear kit ──
-function crearKit() {
-  const btn = document.getElementById('kitBtn');
-  const total = document.getElementById('kitTotal').textContent;
-  const nombre = document.querySelector('#tab-kit .form-title').textContent;
-
-  btn.textContent = '✓ Kit creado';
-  btn.style.background = '#085041';
-  btn.disabled = true;
-
-  // Remove previous confirm card if exists
-  const old = document.getElementById('kitConfirm');
-  if (old) old.remove();
-
-  const card = document.createElement('div');
-  card.id = 'kitConfirm';
-  card.className = 'kit-confirm';
-  card.style.cssText = 'margin-top:14px;padding:14px 18px;background:var(--green-50);border-radius:14px;border:1px solid var(--border);display:flex;align-items:center;gap:14px;';
-  card.innerHTML =
-    '<span style="font-size:28px;">📦</span>' +
-    '<div>' +
-      '<div style="font-family:Syne,sans-serif;font-weight:600;font-size:14px;color:var(--dark);">' + nombre + '</div>' +
-      '<div style="font-size:13px;color:var(--muted);margin-top:3px;">' + total + ' elementos · Listo para distribuir</div>' +
-      '<div style="font-size:12px;color:var(--teal);margin-top:4px;font-weight:500;">✓ Añadido a kits activos</div>' +
-    '</div>';
-  btn.insertAdjacentElement('afterend', card);
-
-  setTimeout(() => {
-    btn.textContent = 'Crear otro kit';
-    btn.style.background = '';
-    btn.disabled = false;
-  }, 2000);
-
-  btn.onclick = function() {
-    if (btn.textContent === 'Crear otro kit') {
-      // Reset quantities to defaults
-      const defaults = [12, 8, 15, 5, 10];
-      document.querySelectorAll('#tab-kit .qty-num').forEach((el, i) => {
-        el.textContent = defaults[i] !== undefined ? defaults[i] : 5;
-      });
-      updateKitTotal();
-      const c = document.getElementById('kitConfirm');
-      if (c) c.remove();
-      btn.textContent = 'Crear kit';
-      btn.onclick = crearKit;
-    } else {
-      crearKit();
-    }
-  };
-}
 
 
 
@@ -1422,21 +1331,58 @@ function selectPrio(el, level) {
   el.classList.add('active-'+level);
 }
 
-// ── Activate emergency → reveal new hot point on map ──
+// ── Activate emergency → add NEW hot point on map each time ──
+const _emergPositions = [
+  {cx:60,  cy:270, r:32}, {cx:360, cy:100, r:28}, {cx:200, cy:310, r:30},
+  {cx:310, cy:200, r:26}, {cx:80,  cy:120, r:28}, {cx:260, cy:330, r:24},
+  {cx:150, cy:360, r:26}, {cx:380, cy:280, r:30},
+];
+let _emergCount = 0;
+
 function activarEmergencia() {
   const btn = document.getElementById('emergBtn');
+  const svg = document.getElementById('emergSvg');
+
   btn.textContent = '✓ Emergencia activada';
   btn.style.background = '#085041';
-  // Show new SVG point
-  const np = document.getElementById('svgNewPoint');
-  if(np) np.style.opacity = '1';
-  // Zoom map slightly
-  const svg = document.getElementById('emergSvg');
-  if(svg) svg.style.transform = 'scale(1.08)';
+  btn.disabled = true;
+
+  // First activation: reveal the pre-built hidden point
+  if (_emergCount === 0) {
+    const np = document.getElementById('svgNewPoint');
+    if (np) np.style.opacity = '1';
+  }
+
+  // Every activation: inject a fresh SVG group at a new position
+  const pos = _emergPositions[_emergCount % _emergPositions.length];
+  _emergCount++;
+  const jitter = () => Math.round((Math.random() - 0.5) * 24);
+  const cx = pos.cx + (_emergCount > 1 ? jitter() : 0);
+  const cy = pos.cy + (_emergCount > 1 ? jitter() : 0);
+  const dur = (1.4 + Math.random() * 0.8).toFixed(1);
+
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.style.cssText = 'opacity:0;transition:opacity 0.5s;';
+  g.innerHTML =
+    '<circle cx="' + cx + '" cy="' + cy + '" r="' + pos.r + '" fill="rgba(226,75,74,0.16)"/>' +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="' + Math.round(pos.r * 0.5) + '" fill="rgba(226,75,74,0.26)"/>' +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="7" fill="#E24B4A"/>' +
+    '<text x="' + cx + '" y="' + (cy + 4) + '" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>' +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="18" fill="none" stroke="#E24B4A" stroke-width="1.5">' +
+      '<animate attributeName="r" values="18;34;18" dur="' + dur + 's" repeatCount="indefinite"/>' +
+      '<animate attributeName="opacity" values="0.7;0;0.7" dur="' + dur + 's" repeatCount="indefinite"/>' +
+    '</circle>';
+  svg.appendChild(g);
+  requestAnimationFrame(() => { g.style.opacity = '1'; });
+
+  svg.style.transform = 'scale(1.06)';
+  setTimeout(() => { svg.style.transform = 'scale(1)'; }, 700);
+
   setTimeout(() => {
     btn.textContent = 'Activar emergencia';
     btn.style.background = '';
-  }, 3000);
+    btn.disabled = false;
+  }, 2500);
 }
 
 // ── Chat ──
@@ -1458,13 +1404,11 @@ function changeQty(btn, delta) {
   qEl.textContent = val; updateKitTotal();
 }
 function updateKitTotal() {
-  //const total = Array.from(document.querySelectorAll('.qty-num')).reduce((s,el) => s+parseInt(el.textContent), 0);
   const total = Array.from(document.querySelectorAll('#tab-kit .qty-num')).reduce((s,el) => s+parseInt(el.textContent), 0);
   document.getElementById('kitTotal').textContent = total;
 }
 
-// ── Map filters ──
-function toggleFilter(el) { el.classList.toggle('active'); }
+// Map filter/modal handled by Leaflet script below
 
 // ── Live counters ──
 setInterval(() => {
@@ -1475,6 +1419,247 @@ setInterval(() => {
     }
   });
 }, 3200);
+
+// ── Crear kit ──
+function crearKit() {
+  const btn = document.getElementById('kitBtn');
+  const total = document.getElementById('kitTotal').textContent;
+  const nombre = document.querySelector('#tab-kit .form-title').textContent;
+
+  btn.textContent = '✓ Kit creado';
+  btn.style.background = '#085041';
+  btn.disabled = true;
+
+  // Remove previous confirm card if exists
+  const old = document.getElementById('kitConfirm');
+  if (old) old.remove();
+
+  const card = document.createElement('div');
+  card.id = 'kitConfirm';
+  card.className = 'kit-confirm';
+  card.style.cssText = 'margin-top:14px;padding:14px 18px;background:var(--green-50);border-radius:14px;border:1px solid var(--border);display:flex;align-items:center;gap:14px;';
+  card.innerHTML =
+    '<span style="font-size:28px;">📦</span>' +
+    '<div>' +
+      '<div style="font-family:Syne,sans-serif;font-weight:600;font-size:14px;color:var(--dark);">' + nombre + '</div>' +
+      '<div style="font-size:13px;color:var(--muted);margin-top:3px;">' + total + ' elementos · Listo para distribuir</div>' +
+      '<div style="font-size:12px;color:var(--teal);margin-top:4px;font-weight:500;">✓ Añadido a kits activos</div>' +
+    '</div>';
+  btn.insertAdjacentElement('afterend', card);
+
+  setTimeout(() => {
+    btn.textContent = 'Crear otro kit';
+    btn.style.background = '';
+    btn.disabled = false;
+  }, 2000);
+
+  btn.onclick = function() {
+    if (btn.textContent === 'Crear otro kit') {
+      // Reset quantities to defaults
+      const defaults = [12, 8, 15, 5, 10];
+      document.querySelectorAll('#tab-kit .qty-num').forEach((el, i) => {
+        el.textContent = defaults[i] !== undefined ? defaults[i] : 5;
+      });
+      updateKitTotal();
+      const c = document.getElementById('kitConfirm');
+      if (c) c.remove();
+      btn.textContent = 'Crear kit';
+      btn.onclick = crearKit;
+    } else {
+      crearKit();
+    }
+  };
+}
+
+// ── Quiénes somos modal ──
+function abrirQuienesSomos() {
+  document.getElementById('qsModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function cerrarQuienesSomos() {
+  document.getElementById('qsModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('qsModal');
+  if (modal && e.target === modal) cerrarQuienesSomos();
+});
+
+</script>
+
+<!-- MODAL QUIÉNES SOMOS -->
+<div class="qs-modal" id="qsModal">
+  <div class="qs-box">
+    <button class="qs-close" onclick="cerrarQuienesSomos()">×</button>
+    <div class="qs-avatar">👩‍💼</div>
+    <div class="qs-name">Sandra González</div>
+    <div class="qs-role">Fundadora &amp; Directora de Kit2Help</div>
+    <p class="qs-bio">
+      Sandra lleva más de 10 años trabajando en gestión de emergencias y acción humanitaria. 
+      Tras vivir de cerca la respuesta a la DANA de Valencia en 2024, decidió crear Kit2Help 
+      para que ninguna comunidad volviera a quedarse sin coordinación cuando más lo necesita. 
+      Combina experiencia en operaciones de campo con visión de producto digital.
+    </p>
+    <a class="qs-linkedin" href="https://www.linkedin.com/in/kit2help" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+      Ver perfil en LinkedIn
+    </a>
+  </div>
+</div>
+
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function() {
+// ── MARKER DATA ──
+var MARKERS = [
+  { lat:39.4699, lng:-0.3763, type:'necesidades', icon:'!', color:'#E24B4A', popup:'<b>🚨 Emergencia</b><br>Placa de lAjuntament<br><span style="color:#E24B4A">Prioridad: Alta</span>' },
+  { lat:39.4617, lng:-0.3854, type:'necesidades', icon:'!', color:'#E24B4A', popup:'<b>🚨 Inundacion</b><br>Barrio de Ruzafa<br><span style="color:#E24B4A">Prioridad: Alta</span>' },
+  { lat:39.4780, lng:-0.3680, type:'necesidades', icon:'!', color:'#EF9F27', popup:'<b>⚠️ Necesidad</b><br>Benimaclet<br><span style="color:#EF9F27">Prioridad: Media</span>' },
+  { lat:39.4560, lng:-0.3900, type:'necesidades', icon:'!', color:'#E24B4A', popup:'<b>🚨 Inundacion</b><br>Barrio de Orriols<br><span style="color:#E24B4A">Prioridad: Alta</span>' },
+  { lat:39.4720, lng:-0.3820, type:'kits', icon:'K', color:'#1D9E75', popup:'<b>📦 Kit de emergencia</b><br>Calle Colon, 23<br>25 kits disponibles' },
+  { lat:39.4650, lng:-0.3700, type:'kits', icon:'K', color:'#1D9E75', popup:'<b>📦 Kit familiar</b><br>C/ Xativa, 10<br>10 kits disponibles' },
+  { lat:39.4800, lng:-0.3750, type:'kits', icon:'K', color:'#1D9E75', popup:'<b>📦 Kit basico</b><br>Avda. del Cid, 5<br>15 kits disponibles' },
+  { lat:39.4690, lng:-0.3780, type:'voluntarios', icon:'V', color:'#EF9F27', popup:'<b>🤝 Checkpoint</b><br>Placa del Ayuntamiento<br>12 voluntarios activos' },
+  { lat:39.4740, lng:-0.3640, type:'voluntarios', icon:'V', color:'#EF9F27', popup:'<b>🤝 Checkpoint</b><br>Campus Blasco Ibanez<br>8 voluntarios activos' },
+  { lat:39.4580, lng:-0.3820, type:'voluntarios', icon:'V', color:'#EF9F27', popup:'<b>🤝 Checkpoint</b><br>Mercado Central<br>5 voluntarios activos' },
+  { lat:39.4705, lng:-0.3800, type:'puntos', icon:'P', color:'#7BAFD4', popup:'<b>📍 Punto de recogida</b><br>Calle Colon<br>Abierto: 8:00-20:00' },
+  { lat:39.4630, lng:-0.3730, type:'puntos', icon:'P', color:'#7BAFD4', popup:'<b>📍 Punto de recogida</b><br>Polideportivo Russafa<br>Abierto: 9:00-18:00' },
+  { lat:39.4760, lng:-0.3860, type:'puntos', icon:'P', color:'#7BAFD4', popup:'<b>📍 Punto de recogida</b><br>IES Benlliure<br>Abierto: 8:00-20:00' }
+];
+
+function makeIcon(color, icon, size) {
+  var s = size || 30;
+  var fs = Math.round(s * 0.42);
+  return L.divIcon({
+    className: '',
+    html: '<div style="width:' + s + 'px;height:' + s + 'px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;font-size:' + fs + 'px;font-weight:700;color:#fff;box-shadow:0 3px 10px rgba(0,0,0,0.35);border:2px solid rgba(255,255,255,0.35);">' + icon + '</div>',
+    iconSize: [s, s],
+    iconAnchor: [s/2, s/2],
+    popupAnchor: [0, -(s/2 + 4)]
+  });
+}
+
+var layerState = { necesidades:true, kits:true, voluntarios:true, puntos:true };
+var mainMap = null, modalMap = null;
+var mainLayers = {}, modalLayers = {};
+
+function buildLayers(map, layers, iconSize) {
+  ['necesidades','kits','voluntarios','puntos'].forEach(function(type) {
+    layers[type] = L.layerGroup();
+    MARKERS.filter(function(m){ return m.type === type; }).forEach(function(m) {
+      L.marker([m.lat, m.lng], { icon: makeIcon(m.color, m.icon, iconSize) })
+        .bindPopup(m.popup, { className: 'k2-popup', maxWidth: 220 })
+        .addTo(layers[type]);
+    });
+    if (layerState[type]) layers[type].addTo(map);
+  });
+}
+
+function initMainMap() {
+  if (mainMap) return;
+  mainMap = L.map('mainMap', {
+    zoomControl: true,
+    attributionControl: true,
+    scrollWheelZoom: false
+  }).setView([39.4699, -0.3763], 14);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(mainMap);
+
+  buildLayers(mainMap, mainLayers, 30);
+
+  // Fix Leaflet marker images path (needed in some CDN contexts)
+  delete L.Icon.Default.prototype._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
+  });
+}
+
+function initModalMap() {
+  if (modalMap) {
+    setTimeout(function(){ modalMap.invalidateSize(); }, 60);
+    return;
+  }
+  modalMap = L.map('modalMap', {
+    zoomControl: true,
+    attributionControl: true,
+    scrollWheelZoom: true
+  }).setView([39.4699, -0.3763], 14);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(modalMap);
+
+  buildLayers(modalMap, modalLayers, 34);
+
+  setTimeout(function(){ modalMap.invalidateSize(); }, 100);
+}
+
+window.toggleLayer = function(btn) {
+  var layer = btn.dataset.layer;
+  var isActive = btn.classList.toggle('active');
+  layerState[layer] = isActive;
+
+  // Sync all buttons with same data-layer
+  document.querySelectorAll('[data-layer="' + layer + '"]').forEach(function(b) {
+    b.classList.toggle('active', isActive);
+  });
+
+  [{ map: mainMap, layers: mainLayers }, { map: modalMap, layers: modalLayers }].forEach(function(pair) {
+    if (!pair.map || !pair.layers[layer]) return;
+    if (isActive) pair.layers[layer].addTo(pair.map);
+    else pair.map.removeLayer(pair.layers[layer]);
+  });
+};
+
+window.abrirMapaCompleto = function() {
+  var m = document.getElementById('mapaModal');
+  m.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  setTimeout(initModalMap, 120);
+};
+
+window.cerrarMapaCompleto = function() {
+  document.getElementById('mapaModal').style.display = 'none';
+  document.body.style.overflow = '';
+};
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') window.cerrarMapaCompleto();
+});
+
+var mapaModal = document.getElementById('mapaModal');
+if (mapaModal) {
+  mapaModal.addEventListener('click', function(e) {
+    if (e.target === mapaModal) window.cerrarMapaCompleto();
+  });
+}
+
+// Init main map on visibility
+var mapEl = document.getElementById('mainMap');
+if (mapEl) {
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { initMainMap(); obs.disconnect(); }
+      });
+    }, { threshold: 0.1 });
+    obs.observe(mapEl);
+  } else {
+    initMainMap();
+  }
+}
+
+})();
 </script>
 </body>
 </html>
