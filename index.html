@@ -13,7 +13,6 @@
     --green-200: #5DCAA5;
     --green-400: #1D9E75;
     --green-600: #0F6E56;
-	  
     --green-800: #085041;
     --green-900: #04342C;
     --teal: #1D9E75;
@@ -310,7 +309,7 @@
   .emergency-layout {
     display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start;
   }
-  @media(max-width:700px) { .emergency-layout { grid-template-columns:1fr; } }
+  /* emergency layout mobile handled below */
 
   .emergency-form {
     background:#fff; border-radius:20px; padding:24px;
@@ -319,6 +318,11 @@
   .emergency-map-col {
     background:#1A2820; border-radius:20px; overflow:hidden;
     position:relative; min-height:420px;
+  }
+  @media(max-width:700px) {
+    .emergency-map-col { min-height:200px; }
+    .emergency-layout { grid-template-columns:1fr; gap:12px; }
+    .demo-panel { padding:12px; }
   }
   .emap-header {
     position:absolute; top:12px; left:12px; right:12px; z-index:10;
@@ -522,7 +526,7 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 12px;
 }
 
 .footer-left {
@@ -537,6 +541,13 @@
 .footer-right {
   display: flex;
   align-items: center;
+}
+
+@media(max-width:600px) {
+  .footer { padding:20px 16px; }
+  .footer-inner { flex-direction:column; align-items:center; text-align:center; gap:14px; }
+  .footer-left { font-size:12px; }
+  .linkedin-btn { width:100%; justify-content:center; }
 }
 
 /* BOTÓN LINKEDIN */
@@ -734,6 +745,32 @@
   /* Filter off state */
   .filter-btn:not(.active) { opacity: 0.4; text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.4); }
   .filter-btn:not(.active) .filter-dot { opacity: 0.3; }
+
+
+  /* Ver mapa completo button */
+  .ver-mapa-btn {
+    background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+    color:rgba(255,255,255,0.8); border-radius:10px; padding:6px 14px;
+    font-size:12px; cursor:pointer; font-family:'DM Sans',sans-serif;
+    transition:background 0.18s; white-space:nowrap; flex-shrink:0;
+  }
+  .ver-mapa-btn:hover { background:rgba(255,255,255,0.18); }
+
+  @media(max-width:600px) {
+    /* Filter bar: chips top row, button second row */
+    #mapFilterBar > div {
+      flex-direction:column; align-items:flex-start; gap:8px;
+    }
+    .map-filter-chips { width:100%; }
+    .ver-mapa-btn { width:100%; text-align:center; }
+    .filter-btn { font-size:11px; padding:5px 10px; }
+
+    /* Stats bar: 2x2 grid on mobile */
+    .map-stats-bar {
+      display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px 16px;
+    }
+    .map-live-badge { grid-column:1/-1; justify-content:center; margin-left:0; }
+  }
 
 </style>
 </head>
@@ -1036,13 +1073,15 @@
     <div class="map-shell reveal">
 
       <!-- Filter bar -->
-      <div id="mapFilterBar" style="display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;background:#243B2E;border-bottom:2px solid rgba(255,255,255,0.07);">
-        <div class="filter-btn active" data-layer="necesidades" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
-        <div class="filter-btn active" data-layer="kits"        onclick="toggleLayer(this)"><div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
-        <div class="filter-btn active" data-layer="voluntarios" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
-        <div class="filter-btn active" data-layer="puntos"      onclick="toggleLayer(this)"><div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
-        <div style="margin-left:auto;">
-          <button onclick="abrirMapaCompleto()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);border-radius:10px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:background 0.18s;" onmouseover="this.style.background='rgba(255,255,255,0.18)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">⛶ Ver mapa completo</button>
+      <div id="mapFilterBar" style="background:#243B2E;border-bottom:2px solid rgba(255,255,255,0.07);padding:10px 14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+          <div class="map-filter-chips" style="display:flex;gap:6px;flex-wrap:wrap;">
+            <div class="filter-btn active" data-layer="necesidades" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
+            <div class="filter-btn active" data-layer="kits"        onclick="toggleLayer(this)"><div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
+            <div class="filter-btn active" data-layer="voluntarios" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
+            <div class="filter-btn active" data-layer="puntos"      onclick="toggleLayer(this)"><div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
+          </div>
+          <button onclick="abrirMapaCompleto()" class="ver-mapa-btn">⛶ Ver mapa completo</button>
         </div>
       </div>
 
@@ -1089,25 +1128,27 @@
 </div>
 
 <!-- MODAL MAPA COMPLETO -->
-<div id="mapaModal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(14,26,22,0.88);backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;">
-  <div style="background:#1A2820;border-radius:20px;width:100%;max-width:1000px;margin:0 auto;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.4);animation:fadeUp 0.3s ease both;">
-    <!-- header -->
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(14,26,22,0.95);border-bottom:1px solid rgba(255,255,255,0.08);">
-      <div>
-        <div style="font-family:Syne,sans-serif;font-size:17px;font-weight:700;color:#fff;">Mapa completo · Valencia</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px;">OpenStreetMap · <span style="color:#5DCAA5;">● En vivo</span></div>
+<div id="mapaModal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(14,26,22,0.88);backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;padding:clamp(0px,2vw,16px);overflow-y:auto;">
+  <div style="background:#1A2820;border-radius:16px;width:100%;max-width:1000px;margin:0 auto;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.4);animation:fadeUp 0.3s ease both;">
+    <!-- header — row 1: title + close -->
+    <div style="background:rgba(14,26,22,0.97);border-bottom:1px solid rgba(255,255,255,0.08);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;">
+        <div>
+          <div style="font-family:Syne,sans-serif;font-size:16px;font-weight:700;color:#fff;">Mapa completo · Valencia</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">OpenStreetMap · <span style="color:#5DCAA5;">● En vivo</span></div>
+        </div>
+        <button onclick="cerrarMapaCompleto()" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:13px;font-family:DM Sans,sans-serif;white-space:nowrap;flex-shrink:0;">✕ Cerrar</button>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <!-- filters duplicated for modal -->
+      <!-- header — row 2: filters -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;padding:8px 18px 12px;border-top:1px solid rgba(255,255,255,0.06);">
         <div class="filter-btn active" data-layer="necesidades" data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
         <div class="filter-btn active" data-layer="kits"        data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
         <div class="filter-btn active" data-layer="voluntarios" data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
         <div class="filter-btn active" data-layer="puntos"      data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
-        <button onclick="cerrarMapaCompleto()" style="background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.7);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;font-family:DM Sans,sans-serif;">✕</button>
       </div>
     </div>
     <!-- full map -->
-    <div id="modalMap" style="height:520px;width:100%;"></div>
+    <div id="modalMap" style="height:clamp(280px,55vw,520px);width:100%;"></div>
     <!-- legend -->
     <div style="padding:14px 20px;background:rgba(14,26,22,0.95);border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:20px;flex-wrap:wrap;align-items:center;">
       <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#E24B4A;"></span>Emergencia</div>
@@ -1493,12 +1534,13 @@ document.addEventListener('click', function(e) {
   <div class="qs-box">
     <button class="qs-close" onclick="cerrarQuienesSomos()">×</button>
     <div class="qs-avatar">👩‍💼</div>
-    <div class="qs-name">Sandra González Fortea</div>
+    <div class="qs-name">Sandra González</div>
     <div class="qs-role">Fundadora &amp; Directora de Kit2Help</div>
     <p class="qs-bio">
-      Tras ver el caso de la DANA de Valencia en 2024, decidió crear Kit2Help 
-      para que ninguna comunidad volviera a quedarse sin coordinación cuando más lo necesita.    
-     <br> <br> |🤝 Donde surge la necesidad, empieza la acción 🤝 |  
+      Sandra lleva más de 10 años trabajando en gestión de emergencias y acción humanitaria. 
+      Tras vivir de cerca la respuesta a la DANA de Valencia en 2024, decidió crear Kit2Help 
+      para que ninguna comunidad volviera a quedarse sin coordinación cuando más lo necesita. 
+      Combina experiencia en operaciones de campo con visión de producto digital.
     </p>
     <a class="qs-linkedin" href="https://www.linkedin.com/in/kit2help" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
