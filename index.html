@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PWJN89WB');</script>
-<!-- End Google Tag Manager -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kit2Help — Ayuda cuando más se necesita</title>
@@ -316,7 +309,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .emergency-layout {
     display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start;
   }
-  /* emergency layout mobile handled below */
+  @media(max-width:700px) { .emergency-layout { grid-template-columns:1fr; } }
 
   .emergency-form {
     background:#fff; border-radius:20px; padding:24px;
@@ -325,11 +318,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .emergency-map-col {
     background:#1A2820; border-radius:20px; overflow:hidden;
     position:relative; min-height:420px;
-  }
-  @media(max-width:700px) {
-    .emergency-map-col { min-height:200px; }
-    .emergency-layout { grid-template-columns:1fr; gap:12px; }
-    .demo-panel { padding:12px; }
   }
   .emap-header {
     position:absolute; top:12px; left:12px; right:12px; z-index:10;
@@ -533,7 +521,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
 }
 
 .footer-left {
@@ -548,13 +536,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 .footer-right {
   display: flex;
   align-items: center;
-}
-
-@media(max-width:600px) {
-  .footer { padding:20px 16px; }
-  .footer-inner { flex-direction:column; align-items:center; text-align:center; gap:14px; }
-  .footer-left { font-size:12px; }
-  .linkedin-btn { width:100%; justify-content:center; }
 }
 
 /* BOTÓN LINKEDIN */
@@ -754,38 +735,182 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .filter-btn:not(.active) .filter-dot { opacity: 0.3; }
 
 
-  /* Ver mapa completo button */
-  .ver-mapa-btn {
-    background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
-    color:rgba(255,255,255,0.8); border-radius:10px; padding:6px 14px;
-    font-size:12px; cursor:pointer; font-family:'DM Sans',sans-serif;
-    transition:background 0.18s; white-space:nowrap; flex-shrink:0;
+  /* ── COORDINATION PANEL ── */
+  .coord-panel {
+    display: flex; flex-direction: column; gap: 0;
+    background: #fff; border-radius: 20px;
+    border: 1px solid rgba(29,158,117,0.1);
+    overflow: hidden; min-height: 460px;
   }
-  .ver-mapa-btn:hover { background:rgba(255,255,255,0.18); }
+  .coord-header {
+    background: #F2F6F3; padding: 14px 20px;
+    border-bottom: 1px solid rgba(29,158,117,0.1);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .coord-header-title { font-family:'Syne',sans-serif; font-weight:600; font-size:15px; color:var(--dark); }
+  .coord-step-pills { display:flex; gap:6px; }
+  .coord-pill {
+    padding:4px 12px; border-radius:100px; font-size:11px; font-weight:500;
+    border:1px solid var(--border); background:#fff; color:var(--muted);
+    cursor:pointer; transition:all 0.18s; user-select:none;
+  }
+  .coord-pill.active { background:var(--teal); color:#fff; border-color:var(--teal); }
+  .coord-pill.done { background:var(--green-50); color:var(--green-600); border-color:var(--green-100); }
+
+  .coord-body { flex:1; padding:20px; display:flex; flex-direction:column; gap:14px; }
+
+  /* Step screens */
+  .coord-screen { display:none; flex-direction:column; gap:14px; }
+  .coord-screen.active { display:flex; }
+
+  /* Step 1 — detect */
+  .coord-alert-card {
+    background:rgba(226,75,74,0.06); border:1px solid rgba(226,75,74,0.2);
+    border-radius:14px; padding:16px; display:flex; gap:14px; align-items:flex-start;
+  }
+  .coord-alert-icon { font-size:28px; flex-shrink:0; }
+  .coord-alert-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:600; color:#C0392B; margin-bottom:4px; }
+  .coord-alert-body { font-size:13px; color:var(--muted); line-height:1.55; }
+  .coord-alert-meta { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+  .coord-tag {
+    font-size:11px; padding:3px 10px; border-radius:100px; font-weight:500;
+  }
+  .coord-tag-red { background:rgba(226,75,74,0.1); color:#C0392B; }
+  .coord-tag-orange { background:rgba(239,159,39,0.12); color:#9A5C00; }
+  .coord-tag-green { background:var(--green-50); color:var(--green-600); }
+
+  .coord-report-form {
+    background:var(--bg); border-radius:12px; padding:14px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .coord-report-label { font-size:12px; font-weight:500; color:var(--muted); }
+  .coord-report-select, .coord-report-input {
+    border:1px solid var(--border); border-radius:10px; padding:9px 12px;
+    font-family:'DM Sans',sans-serif; font-size:13px; color:var(--text);
+    background:#fff; outline:none; width:100%; transition:border-color 0.18s;
+  }
+  .coord-report-select:focus, .coord-report-input:focus { border-color:var(--teal); }
+  .coord-report-row { display:flex; gap:8px; }
+  .coord-report-row > * { flex:1; }
+
+  /* Step 2 — report sent */
+  .coord-sent-card {
+    background:var(--green-50); border:1px solid var(--green-100);
+    border-radius:14px; padding:16px;
+  }
+  .coord-sent-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:600; color:var(--green-600); margin-bottom:4px; }
+  .coord-sent-body { font-size:13px; color:var(--muted); line-height:1.55; }
+  .coord-sent-fields { margin-top:12px; display:flex; flex-direction:column; gap:6px; }
+  .coord-field-row { display:flex; justify-content:space-between; font-size:12px; }
+  .coord-field-key { color:var(--muted); }
+  .coord-field-val { font-weight:500; color:var(--dark); }
+
+  /* Step 3 — coord result */
+  .coord-aviso {
+    border-radius:12px; padding:14px 16px;
+    display:flex; gap:12px; align-items:flex-start;
+    border:1px solid transparent;
+  }
+  .coord-aviso-urgente { background:rgba(226,75,74,0.05); border-color:rgba(226,75,74,0.18); }
+  .coord-aviso-info    { background:rgba(29,158,117,0.05); border-color:rgba(29,158,117,0.15); }
+  .coord-aviso-recurso { background:rgba(239,159,39,0.05); border-color:rgba(239,159,39,0.18); }
+  .coord-aviso-icon { font-size:22px; flex-shrink:0; margin-top:1px; }
+  .coord-aviso-content { flex:1; }
+  .coord-aviso-label { font-size:10px; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; margin-bottom:4px; }
+  .coord-aviso-label-red { color:#C0392B; }
+  .coord-aviso-label-green { color:var(--teal); }
+  .coord-aviso-label-orange { color:#9A5C00; }
+  .coord-aviso-text { font-size:13px; color:var(--dark); line-height:1.55; }
+  .coord-aviso-time { font-size:11px; color:var(--muted); margin-top:4px; }
+
+  .coord-nav-row { display:flex; gap:8px; justify-content:flex-end; margin-top:4px; }
+  .coord-btn-next {
+    background:var(--teal); color:#fff; border:none; border-radius:10px;
+    padding:10px 20px; font-size:13px; font-weight:500; cursor:pointer;
+    font-family:'DM Sans',sans-serif; transition:background 0.18s, transform 0.12s;
+  }
+  .coord-btn-next:hover { background:var(--green-600); }
+  .coord-btn-next:active { transform:scale(0.97); }
+  .coord-btn-back {
+    background:transparent; color:var(--muted); border:1px solid rgba(0,0,0,0.12);
+    border-radius:10px; padding:10px 16px; font-size:13px; cursor:pointer;
+    font-family:'DM Sans',sans-serif; transition:all 0.18s;
+  }
+  .coord-btn-back:hover { border-color:var(--teal); color:var(--teal); }
+
+  .coord-progress {
+    height:3px; background:rgba(29,158,117,0.12); border-radius:0;
+  }
+  .coord-progress-bar {
+    height:100%; background:var(--teal); border-radius:0;
+    transition:width 0.4s ease;
+  }
 
   @media(max-width:600px) {
-    /* Filter bar: chips top row, button second row */
-    #mapFilterBar > div {
-      flex-direction:column; align-items:flex-start; gap:8px;
-    }
-    .map-filter-chips { width:100%; }
-    .ver-mapa-btn { width:100%; text-align:center; }
-    .filter-btn { font-size:11px; padding:5px 10px; }
+    .coord-step-pills { display:none; }
+    .coord-report-row { flex-direction:column; }
+  }
 
-    /* Stats bar: 2x2 grid on mobile */
-    .map-stats-bar {
-      display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px 16px;
-    }
-    .map-live-badge { grid-column:1/-1; justify-content:center; margin-left:0; }
+
+  /* ── USER REPORT CARD (appears at top of step 3) ── */
+  .coord-user-report {
+    background: #fff;
+    border: 2px solid var(--teal);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex; gap: 12px; align-items: flex-start;
+    animation: coordSlideIn 0.5s ease both;
+    position: relative;
+  }
+  .coord-user-report::before {
+    content: 'Tu reporte';
+    position: absolute; top: -10px; left: 14px;
+    background: var(--teal); color: #fff;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.6px;
+    padding: 2px 10px; border-radius: 100px;
+    text-transform: uppercase;
+  }
+  .coord-user-report-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  .coord-user-report-content { flex: 1; }
+  .coord-user-report-title {
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--dark); margin-bottom: 4px;
+  }
+  .coord-user-report-body { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .coord-user-report-meta {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;
+  }
+  .coord-processing-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; color: var(--teal); font-weight: 500; margin-top: 6px;
+  }
+  .coord-processing-dots::after {
+    content: '';
+    animation: processingDots 1.4s steps(4, end) infinite;
+  }
+  @keyframes processingDots {
+    0%   { content: ''; }
+    25%  { content: '.'; }
+    50%  { content: '..'; }
+    75%  { content: '...'; }
+    100% { content: ''; }
+  }
+  @keyframes coordSlideIn {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .coord-divider {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; color: var(--muted); text-transform: uppercase;
+    letter-spacing: 0.6px; font-weight: 500;
+  }
+  .coord-divider::before, .coord-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
   }
 
 </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PWJN89WB"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
 <!-- NAV -->
 <nav>
@@ -878,7 +1003,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p class="section-sub reveal reveal-delay-2">Una plataforma diseñada para actuar en los primeros minutos de una emergencia. Desde el aviso inicial hasta el kit entregado, todo coordinado en tiempo real.</p>
   <div class="features-grid">
     <div class="feature-card reveal"><div class="feature-icon">🚨</div><h3>Activar emergencia</h3><p>Cualquier persona puede activar una alerta geolocalizáda en segundos. Tipo, prioridad y descripción para que los recursos lleguen al lugar correcto.</p></div>
-    <div class="feature-card reveal reveal-delay-1"><div class="feature-icon">💬</div><h3>Chat comunitario</h3><p>Canal de comunicación abierto con fotos y mensajes en tiempo real. La comunidad coordina, informa y se apoya mutuamente.</p></div>
+    <div class="feature-card reveal reveal-delay-1"><div class="feature-icon">📋</div><h3>Canal de coordinación</h3><p>Actualizaciones claras y dirigidas desde el coordinador a quien las necesita. Sin ruido, sin mensajes perdidos. La información correcta, para la persona correcta, en el momento exacto.</p></div>
     <div class="feature-card reveal reveal-delay-2"><div class="feature-icon">📦</div><h3>Crear kits de ayuda</h3><p>Define qué contiene tu kit, cuántas unidades de cada elemento. Los voluntarios saben exactamente qué preparar y cuánto.</p></div>
     <div class="feature-card reveal"><div class="feature-icon">📍</div><h3>Añadir ubicaciones</h3><p>Marca puntos de recogida, checkpoints para voluntarios y zonas afectadas directamente en el mapa.</p></div>
     <div class="feature-card reveal reveal-delay-1"><div class="feature-icon">🗺️</div><h3>Mapa de necesidades</h3><p>Visualización en tiempo real de zonas calientes, necesidades urgentes y recursos disponibles con filtros.</p></div>
@@ -904,7 +1029,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <!-- tabs -->
       <div class="demo-tabs">
         <div class="demo-tab active" onclick="switchTab('emergencia')">🚨 Emergencia</div>
-        <div class="demo-tab" onclick="switchTab('chat')">💬 Chat</div>
+        <div class="demo-tab" onclick="switchTab('chat')">📋 Coordinación</div>
         <div class="demo-tab" onclick="switchTab('kit')">📦 Kit</div>
       </div>
       <!-- content -->
@@ -1034,23 +1159,119 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
 
-        <!-- TAB: CHAT -->
+        <!-- TAB: COORDINACIÓN -->
         <div class="demo-panel" id="tab-chat">
-          <div class="chat-wrap">
-            <div class="chat-header">
-              <span class="chat-header-title">Chat general</span>
-              <span class="online-badge"><div class="dot-pulse" style="width:6px;height:6px;"></div>&nbsp;345 en línea</span>
+          <div class="coord-panel">
+
+            <!-- header con pills de paso -->
+            <div class="coord-header">
+              <span class="coord-header-title">📋 Canal de coordinación</span>
+              <div class="coord-step-pills">
+                <div class="coord-pill active" id="pill-1" onclick="coordGoStep(1)">1 Detectar</div>
+                <div class="coord-pill" id="pill-2" onclick="coordGoStep(2)">2 Reportar</div>
+                <div class="coord-pill" id="pill-3" onclick="coordGoStep(3)">3 Coordinar</div>
+              </div>
             </div>
-            <div class="chat-messages" id="chatMsgs">
-              <div class="msg"><div class="avatar" style="background:#E1F5EE;color:#085041">LG</div><div class="bubble"><p>Necesitamos mantas en la zona de Ruzafa, muchas familias afectadas.</p><small>Laura G. · hace 2 min</small></div></div>
-              <div class="msg"><div class="avatar" style="background:#FAEEDA;color:#633806">CM</div><div class="bubble"><p>¿Alguien puede ayudar con agua potable en el centro?</p><small>Carlos M. · hace 5 min</small></div></div>
-              <div class="msg"><div class="avatar" style="background:#E6F1FB;color:#0C447C">AR</div><div class="bubble"><p>Punto de recogida disponible en Calle Colón 23, abierto hasta las 20h.</p><small>Ana R. · hace 8 min</small></div></div>
-            </div>
-            <div class="chat-input-row">
-              <input class="chat-input" id="chatInput" type="text" placeholder="Escribe un mensaje...">
-              <button class="chat-send" onclick="enviarMensaje()">→</button>
-            </div>
-          </div>
+
+            <!-- progress bar -->
+            <div class="coord-progress"><div class="coord-progress-bar" id="coordProgressBar" style="width:33%"></div></div>
+
+            <div class="coord-body">
+
+              <!-- PASO 1: usuario detecta emergencia -->
+              <div class="coord-screen active" id="coord-step-1">
+                <div style="font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Paso 1 de 3 · Detectar situación</div>
+                <div class="coord-alert-card">
+                  <div class="coord-alert-icon">🌊</div>
+                  <div>
+                    <div class="coord-alert-title">Alerta activa en tu zona</div>
+                    <div class="coord-alert-body">Se ha detectado una inundación en Ruzafa, Valencia. 3 zonas afectadas reportadas en los últimos 20 minutos.</div>
+                    <div class="coord-alert-meta">
+                      <span class="coord-tag coord-tag-red">🔴 Prioridad Alta</span>
+                      <span class="coord-tag coord-tag-orange">📍 Ruzafa, Valencia</span>
+                      <span class="coord-tag coord-tag-green">⏱ Hace 4 min</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="font-size:13px;color:var(--muted);line-height:1.6;padding:0 2px;">
+                  Ves agua en la calle y vecinos sin poder salir. Kit2Help ya tiene la alerta activa. Ahora puedes reportar lo que estás viendo directamente desde aquí.
+                </div>
+                <div class="coord-nav-row">
+                  <button class="coord-btn-next" onclick="coordGoStep(2)">Reportar lo que veo →</button>
+                </div>
+              </div>
+
+              <!-- PASO 2: reporta información estructurada -->
+              <div class="coord-screen" id="coord-step-2">
+                <div style="font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Paso 2 de 3 · Reportar información</div>
+                <div class="coord-report-form">
+                  <div class="coord-report-label">¿Qué estás viendo?</div>
+                  <select class="coord-report-select" id="coordTipo">
+                    <option value="necesidad" selected>Necesidad urgente</option>
+                    <option value="recurso">Recurso disponible</option>
+                    <option value="bloqueo">Acceso bloqueado</option>
+                    <option value="evacuacion">Evacuación necesaria</option>
+                  </select>
+                  <div class="coord-report-row">
+                    <div>
+                      <div class="coord-report-label">Zona</div>
+                      <input class="coord-report-input" id="coordZona" value="C/ Dénia, 14 — Ruzafa" />
+                    </div>
+                    <div>
+                      <div class="coord-report-label">Personas afectadas</div>
+                      <input class="coord-report-input" id="coordPersonas" type="number" value="8" min="1" />
+                    </div>
+                  </div>
+                  <div class="coord-report-label">Detalle (opcional)</div>
+                  <input class="coord-report-input" id="coordDetalle" placeholder="Familias en planta baja, sin acceso a escaleras..." value="Familias en planta baja, sin acceso a escaleras" />
+                </div>
+                <div class="coord-nav-row">
+                  <button class="coord-btn-back" onclick="coordGoStep(1)">← Volver</button>
+                  <button class="coord-btn-next" onclick="coordEnviarReporte()">Enviar reporte →</button>
+                </div>
+              </div>
+
+              <!-- PASO 3: ve información coordinada resultante -->
+              <div class="coord-screen" id="coord-step-3">
+                <div style="font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Paso 3 de 3 · Panel coordinado</div>
+
+                <!-- User report injected here by JS -->
+                <div id="coordUserReportSlot"></div>
+
+                <div class="coord-aviso coord-aviso-urgente">
+                  <div class="coord-aviso-icon">🚨</div>
+                  <div class="coord-aviso-content">
+                    <div class="coord-aviso-label coord-aviso-label-red">Acción urgente</div>
+                    <div class="coord-aviso-text">8 personas atrapadas en C/ Dénia, 14. Se necesitan voluntarios con barca o acceso elevado. Coordinador asignado: Miguel R.</div>
+                    <div class="coord-aviso-time">Publicado hace 30 seg · procesado por coordinación</div>
+                  </div>
+                </div>
+
+                <div class="coord-aviso coord-aviso-recurso">
+                  <div class="coord-aviso-icon">📦</div>
+                  <div class="coord-aviso-content">
+                    <div class="coord-aviso-label coord-aviso-label-orange">Recurso asignado</div>
+                    <div class="coord-aviso-text">Kit de emergencia básico (×8) enviado desde Punto Colón. ETA estimada: 12 minutos.</div>
+                    <div class="coord-aviso-time">Hace 1 min · actualización automática</div>
+                  </div>
+                </div>
+
+                <div class="coord-aviso coord-aviso-info">
+                  <div class="coord-aviso-icon">✅</div>
+                  <div class="coord-aviso-content">
+                    <div class="coord-aviso-label coord-aviso-label-green">Aviso verificado</div>
+                    <div class="coord-aviso-text">Zona C/ Dénia confirmada en mapa. Voluntarios de Checkpoint Russafa redirigidos. Sin duplicados con otros reportes activos.</div>
+                    <div class="coord-aviso-time">Hace 2 min · triado por coordinación</div>
+                  </div>
+                </div>
+
+                <div class="coord-nav-row">
+                  <button class="coord-btn-back" onclick="coordGoStep(1)" style="font-size:12px;padding:8px 14px;">↺ Reiniciar demo</button>
+                </div>
+              </div>
+
+            </div><!-- /coord-body -->
+          </div><!-- /coord-panel -->
         </div>
 
         <!-- TAB: KIT -->
@@ -1084,15 +1305,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="map-shell reveal">
 
       <!-- Filter bar -->
-      <div id="mapFilterBar" style="background:#243B2E;border-bottom:2px solid rgba(255,255,255,0.07);padding:10px 14px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
-          <div class="map-filter-chips" style="display:flex;gap:6px;flex-wrap:wrap;">
-            <div class="filter-btn active" data-layer="necesidades" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
-            <div class="filter-btn active" data-layer="kits"        onclick="toggleLayer(this)"><div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
-            <div class="filter-btn active" data-layer="voluntarios" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
-            <div class="filter-btn active" data-layer="puntos"      onclick="toggleLayer(this)"><div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
-          </div>
-          <button onclick="abrirMapaCompleto()" class="ver-mapa-btn">⛶ Ver mapa completo</button>
+      <div id="mapFilterBar" style="display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;background:#243B2E;border-bottom:2px solid rgba(255,255,255,0.07);">
+        <div class="filter-btn active" data-layer="necesidades" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
+        <div class="filter-btn active" data-layer="kits"        onclick="toggleLayer(this)"><div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
+        <div class="filter-btn active" data-layer="voluntarios" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
+        <div class="filter-btn active" data-layer="puntos"      onclick="toggleLayer(this)"><div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
+        <div style="margin-left:auto;">
+          <button onclick="abrirMapaCompleto()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);border-radius:10px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:background 0.18s;" onmouseover="this.style.background='rgba(255,255,255,0.18)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">⛶ Ver mapa completo</button>
         </div>
       </div>
 
@@ -1139,27 +1358,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <!-- MODAL MAPA COMPLETO -->
-<div id="mapaModal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(14,26,22,0.88);backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;padding:clamp(0px,2vw,16px);overflow-y:auto;">
-  <div style="background:#1A2820;border-radius:16px;width:100%;max-width:1000px;margin:0 auto;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.4);animation:fadeUp 0.3s ease both;">
-    <!-- header — row 1: title + close -->
-    <div style="background:rgba(14,26,22,0.97);border-bottom:1px solid rgba(255,255,255,0.08);">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;">
-        <div>
-          <div style="font-family:Syne,sans-serif;font-size:16px;font-weight:700;color:#fff;">Mapa completo · Valencia</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">OpenStreetMap · <span style="color:#5DCAA5;">● En vivo</span></div>
-        </div>
-        <button onclick="cerrarMapaCompleto()" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:13px;font-family:DM Sans,sans-serif;white-space:nowrap;flex-shrink:0;">✕ Cerrar</button>
+<div id="mapaModal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(14,26,22,0.88);backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;">
+  <div style="background:#1A2820;border-radius:20px;width:100%;max-width:1000px;margin:0 auto;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.4);animation:fadeUp 0.3s ease both;">
+    <!-- header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(14,26,22,0.95);border-bottom:1px solid rgba(255,255,255,0.08);">
+      <div>
+        <div style="font-family:Syne,sans-serif;font-size:17px;font-weight:700;color:#fff;">Mapa completo · Valencia</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px;">OpenStreetMap · <span style="color:#5DCAA5;">● En vivo</span></div>
       </div>
-      <!-- header — row 2: filters -->
-      <div style="display:flex;gap:6px;flex-wrap:wrap;padding:8px 18px 12px;border-top:1px solid rgba(255,255,255,0.06);">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <!-- filters duplicated for modal -->
         <div class="filter-btn active" data-layer="necesidades" data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
         <div class="filter-btn active" data-layer="kits"        data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
         <div class="filter-btn active" data-layer="voluntarios" data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
         <div class="filter-btn active" data-layer="puntos"      data-modal="1" onclick="toggleLayer(this)"><div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
+        <button onclick="cerrarMapaCompleto()" style="background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.7);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;font-family:DM Sans,sans-serif;">✕</button>
       </div>
     </div>
     <!-- full map -->
-    <div id="modalMap" style="height:clamp(280px,55vw,520px);width:100%;"></div>
+    <div id="modalMap" style="height:520px;width:100%;"></div>
     <!-- legend -->
     <div style="padding:14px 20px;background:rgba(14,26,22,0.95);border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:20px;flex-wrap:wrap;align-items:center;">
       <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#E24B4A;"></span>Emergencia</div>
@@ -1537,6 +1754,114 @@ document.addEventListener('click', function(e) {
   const modal = document.getElementById('qsModal');
   if (modal && e.target === modal) cerrarQuienesSomos();
 });
+
+
+// ── Coordination panel navigation ──
+function coordGoStep(step) {
+  // On restart (back to step 1), clear the injected report
+  if (step === 1) {
+    var slot = document.getElementById('coordUserReportSlot');
+    if (slot) slot.innerHTML = '';
+  }
+  [1,2,3].forEach(function(i) {
+    var screen = document.getElementById('coord-step-' + i);
+    var pill   = document.getElementById('pill-' + i);
+    if (!screen || !pill) return;
+    screen.classList.toggle('active', i === step);
+    pill.classList.remove('active','done');
+    if (i === step)  pill.classList.add('active');
+    if (i < step)    pill.classList.add('done');
+  });
+  var pct = { 1:'33%', 2:'66%', 3:'100%' }[step] || '33%';
+  var bar = document.getElementById('coordProgressBar');
+  if (bar) bar.style.width = pct;
+}
+
+function coordEnviarReporte() {
+  var btn = document.querySelector('#coord-step-2 .coord-btn-next');
+
+  // Read form values
+  var tipoEl    = document.getElementById('coordTipo');
+  var zonaEl    = document.getElementById('coordZona');
+  var personasEl= document.getElementById('coordPersonas');
+  var detalleEl = document.getElementById('coordDetalle');
+
+  var tipoLabels = {
+    'necesidad':  'Necesidad urgente',
+    'recurso':    'Recurso disponible',
+    'bloqueo':    'Acceso bloqueado',
+    'evacuacion': 'Evacuación necesaria'
+  };
+  var tipoIconos = {
+    'necesidad':  '🆘',
+    'recurso':    '📦',
+    'bloqueo':    '🚧',
+    'evacuacion': '🏃'
+  };
+
+  var tipo     = tipoEl     ? tipoEl.value     : 'necesidad';
+  var zona     = zonaEl     ? zonaEl.value     : 'Zona desconocida';
+  var personas = personasEl ? personasEl.value : '?';
+  var detalle  = detalleEl  ? detalleEl.value  : '';
+  var icono    = tipoIconos[tipo] || '📋';
+  var label    = tipoLabels[tipo] || tipo;
+
+  // Button feedback
+  if (btn) {
+    btn.textContent = '✓ Enviando...';
+    btn.disabled = true;
+    btn.style.background = '#085041';
+  }
+
+  setTimeout(function() {
+    if (btn) {
+      btn.textContent = 'Enviar reporte →';
+      btn.style.background = '';
+      btn.disabled = false;
+    }
+
+    // Build the user-report card for step 3
+    var slot = document.getElementById('coordUserReportSlot');
+    if (slot) {
+      var now = new Date();
+      var timeStr = 'Hace unos segundos';
+
+      var metaHtml = '<span class="coord-tag coord-tag-orange">' + zona + '</span>';
+      if (personas) metaHtml += ' <span class="coord-tag coord-tag-red">👥 ' + personas + ' personas</span>';
+
+      slot.innerHTML =
+        '<div class="coord-user-report">' +
+          '<div class="coord-user-report-icon">' + icono + '</div>' +
+          '<div class="coord-user-report-content">' +
+            '<div class="coord-user-report-title">' + label + '</div>' +
+            '<div class="coord-user-report-body">' + (detalle || zona) + '</div>' +
+            '<div class="coord-user-report-meta">' + metaHtml + '</div>' +
+            '<div class="coord-processing-badge">' +
+              '<div class="dot-pulse" style="width:6px;height:6px;background:var(--teal);"></div>' +
+              'Procesando por coordinación<span class="coord-processing-dots"></span>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="coord-divider">Respuesta del coordinador</div>';
+
+      // After 2s replace the "processing" badge with "processed"
+      setTimeout(function() {
+        var badge = slot.querySelector('.coord-processing-badge');
+        if (badge) {
+          badge.innerHTML = '<span style="color:var(--teal);">✓</span> Triado y publicado en el canal';
+          badge.style.color = 'var(--teal)';
+        }
+      }, 2000);
+    }
+
+    coordGoStep(3);
+
+    // Scroll step-3 to top to show the user report
+    var step3 = document.getElementById('coord-step-3');
+    if (step3) step3.scrollTop = 0;
+
+  }, 800);
+}
 
 </script>
 
