@@ -1070,157 +1070,287 @@
             content: ''; flex: 1; height: 1px; background: var(--border);
           }
     
-/* ══════════════════════════════════════════════
-   DEMO v2 — 5 funcionalidades
-══════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   DEMO — 5 funcionalidades (mobile-first)
+═══════════════════════════════════════════ */
 
-/* Step indicator strip above tabs */
+/* Step strip */
 .demo-steps {
-  display:flex; background:#1C2D24; border-bottom:1px solid rgba(255,255,255,0.06);
-  padding:0 4px; overflow-x:auto; scrollbar-width:none;
+  display:flex; background:#1C2D24;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  overflow-x:auto; scrollbar-width:none;
 }
-.demo-steps::-webkit-scrollbar{display:none;}
+.demo-steps::-webkit-scrollbar { display:none; }
 .demo-step {
-  flex:1; min-width:80px; display:flex; flex-direction:column; align-items:center;
-  padding:10px 6px 9px; cursor:pointer; border-bottom:3px solid transparent;
-  transition:all 0.18s; color:rgba(255,255,255,0.38); font-family:'DM Sans',sans-serif;
-  user-select:none; gap:3px; font-size:11px; font-weight:500; white-space:nowrap;
+  flex:1; min-width:60px; display:flex; flex-direction:column;
+  align-items:center; padding:9px 4px 8px; cursor:pointer;
+  border-bottom:3px solid transparent; transition:all 0.18s;
+  color:rgba(255,255,255,0.38); font-family:'DM Sans',sans-serif;
+  font-size:11px; font-weight:500; gap:3px; user-select:none; white-space:nowrap;
 }
 .demo-step .ds-num {
-  width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.1);
-  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
-  transition:all 0.18s;
+  width:20px; height:20px; border-radius:50%;
+  background:rgba(255,255,255,0.1);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; font-weight:700; transition:all 0.18s; flex-shrink:0;
 }
 .demo-step.active { color:#5DCAA5; border-bottom-color:#5DCAA5; }
 .demo-step.active .ds-num { background:#5DCAA5; color:#0E1A16; }
-.demo-step.done { color:rgba(255,255,255,0.55); }
-.demo-step.done .ds-num { background:rgba(93,202,165,0.25); color:#5DCAA5; }
-.demo-step:hover:not(.active) { color:rgba(255,255,255,0.75); }
+.demo-step.done { color:rgba(255,255,255,0.5); }
+.demo-step.done .ds-num { background:rgba(93,202,165,0.2); color:#5DCAA5; }
 
 /* Panel base */
-.demo-panel { display:none; padding:20px; animation:fadeUp 0.25s ease both; }
+.demo-panel { display:none; padding:16px; animation:fadeUp 0.22s ease both; }
 .demo-panel.active { display:block; }
 
-/* ── TAB 1: Activar Necesidad ── */
-.nec-layout { display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
-.nec-form { background:#fff; border-radius:18px; padding:20px; border:1px solid rgba(29,158,117,0.1); }
-.nec-map { background:#1A2820; border-radius:18px; overflow:hidden; position:relative; min-height:380px; }
-.nec-preview { background:#fff; border-radius:18px; padding:18px; border:1px solid rgba(29,158,117,0.1); display:none; }
-.nec-preview.visible { display:block; animation:fadeUp 0.3s ease both; }
-.nec-badge {
-  display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;
-  padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:0.5px;
+/* ── Shared form elements ── */
+.d-form-group { margin-bottom:14px; }
+.d-form-group label {
+  font-size:12px; font-weight:500; color:var(--muted);
+  display:block; margin-bottom:6px;
 }
-.nec-badge-pend { background:#FEF5EC;color:#9A5C00;border:1px solid #F5CBA7; }
-.nec-badge-ok   { background:#EAFAF1;color:#1D6A3A;border:1px solid #A9DFBF; }
-.nec-badge-urg  { background:#FDEDEC;color:#922B21;border:1px solid #F1948A; }
-.nec-summary { margin-top:12px;display:flex;flex-direction:column;gap:8px; }
-.nec-row { display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid var(--border); }
-.nec-row:last-child{border-bottom:none;}
-.nec-key{color:var(--muted);}
-.nec-val{font-weight:500;color:var(--dark);text-align:right;}
+.d-input, .d-select, .d-textarea {
+  width:100%; border:1px solid rgba(29,158,117,0.15); border-radius:10px;
+  padding:10px 12px; font-family:'DM Sans',sans-serif; font-size:13px;
+  color:var(--text); background:#fff; outline:none; transition:border-color 0.18s;
+}
+.d-input:focus, .d-select:focus, .d-textarea:focus { border-color:var(--teal); }
+.d-textarea { resize:none; }
+.d-btn-primary {
+  width:100%; padding:12px; border-radius:12px; background:var(--teal);
+  color:#fff; border:none; font-size:14px; font-weight:500; cursor:pointer;
+  font-family:'DM Sans',sans-serif; transition:background 0.18s, transform 0.1s;
+}
+.d-btn-primary:hover { background:var(--green-600); }
+.d-btn-primary:active { transform:scale(0.98); }
+.d-btn-primary:disabled { background:var(--muted); cursor:default; }
+.d-btn-next {
+  display:flex; align-items:center; justify-content:flex-end; margin-top:12px;
+}
+.d-btn-next button {
+  background:transparent; border:1px solid var(--teal); color:var(--teal);
+  border-radius:10px; padding:8px 18px; font-size:12px; font-weight:500;
+  cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.18s;
+}
+.d-btn-next button:hover { background:var(--teal); color:#fff; }
 
-/* ── TAB 2: Panel de validación ── */
-.val-list { display:flex;flex-direction:column;gap:10px; }
+/* ── Panel title ── */
+.d-panel-title {
+  font-family:'Syne',sans-serif; font-size:15px; font-weight:600;
+  color:var(--dark); margin-bottom:4px;
+}
+.d-panel-sub { font-size:12px; color:var(--muted); margin-bottom:14px; }
+
+/* ── Badges ── */
+.d-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:10px; font-weight:600; padding:3px 9px; border-radius:100px;
+  text-transform:uppercase; letter-spacing:0.4px; white-space:nowrap;
+}
+.d-badge-pend   { background:#FEF5EC; color:#9A5C00; border:1px solid #F5CBA7; }
+.d-badge-ok     { background:#EAFAF1; color:#1D6A3A; border:1px solid #A9DFBF; }
+.d-badge-urg    { background:#FDEDEC; color:#922B21; border:1px solid #F1948A; }
+.d-badge-info   { background:#EEF2FF; color:#3949AB; border:1px solid #9FA8DA; }
+
+/* ══════════════════════════════
+   TAB 1 — Activar necesidad
+══════════════════════════════ */
+.nec-layout { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.nec-form { background:#fff; border-radius:16px; padding:18px; border:1px solid rgba(29,158,117,0.1); }
+.nec-map-col { display:flex; flex-direction:column; gap:12px; }
+.nec-map-box {
+  background:#1A2820; border-radius:16px; overflow:hidden;
+  position:relative; min-height:220px; flex:1;
+}
+.nec-confirm {
+  display:none; background:#fff; border-radius:14px; padding:16px;
+  border:1px solid rgba(29,158,117,0.12); animation:fadeUp 0.3s ease both;
+}
+.nec-confirm.visible { display:block; }
+.nec-summary-row {
+  display:flex; justify-content:space-between; font-size:12px;
+  padding:6px 0; border-bottom:1px solid var(--border);
+}
+.nec-summary-row:last-child { border-bottom:none; }
+
+/* ══════════════════════════════
+   TAB 2 — Validación / Triaje
+══════════════════════════════ */
+.val-filters {
+  display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px;
+}
+.val-filter-btn {
+  padding:5px 12px; border-radius:100px; font-size:12px; font-weight:500;
+  border:1px solid var(--border); background:#fff; color:var(--muted);
+  cursor:pointer; transition:all 0.15s; font-family:'DM Sans',sans-serif;
+}
+.val-filter-btn.active {
+  background:var(--teal); color:#fff; border-color:var(--teal);
+}
+.val-list { display:flex; flex-direction:column; gap:10px; }
 .val-card {
-  background:#fff;border-radius:14px;border:1px solid var(--border);
-  overflow:hidden;transition:box-shadow 0.18s;
+  background:#fff; border-radius:14px; border:1px solid var(--border);
+  overflow:hidden; transition:box-shadow 0.18s;
 }
-.val-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.07);}
-.val-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;}
-.val-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.val-info{flex:1;min-width:0;}
-.val-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--dark);}
-.val-meta{font-size:11px;color:var(--muted);margin-top:2px;}
-.val-actions{display:flex;gap:6px;flex-shrink:0;}
-.val-btn{padding:6px 12px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
-.val-btn-ok{background:#EAFAF1;color:#1D6A3A;}
-.val-btn-ok:hover{background:#A9DFBF;}
-.val-btn-rej{background:#FDEDEC;color:#922B21;}
-.val-btn-rej:hover{background:#F1948A;}
-.val-btn-more{background:var(--bg);color:var(--muted);border:1px solid var(--border)!important;}
-.val-expand{display:none;padding:10px 14px 14px;border-top:1px solid var(--border);background:var(--bg);}
-.val-expand.open{display:block;animation:fadeUp 0.2s ease both;}
-.val-expand-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
-.val-field{font-size:12px;color:var(--muted);}
-.val-field span{display:block;color:var(--dark);font-weight:500;margin-top:2px;}
-.val-done-msg{display:none;font-size:12px;font-weight:500;padding:6px 10px;border-radius:8px;margin-top:4px;}
-
-/* ── TAB 3: Muro de coordinación ── */
-.muro-layout{display:grid;grid-template-columns:200px 1fr;gap:14px;}
-.muro-sidebar{display:flex;flex-direction:column;gap:8px;}
-.muro-filter-btn{
-  display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;
-  border:1px solid var(--border);background:#fff;cursor:pointer;font-size:13px;
-  font-family:'DM Sans',sans-serif;transition:all 0.15s;color:var(--text);width:100%;text-align:left;
+/* The key mobile fix: header stacks icon+info on top, actions below */
+.val-header {
+  display:flex; flex-direction:column; gap:10px; padding:12px 14px; cursor:pointer;
 }
-.muro-filter-btn.active{background:var(--green-50);border-color:var(--teal);color:var(--teal);font-weight:500;}
-.muro-filter-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.muro-feed{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto;padding-right:4px;}
-.muro-feed::-webkit-scrollbar{width:4px;}
-.muro-feed::-webkit-scrollbar-track{background:transparent;}
-.muro-feed::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-.muro-item{background:#fff;border-radius:14px;border:1px solid var(--border);padding:14px;display:flex;gap:12px;align-items:flex-start;transition:border-color 0.15s;}
-.muro-item:hover{border-color:rgba(29,158,117,0.25);}
-.muro-item.hidden{display:none;}
-.muro-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
-.muro-content{flex:1;min-width:0;}
-.muro-item-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;}
-.muro-item-body{font-size:12px;color:var(--muted);line-height:1.55;}
-.muro-item-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;flex-wrap:wrap;gap:4px;}
-.muro-item-time{font-size:11px;color:var(--muted);}
-.muro-item-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:0.4px;}
-.muro-claim-btn{font-size:11px;padding:4px 10px;border-radius:7px;border:1px solid var(--teal);background:transparent;color:var(--teal);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
-.muro-claim-btn:hover{background:var(--teal);color:#fff;}
-.muro-claimed{font-size:11px;color:var(--teal);font-weight:500;}
-
-/* ── TAB 4: Kits — same styles kept + traza section ── */
-
-/* ── TAB 5: Trazabilidad ── */
-.traza-layout{display:flex;flex-direction:column;gap:14px;}
-.traza-list{display:flex;flex-direction:column;gap:8px;}
-.traza-card{background:#fff;border-radius:14px;border:1px solid var(--border);overflow:hidden;}
-.traza-card-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;}
-.traza-box{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.traza-info{flex:1;min-width:0;}
-.traza-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--dark);}
-.traza-sub{font-size:11px;color:var(--muted);margin-top:1px;}
-.traza-status{font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;}
-.traza-steps{display:none;padding:0 14px 14px;}
-.traza-steps.open{display:block;animation:fadeUp 0.2s ease both;}
-.traza-timeline{display:flex;flex-direction:column;gap:0;margin-top:10px;position:relative;}
-.traza-tl-item{display:flex;gap:12px;align-items:flex-start;position:relative;padding-bottom:14px;}
-.traza-tl-item:last-child{padding-bottom:0;}
-.traza-tl-dot-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:20px;}
-.traza-tl-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:2px;border:2px solid #fff;box-shadow:0 0 0 2px currentColor;}
-.traza-tl-line{width:2px;flex:1;margin-top:2px;min-height:18px;}
-.traza-tl-text{flex:1;font-size:12px;}
-.traza-tl-label{font-weight:600;color:var(--dark);}
-.traza-tl-meta{color:var(--muted);margin-top:1px;}
-.traza-confirm-btn{
-  display:block;width:100%;margin-top:12px;padding:10px;border-radius:12px;border:none;
-  background:var(--teal);color:#fff;font-size:13px;font-weight:500;cursor:pointer;
-  font-family:'DM Sans',sans-serif;transition:background 0.18s;
+.val-header-top { display:flex; align-items:flex-start; gap:10px; }
+.val-icon {
+  width:36px; height:36px; border-radius:10px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:18px;
 }
-.traza-confirm-btn:hover{background:var(--green-600);}
-.traza-confirm-btn:disabled{background:var(--muted);cursor:default;}
+.val-info { flex:1; min-width:0; }
+.val-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:600; color:var(--dark); }
+.val-meta { font-size:11px; color:var(--muted); margin-top:3px; display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+/* Actions always on their own row */
+.val-actions {
+  display:flex; gap:6px; flex-wrap:wrap;
+  border-top:1px solid var(--border); padding-top:10px; margin-top:2px;
+}
+.val-btn {
+  flex:1; min-width:80px; padding:7px 10px; border-radius:8px; border:none;
+  font-size:12px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif;
+  transition:all 0.15s; text-align:center;
+}
+.val-btn-ok  { background:#EAFAF1; color:#1D6A3A; }
+.val-btn-ok:hover  { background:#A9DFBF; }
+.val-btn-rej { background:#FDEDEC; color:#922B21; }
+.val-btn-rej:hover { background:#F1948A; }
+.val-btn-more { background:var(--bg); color:var(--muted); border:1px solid var(--border) !important; flex:0; min-width:70px; }
+.val-expand {
+  display:none; padding:12px 14px; border-top:1px solid var(--border); background:var(--bg);
+}
+.val-expand.open { display:block; animation:fadeUp 0.18s ease both; }
+.val-expand-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+.val-field { font-size:12px; color:var(--muted); }
+.val-field span { display:block; color:var(--dark); font-weight:500; margin-top:2px; }
+.val-done-msg {
+  display:none; font-size:12px; font-weight:500; padding:7px 12px;
+  border-radius:8px; margin-top:8px;
+}
+/* Validated card — no action row */
+.val-card[data-estado="validada"] .val-actions { display:none; }
+.val-card[data-estado="validada"] .val-header { cursor:default; }
 
-/* ── MOBILE responsive for new demo ── */
-@media(max-width:640px){
-  .nec-layout{grid-template-columns:1fr;}
-  .nec-map{min-height:200px;}
-  .muro-layout{grid-template-columns:1fr;}
-  .muro-sidebar{flex-direction:row;flex-wrap:wrap;}
-  .muro-filter-btn{flex:1;min-width:90px;font-size:12px;padding:7px 8px;}
-  .muro-feed{max-height:340px;}
-  .val-expand-grid{grid-template-columns:1fr;}
-  .val-actions{flex-wrap:wrap;}
-  .demo-step{min-width:60px;font-size:10px;padding:8px 4px;}
-  .demo-step .ds-num{width:18px;height:18px;font-size:10px;}
-  .demo-panel{padding:14px;}
+/* ══════════════════════════════
+   TAB 3 — Muro coordinación
+══════════════════════════════ */
+.muro-layout { display:flex; flex-direction:column; gap:12px; }
+/* Filters: horizontal pill row, scrollable */
+.muro-filters {
+  display:flex; gap:6px; flex-wrap:wrap;
+  padding-bottom:4px;
+}
+.muro-filter-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 12px; border-radius:100px; font-size:12px; font-weight:500;
+  border:1px solid var(--border); background:#fff; cursor:pointer;
+  font-family:'DM Sans',sans-serif; transition:all 0.15s; color:var(--muted);
+  white-space:nowrap;
+}
+.muro-filter-btn .mf-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.muro-filter-btn.active { background:var(--green-50); border-color:var(--teal); color:var(--teal); font-weight:600; }
+.muro-filter-btn:hover:not(.active) { border-color:var(--teal); color:var(--teal); }
+.muro-feed { display:flex; flex-direction:column; gap:10px; max-height:380px; overflow-y:auto; padding-right:2px; }
+.muro-feed::-webkit-scrollbar { width:3px; }
+.muro-feed::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+.muro-item {
+  background:#fff; border-radius:14px; border:1px solid var(--border);
+  padding:14px; display:flex; gap:10px; align-items:flex-start;
+  transition:border-color 0.15s;
+}
+.muro-item.hidden { display:none; }
+.muro-item:hover { border-color:rgba(29,158,117,0.25); }
+.muro-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+.muro-content { flex:1; min-width:0; }
+.muro-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:600; color:var(--dark); margin-bottom:4px; }
+.muro-body  { font-size:12px; color:var(--muted); line-height:1.55; }
+.muro-footer {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:8px; flex-wrap:wrap; gap:6px;
+}
+.muro-time { font-size:11px; color:var(--muted); }
+.muro-tag {
+  font-size:10px; font-weight:600; padding:2px 8px; border-radius:100px;
+  text-transform:uppercase; letter-spacing:0.4px;
+}
+.muro-claim-btn {
+  font-size:11px; padding:4px 12px; border-radius:7px;
+  border:1px solid var(--teal); background:transparent; color:var(--teal);
+  cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s;
+}
+.muro-claim-btn:hover { background:var(--teal); color:#fff; }
+.muro-claimed { font-size:11px; color:var(--teal); font-weight:600; }
+
+/* ══════════════════════════════
+   TAB 5 — Trazabilidad
+══════════════════════════════ */
+.traza-list { display:flex; flex-direction:column; gap:10px; }
+.traza-card { background:#fff; border-radius:14px; border:1px solid var(--border); overflow:hidden; }
+.traza-header {
+  display:flex; align-items:center; gap:10px; padding:12px 14px;
+  cursor:pointer;
+}
+.traza-box {
+  width:36px; height:36px; border-radius:10px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:18px;
+}
+.traza-info { flex:1; min-width:0; }
+.traza-name { font-family:'Syne',sans-serif; font-size:13px; font-weight:600; color:var(--dark); }
+.traza-sub  { font-size:11px; color:var(--muted); margin-top:1px; }
+.traza-status-badge {
+  font-size:11px; font-weight:600; padding:3px 10px; border-radius:100px;
+  white-space:nowrap; flex-shrink:0;
+}
+.traza-steps { display:none; padding:0 14px 14px; }
+.traza-steps.open { display:block; animation:fadeUp 0.2s ease both; }
+.traza-timeline { display:flex; flex-direction:column; margin-top:8px; }
+.traza-tl-item { display:flex; gap:10px; align-items:flex-start; padding-bottom:14px; }
+.traza-tl-item:last-child { padding-bottom:0; }
+.traza-tl-col { display:flex; flex-direction:column; align-items:center; width:18px; flex-shrink:0; }
+.traza-tl-dot {
+  width:13px; height:13px; border-radius:50%; margin-top:2px;
+  border:2px solid #fff; box-shadow:0 0 0 2px currentColor; flex-shrink:0;
+}
+.traza-tl-line { width:2px; flex:1; min-height:16px; background:var(--border); margin-top:3px; }
+.traza-tl-text { flex:1; font-size:12px; }
+.traza-tl-label { font-weight:600; color:var(--dark); }
+.traza-tl-meta  { color:var(--muted); margin-top:1px; font-size:11px; }
+.traza-confirm-btn {
+  display:block; width:100%; margin-top:12px; padding:10px; border-radius:12px;
+  border:none; background:var(--teal); color:#fff; font-size:13px; font-weight:500;
+  cursor:pointer; font-family:'DM Sans',sans-serif; transition:background 0.18s;
+}
+.traza-confirm-btn:hover { background:var(--green-600); }
+.traza-confirm-btn:disabled { background:var(--muted); cursor:default; }
+
+/* ══════════════════════════════
+   MOBILE overrides  ≤ 600px
+══════════════════════════════ */
+@media(max-width:600px) {
+  /* 1-column necesidad layout */
+  .nec-layout { grid-template-columns:1fr; }
+  .nec-map-box { min-height:180px; }
+
+  /* Triaje: actions always below info, no overflow */
+  .val-expand-grid { grid-template-columns:1fr; }
+  .val-btn { font-size:11px; padding:7px 8px; }
+
+  /* Muro filters: scrollable row */
+  .muro-filters { flex-wrap:nowrap; overflow-x:auto; padding-bottom:6px; }
+  .muro-feed { max-height:320px; }
+
+  /* Demo panel padding */
+  .demo-panel { padding:12px; }
+
+  /* Step label truncate */
+  .demo-step { font-size:10px; min-width:52px; }
+  .demo-step .ds-num { width:18px; height:18px; font-size:9px; }
 }
 
-</style>
+  </style>
 </head>
 
 <body>
@@ -1368,176 +1498,145 @@
         <p class="section-sub reveal reveal-delay-2">Cinco funcionalidades conectadas: desde la necesidad detectada hasta la entrega verificada.</p>
 
         <div class="demo-shell reveal">
-          <!-- topbar -->
           <div class="demo-topbar">
-            <div class="dot dot-red"></div>
-            <div class="dot dot-yellow"></div>
-            <div class="dot dot-green"></div>
-            <span class="demo-url">kit2help.app / demo</span>
+            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+            <span class="demo-url">kit2help.es / demo</span>
           </div>
 
           <!-- Step indicators -->
-          <div class="demo-steps" id="demoSteps">
-            <div class="demo-step active" data-tab="necesidad" onclick="switchDemo('necesidad',this)">
-              <div class="ds-num">1</div>
-              <span>Necesidad</span>
-            </div>
-            <div class="demo-step" data-tab="validacion" onclick="switchDemo('validacion',this)">
-              <div class="ds-num">2</div>
-              <span>Triaje</span>
-            </div>
-            <div class="demo-step" data-tab="muro" onclick="switchDemo('muro',this)">
-              <div class="ds-num">3</div>
-              <span>Coordinación</span>
-            </div>
-            <div class="demo-step" data-tab="kits" onclick="switchDemo('kits',this)">
-              <div class="ds-num">4</div>
-              <span>Kits</span>
-            </div>
-            <div class="demo-step" data-tab="traza" onclick="switchDemo('traza',this)">
-              <div class="ds-num">5</div>
-              <span>Trazabilidad</span>
-            </div>
+          <div class="demo-steps">
+            <div class="demo-step active" onclick="switchDemo('necesidad')"><div class="ds-num">1</div><span>Necesidad</span></div>
+            <div class="demo-step"        onclick="switchDemo('validacion')"><div class="ds-num">2</div><span>Triaje</span></div>
+            <div class="demo-step"        onclick="switchDemo('muro')">      <div class="ds-num">3</div><span>Coordinación</span></div>
+            <div class="demo-step"        onclick="switchDemo('kits')">      <div class="ds-num">4</div><span>Kits</span></div>
+            <div class="demo-step"        onclick="switchDemo('traza')">     <div class="ds-num">5</div><span>Trazabilidad</span></div>
           </div>
 
-          <!-- CONTENT -->
-          <div class="demo-content" style="min-height:460px;">
+          <div class="demo-content" style="min-height:420px;">
 
-            <!-- ════ TAB 1: ACTIVAR NECESIDAD ════ -->
+            <!-- ══ TAB 1: ACTIVAR NECESIDAD ══ -->
             <div class="demo-panel active" id="tab-necesidad">
+              <div class="d-panel-title">📝 Activar Necesidad</div>
+              <div class="d-panel-sub">Reporta una necesidad de forma estructurada para que llegue al coordinador correcto.</div>
               <div class="nec-layout">
-                <!-- Formulario -->
-                <div>
-                  <div class="nec-form">
-                    <div class="form-title" style="font-size:16px;margin-bottom:16px;">📝 Nueva necesidad</div>
-                    <div class="form-group">
-                      <label>Ubicación</label>
-                      <input type="text" id="necUbic" value="C/ Sueca, 22 — Ruzafa, Valencia">
-                    </div>
-                    <div class="form-group">
-                      <label>Categoría</label>
-                      <div class="type-chips" id="necCat">
-                        <div class="chip active" onclick="selectChipGroup(this,'necCat')">🍱 Alimentación</div>
-                        <div class="chip" onclick="selectChipGroup(this,'necCat')">💊 Salud</div>
-                        <div class="chip" onclick="selectChipGroup(this,'necCat')">🧥 Ropa</div>
-                        <div class="chip" onclick="selectChipGroup(this,'necCat')">🏠 Refugio</div>
-                        <div class="chip" onclick="selectChipGroup(this,'necCat')">🔧 Útiles</div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label>Prioridad</label>
-                      <div class="priority-row" id="necPrio">
-                        <div class="prio-btn" onclick="selectPrioGroup(this,'necPrio','low')">Baja</div>
-                        <div class="prio-btn active-mid" onclick="selectPrioGroup(this,'necPrio','mid')">Media</div>
-                        <div class="prio-btn" onclick="selectPrioGroup(this,'necPrio','high')">Alta</div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label>Personas afectadas</label>
-                      <input type="number" id="necPersonas" value="6" min="1">
-                    </div>
-                    <div class="form-group">
-                      <label>Descripción</label>
-                      <textarea id="necDesc" rows="2" style="resize:none;">Familia con 2 menores y anciano. Sin acceso a víveres desde hace 2 días.</textarea>
-                    </div>
-                    <button class="btn-submit" id="necBtn" onclick="enviarNecesidad()">Enviar necesidad</button>
+                <!-- Form -->
+                <div class="nec-form">
+                  <div class="d-form-group">
+                    <label>Ubicación</label>
+                    <input class="d-input" id="necUbic" type="text" value="C/ Sueca, 22 — Ruzafa, Valencia">
                   </div>
+                  <div class="d-form-group">
+                    <label>Categoría</label>
+                    <div class="type-chips" id="necCatChips">
+                      <div class="chip active" onclick="selectChipIn(this,'necCatChips')">🍱 Alimentación</div>
+                      <div class="chip" onclick="selectChipIn(this,'necCatChips')">💊 Salud</div>
+                      <div class="chip" onclick="selectChipIn(this,'necCatChips')">🧥 Ropa</div>
+                      <div class="chip" onclick="selectChipIn(this,'necCatChips')">🏠 Refugio</div>
+                    </div>
+                  </div>
+                  <div class="d-form-group">
+                    <label>Prioridad</label>
+                    <div class="priority-row" id="necPrioRow">
+                      <div class="prio-btn" onclick="selectPrioIn(this,'necPrioRow','low')">Baja</div>
+                      <div class="prio-btn active-mid" onclick="selectPrioIn(this,'necPrioRow','mid')">Media</div>
+                      <div class="prio-btn" onclick="selectPrioIn(this,'necPrioRow','high')">Alta</div>
+                    </div>
+                  </div>
+                  <div class="d-form-group">
+                    <label>Personas afectadas</label>
+                    <input class="d-input" id="necPersonas" type="number" value="6" min="1">
+                  </div>
+                  <div class="d-form-group">
+                    <label>Descripción</label>
+                    <textarea class="d-textarea" id="necDesc" rows="2">Familia con 2 menores y anciano. Sin víveres 2 días.</textarea>
+                  </div>
+                  <button class="d-btn-primary" id="necBtn" onclick="enviarNecesidad()">Enviar necesidad</button>
                 </div>
-                <!-- Right: map + preview -->
-                <div style="display:flex;flex-direction:column;gap:14px;">
-                  <div class="nec-map" id="necMap">
+                <!-- Map + confirm -->
+                <div class="nec-map-col">
+                  <div class="nec-map-box">
                     <div class="emap-header">
                       <div class="emap-badge"><div class="rdot"></div>Mapa en vivo</div>
                     </div>
-                    <svg viewBox="0 0 420 380" style="width:100%;height:100%;position:absolute;inset:0;" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="420" height="380" fill="#1A2820"/>
-                      <g stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none">
+                    <svg viewBox="0 0 420 320" style="width:100%;height:100%;position:absolute;inset:0;" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="420" height="320" fill="#1A2820"/>
+                      <g stroke="rgba(255,255,255,0.07)" stroke-width="1" fill="none">
                         <line x1="0" y1="80" x2="420" y2="80"/><line x1="0" y1="160" x2="420" y2="160"/>
-                        <line x1="0" y1="240" x2="420" y2="240"/><line x1="0" y1="320" x2="420" y2="320"/>
-                        <line x1="90" y1="0" x2="90" y2="380"/><line x1="180" y1="0" x2="180" y2="380"/>
-                        <line x1="270" y1="0" x2="270" y2="380"/><line x1="360" y1="0" x2="360" y2="380"/>
+                        <line x1="0" y1="240" x2="420" y2="240"/>
+                        <line x1="105" y1="0" x2="105" y2="320"/><line x1="210" y1="0" x2="210" y2="320"/><line x1="315" y1="0" x2="315" y2="320"/>
                       </g>
-                      <g stroke="rgba(255,255,255,0.15)" stroke-width="2.5" fill="none">
-                        <line x1="0" y1="190" x2="420" y2="190"/><line x1="160" y1="0" x2="160" y2="380"/>
+                      <g stroke="rgba(255,255,255,0.14)" stroke-width="2.5" fill="none">
+                        <line x1="0" y1="165" x2="420" y2="165"/><line x1="160" y1="0" x2="160" y2="320"/>
                       </g>
-                      <path d="M0 350 Q100 330 200 348 Q300 366 420 345" stroke="rgba(100,180,255,0.18)" stroke-width="7" fill="none"/>
-                      <!-- existing markers -->
-                      <circle cx="120" cy="140" r="28" fill="rgba(226,75,74,0.2)"/>
-                      <circle cx="120" cy="140" r="7" fill="#E24B4A"/>
-                      <text x="120" y="144" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
-                      <circle cx="120" cy="140" r="18" fill="none" stroke="#E24B4A" stroke-width="1.5">
-                        <animate attributeName="r" values="18;30;18" dur="2s" repeatCount="indefinite"/>
+                      <path d="M0 295 Q120 275 240 292 Q330 306 420 285" stroke="rgba(100,180,255,0.18)" stroke-width="6" fill="none"/>
+                      <circle cx="120" cy="130" r="24" fill="rgba(226,75,74,0.18)"/>
+                      <circle cx="120" cy="130" r="7" fill="#E24B4A"/>
+                      <text x="120" y="134" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
+                      <circle cx="120" cy="130" r="16" fill="none" stroke="#E24B4A" stroke-width="1.5">
+                        <animate attributeName="r" values="16;28;16" dur="2s" repeatCount="indefinite"/>
                         <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
                       </circle>
-                      <circle cx="280" cy="220" r="22" fill="rgba(226,75,74,0.15)"/>
-                      <circle cx="280" cy="220" r="7" fill="#EF9F27"/>
-                      <text x="280" y="224" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
-                      <circle cx="200" cy="90" r="9" fill="#1D9E75"/>
-                      <text x="200" y="94" text-anchor="middle" fill="white" font-size="8" font-weight="bold">K</text>
-                      <!-- new point revealed on submit -->
+                      <circle cx="280" cy="200" r="7" fill="#1D9E75"/>
+                      <text x="280" y="204" text-anchor="middle" fill="white" font-size="8" font-weight="bold">K</text>
                       <g id="necNewPoint" opacity="0" style="transition:opacity 0.5s;">
-                        <circle cx="155" cy="195" r="30" fill="rgba(226,75,74,0.18)"/>
-                        <circle cx="155" cy="195" r="7" fill="#E24B4A"/>
-                        <text x="155" y="199" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
-                        <circle cx="155" cy="195" r="18" fill="none" stroke="#E24B4A" stroke-width="1.5">
-                          <animate attributeName="r" values="18;32;18" dur="1.5s" repeatCount="indefinite"/>
+                        <circle cx="158" cy="172" r="22" fill="rgba(226,75,74,0.2)"/>
+                        <circle cx="158" cy="172" r="7" fill="#E24B4A"/>
+                        <text x="158" y="176" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
+                        <circle cx="158" cy="172" r="16" fill="none" stroke="#E24B4A" stroke-width="1.5">
+                          <animate attributeName="r" values="16;28;16" dur="1.5s" repeatCount="indefinite"/>
                           <animate attributeName="opacity" values="0.7;0;0.7" dur="1.5s" repeatCount="indefinite"/>
                         </circle>
                       </g>
                     </svg>
                   </div>
-                  <!-- Confirmation card -->
-                  <div class="nec-preview" id="necPreview">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                  <!-- Confirm card -->
+                  <div class="nec-confirm" id="necConfirm">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
                       <span style="font-family:Syne,sans-serif;font-size:13px;font-weight:600;color:var(--dark);">Necesidad registrada</span>
-                      <span class="nec-badge nec-badge-pend" id="necStatus">● Pendiente validación</span>
+                      <span class="d-badge d-badge-pend">● Pendiente validación</span>
                     </div>
-                    <div class="nec-summary" id="necSummary"></div>
-                    <div style="margin-top:12px;font-size:12px;color:var(--muted);background:var(--bg);border-radius:10px;padding:10px;">
-                      📬 La necesidad ha entrado en el panel de triaje. Un coordinador la revisará en los próximos minutos.
+                    <div id="necSummary"></div>
+                    <div style="margin-top:10px;font-size:12px;color:var(--muted);background:var(--bg);border-radius:10px;padding:10px;line-height:1.5;">
+                      📬 Entrando en panel de triaje. Un coordinador la revisará pronto.
                     </div>
                   </div>
                 </div>
               </div>
-              <div style="margin-top:14px;display:flex;justify-content:flex-end;">
-                <button class="btn-submit" style="width:auto;padding:10px 24px;font-size:13px;" onclick="switchDemo('validacion')">Ver en triaje →</button>
-              </div>
+              <div class="d-btn-next"><button onclick="switchDemo('validacion')">Ver en triaje →</button></div>
             </div>
 
-            <!-- ════ TAB 2: PANEL DE VALIDACIÓN ════ -->
+            <!-- ══ TAB 2: VALIDACIÓN / TRIAJE ══ -->
             <div class="demo-panel" id="tab-validacion">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-                <div>
-                  <div style="font-family:Syne,sans-serif;font-size:15px;font-weight:600;color:var(--dark);">🔎 Panel de validación y triaje</div>
-                  <div style="font-size:12px;color:var(--muted);margin-top:2px;">Revisa, prioriza y valida cada solicitud antes de publicarla</div>
-                </div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;" id="valFilterBtns">
-                  <button class="val-btn val-btn-more active" onclick="filtrarVal('todas',this)" style="font-size:11px;">Todas (4)</button>
-                  <button class="val-btn val-btn-more" onclick="filtrarVal('pendiente',this)" style="font-size:11px;">Pendientes</button>
-                  <button class="val-btn val-btn-more" onclick="filtrarVal('validada',this)" style="font-size:11px;">Validadas</button>
-                </div>
+              <div class="d-panel-title">🔎 Panel de validación y triaje</div>
+              <div class="d-panel-sub">Revisa, prioriza y valida cada solicitud antes de publicarla en el muro.</div>
+              <div class="val-filters">
+                <button class="val-filter-btn active" onclick="filtrarVal('todas',this)">Todas (4)</button>
+                <button class="val-filter-btn" onclick="filtrarVal('pendiente',this)">Pendientes</button>
+                <button class="val-filter-btn" onclick="filtrarVal('validada',this)">Validadas</button>
               </div>
-              <div class="val-list" id="valList">
+              <div class="val-list">
 
-                <!-- Card 1 — pendiente (recién enviada) -->
+                <!-- Card 1 -->
                 <div class="val-card" id="valCard1" data-estado="pendiente">
-                  <div class="val-header" onclick="toggleValExpand('valExpand1')">
-                    <div class="val-icon" style="background:#FDF0EF;">🍱</div>
-                    <div class="val-info">
-                      <div class="val-title">Necesidad alimentaria · C/ Sueca, 22</div>
-                      <div class="val-meta">📍 Ruzafa · 6 personas · <span class="nec-badge nec-badge-pend" style="font-size:10px;padding:1px 7px;">Pendiente</span></div>
+                  <div class="val-header">
+                    <div class="val-header-top">
+                      <div class="val-icon" style="background:#FDF0EF;">🍱</div>
+                      <div class="val-info">
+                        <div class="val-title">Necesidad alimentaria · C/ Sueca, 22</div>
+                        <div class="val-meta">📍 Ruzafa · 6 personas <span class="d-badge d-badge-pend">Pendiente</span></div>
+                      </div>
                     </div>
-                    <div class="val-actions" id="valAct1">
-                      <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard1','valAct1','valDone1',true)">✓ Validar</button>
+                    <div class="val-actions">
+                      <button class="val-btn val-btn-ok"  onclick="validarNec(event,'valCard1','valAct1','valDone1',true)">✓ Validar</button>
                       <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard1','valAct1','valDone1',false)">✕ Rechazar</button>
                       <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand1');event.stopPropagation()">Detalles</button>
                     </div>
                   </div>
                   <div class="val-expand" id="valExpand1">
                     <div class="val-expand-grid">
-                      <div class="val-field">Descripción<span>Familia con 2 menores y anciano. Sin acceso a víveres desde hace 2 días.</span></div>
+                      <div class="val-field">Descripción<span>Familia con 2 menores y anciano. Sin víveres 2 días.</span></div>
                       <div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
-                      <div class="val-field">Solicitante<span>Ciudadano anónimo</span></div>
+                      <div class="val-field">Solicitante<span>Ciudadano</span></div>
                       <div class="val-field">Recibida<span>Hace 2 min</span></div>
                     </div>
                     <div class="val-done-msg" id="valDone1"></div>
@@ -1546,21 +1645,23 @@
 
                 <!-- Card 2 -->
                 <div class="val-card" id="valCard2" data-estado="pendiente">
-                  <div class="val-header" onclick="toggleValExpand('valExpand2')">
-                    <div class="val-icon" style="background:#FDEDEC;">🚨</div>
-                    <div class="val-info">
-                      <div class="val-title">Evacuación urgente · C/ Dénia, 8</div>
-                      <div class="val-meta">📍 Ruzafa · 12 personas · <span class="nec-badge nec-badge-urg" style="font-size:10px;padding:1px 7px;">Alta prioridad</span></div>
+                  <div class="val-header">
+                    <div class="val-header-top">
+                      <div class="val-icon" style="background:#FDEDEC;">🚨</div>
+                      <div class="val-info">
+                        <div class="val-title">Evacuación urgente · C/ Dénia, 8</div>
+                        <div class="val-meta">📍 Ruzafa · 12 personas <span class="d-badge d-badge-urg">Alta prioridad</span></div>
+                      </div>
                     </div>
-                    <div class="val-actions" id="valAct2">
-                      <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard2','valAct2','valDone2',true)">✓ Validar</button>
+                    <div class="val-actions">
+                      <button class="val-btn val-btn-ok"  onclick="validarNec(event,'valCard2','valAct2','valDone2',true)">✓ Validar</button>
                       <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard2','valAct2','valDone2',false)">✕ Rechazar</button>
                       <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand2');event.stopPropagation()">Detalles</button>
                     </div>
                   </div>
                   <div class="val-expand" id="valExpand2">
                     <div class="val-expand-grid">
-                      <div class="val-field">Descripción<span>Planta baja inundada. Familia mayor sin movilidad. Necesitan evacuación inmediata.</span></div>
+                      <div class="val-field">Descripción<span>Planta baja inundada. Familia mayor sin movilidad.</span></div>
                       <div class="val-field">Prioridad<span style="color:#E24B4A;">Alta</span></div>
                       <div class="val-field">Solicitante<span>Bomberos voluntarios</span></div>
                       <div class="val-field">Recibida<span>Hace 8 min</span></div>
@@ -1572,12 +1673,14 @@
                 <!-- Card 3 — ya validada -->
                 <div class="val-card" id="valCard3" data-estado="validada">
                   <div class="val-header">
-                    <div class="val-icon" style="background:#EAFAF1;">💊</div>
-                    <div class="val-info">
-                      <div class="val-title">Medicación urgente · Av. Mistral, 3</div>
-                      <div class="val-meta">📍 Eixample · 3 personas · <span class="nec-badge nec-badge-ok" style="font-size:10px;padding:1px 7px;">✓ Validada</span></div>
+                    <div class="val-header-top">
+                      <div class="val-icon" style="background:#EAFAF1;">💊</div>
+                      <div class="val-info">
+                        <div class="val-title">Medicación · Av. Mistral, 3</div>
+                        <div class="val-meta">📍 Eixample · 3 personas <span class="d-badge d-badge-ok">✓ Validada</span></div>
+                      </div>
                     </div>
-                    <div class="val-actions">
+                    <div class="val-actions" style="border-top:none;padding-top:0;">
                       <span style="font-size:12px;color:var(--teal);font-weight:500;">✓ Publicada en muro</span>
                     </div>
                   </div>
@@ -1585,23 +1688,25 @@
 
                 <!-- Card 4 -->
                 <div class="val-card" id="valCard4" data-estado="pendiente">
-                  <div class="val-header" onclick="toggleValExpand('valExpand4')">
-                    <div class="val-icon" style="background:#F0F2F4;">🧥</div>
-                    <div class="val-info">
-                      <div class="val-title">Ropa de abrigo · C/ Cuba, 17</div>
-                      <div class="val-meta">📍 Russafa · 9 personas · <span class="nec-badge nec-badge-pend" style="font-size:10px;padding:1px 7px;">Pendiente</span></div>
+                  <div class="val-header">
+                    <div class="val-header-top">
+                      <div class="val-icon" style="background:#F0F2F4;">🧥</div>
+                      <div class="val-info">
+                        <div class="val-title">Ropa de abrigo · C/ Cuba, 17</div>
+                        <div class="val-meta">📍 Russafa · 9 personas <span class="d-badge d-badge-pend">Pendiente</span></div>
+                      </div>
                     </div>
-                    <div class="val-actions" id="valAct4">
-                      <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard4','valAct4','valDone4',true)">✓ Validar</button>
+                    <div class="val-actions">
+                      <button class="val-btn val-btn-ok"  onclick="validarNec(event,'valCard4','valAct4','valDone4',true)">✓ Validar</button>
                       <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard4','valAct4','valDone4',false)">✕ Rechazar</button>
                       <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand4');event.stopPropagation()">Detalles</button>
                     </div>
                   </div>
                   <div class="val-expand" id="valExpand4">
                     <div class="val-expand-grid">
-                      <div class="val-field">Descripción<span>Grupo de personas mayores sin ropa de abrigo suficiente. Noche fría prevista.</span></div>
+                      <div class="val-field">Descripción<span>Personas mayores sin ropa de abrigo. Noche fría prevista.</span></div>
                       <div class="val-field">Prioridad<span style="color:#1D9E75;">Baja</span></div>
-                      <div class="val-field">Solicitante<span>Cruz Roja local</span></div>
+                      <div class="val-field">Solicitante<span>Cruz Roja</span></div>
                       <div class="val-field">Recibida<span>Hace 15 min</span></div>
                     </div>
                     <div class="val-done-msg" id="valDone4"></div>
@@ -1609,148 +1714,125 @@
                 </div>
 
               </div>
-              <div style="margin-top:14px;display:flex;justify-content:flex-end;">
-                <button class="btn-submit" style="width:auto;padding:10px 24px;font-size:13px;" onclick="switchDemo('muro')">Ver en muro →</button>
-              </div>
+              <div class="d-btn-next"><button onclick="switchDemo('muro')">Ver en muro →</button></div>
             </div>
 
-            <!-- ════ TAB 3: MURO DE COORDINACIÓN ════ -->
+            <!-- ══ TAB 3: MURO DE COORDINACIÓN ══ -->
             <div class="demo-panel" id="tab-muro">
-              <div style="font-family:Syne,sans-serif;font-size:15px;font-weight:600;color:var(--dark);margin-bottom:14px;">📢 Muro de coordinación</div>
-              <div class="muro-layout">
-                <!-- Sidebar filtros -->
-                <div class="muro-sidebar">
-                  <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Filtrar</div>
-                  <button class="muro-filter-btn active" onclick="filtrarMuro('todas',this)">
-                    <div class="muro-filter-dot" style="background:var(--teal);"></div>Todas
-                  </button>
-                  <button class="muro-filter-btn" onclick="filtrarMuro('urgente',this)">
-                    <div class="muro-filter-dot" style="background:#E24B4A;"></div>Urgentes
-                  </button>
-                  <button class="muro-filter-btn" onclick="filtrarMuro('recurso',this)">
-                    <div class="muro-filter-dot" style="background:#1D9E75;"></div>Recursos
-                  </button>
-                  <button class="muro-filter-btn" onclick="filtrarMuro('info',this)">
-                    <div class="muro-filter-dot" style="background:#EF9F27;"></div>Información
-                  </button>
-                  <button class="muro-filter-btn" onclick="filtrarMuro('voluntario',this)">
-                    <div class="muro-filter-dot" style="background:#7B5EA7;"></div>Voluntarios
-                  </button>
+              <div class="d-panel-title">📢 Muro de coordinación</div>
+              <div class="d-panel-sub">Información validada, priorizada y lista para actuar. Sin ruido.</div>
+              <!-- Filters as pill row -->
+              <div class="muro-filters">
+                <button class="muro-filter-btn active" onclick="filtrarMuro('todas',this)">
+                  <span class="mf-dot" style="background:var(--teal);"></span>Todas
+                </button>
+                <button class="muro-filter-btn" onclick="filtrarMuro('urgente',this)">
+                  <span class="mf-dot" style="background:#E24B4A;"></span>Urgentes
+                </button>
+                <button class="muro-filter-btn" onclick="filtrarMuro('recurso',this)">
+                  <span class="mf-dot" style="background:#1D9E75;"></span>Recursos
+                </button>
+                <button class="muro-filter-btn" onclick="filtrarMuro('info',this)">
+                  <span class="mf-dot" style="background:#EF9F27;"></span>Avisos
+                </button>
+                <button class="muro-filter-btn" onclick="filtrarMuro('voluntario',this)">
+                  <span class="mf-dot" style="background:#7B5EA7;"></span>Voluntarios
+                </button>
+              </div>
+              <div class="muro-feed" id="muroFeed">
+                <div class="muro-item" data-tipo="urgente">
+                  <div class="muro-dot" style="background:#E24B4A;"></div>
+                  <div class="muro-content">
+                    <div class="muro-title">🚨 Evacuación urgente · C/ Dénia, 8</div>
+                    <div class="muro-body">12 personas con movilidad reducida. Planta baja inundada. Acceso por C/ Cuba.</div>
+                    <div class="muro-footer">
+                      <span class="muro-time">Hace 8 min · Validado</span>
+                      <span class="muro-tag" style="background:#FDEDEC;color:#922B21;">Urgente</span>
+                      <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
+                    </div>
+                  </div>
                 </div>
-                <!-- Feed -->
-                <div class="muro-feed" id="muroFeed">
-
-                  <div class="muro-item" data-tipo="urgente">
-                    <div class="muro-dot" style="background:#E24B4A;"></div>
-                    <div class="muro-content">
-                      <div class="muro-item-title">🚨 Evacuación urgente · C/ Dénia, 8</div>
-                      <div class="muro-item-body">12 personas incluyendo mayores sin movilidad. Planta baja inundada. Acceso por C/ Cuba.</div>
-                      <div class="muro-item-footer">
-                        <span class="muro-item-time">Hace 8 min · Validado</span>
-                        <span class="muro-item-tag" style="background:#FDEDEC;color:#922B21;">Urgente</span>
-                        <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
-                      </div>
+                <div class="muro-item" data-tipo="recurso">
+                  <div class="muro-dot" style="background:#1D9E75;"></div>
+                  <div class="muro-content">
+                    <div class="muro-title">📦 Kit alimentario · Punto Colón</div>
+                    <div class="muro-body">25 kits básicos disponibles: agua ×6, conservas ×4, barras energéticas ×8.</div>
+                    <div class="muro-footer">
+                      <span class="muro-time">Hace 12 min</span>
+                      <span class="muro-tag" style="background:#EAFAF1;color:#1D6A3A;">Recurso</span>
+                      <button class="muro-claim-btn" onclick="claimMuro(this)">Reservar</button>
                     </div>
                   </div>
-
-                  <div class="muro-item" data-tipo="recurso">
-                    <div class="muro-dot" style="background:#1D9E75;"></div>
-                    <div class="muro-content">
-                      <div class="muro-item-title">📦 Kit alimentario disponible · Punto Colón</div>
-                      <div class="muro-item-body">25 kits básicos disponibles. Incluye agua 1.5L ×6, conservas ×4 y barras energéticas ×8.</div>
-                      <div class="muro-item-footer">
-                        <span class="muro-item-time">Hace 12 min</span>
-                        <span class="muro-item-tag" style="background:#EAFAF1;color:#1D6A3A;">Recurso</span>
-                        <button class="muro-claim-btn" onclick="claimMuro(this)">Reservar</button>
-                      </div>
+                </div>
+                <div class="muro-item" data-tipo="info">
+                  <div class="muro-dot" style="background:#EF9F27;"></div>
+                  <div class="muro-content">
+                    <div class="muro-title">ℹ️ Acceso cortado · Av. del Cid norte</div>
+                    <div class="muro-body">Agua acumulada. Usar Ronda Interior hacia el sur.</div>
+                    <div class="muro-footer">
+                      <span class="muro-time">Hace 20 min</span>
+                      <span class="muro-tag" style="background:#FEF5EC;color:#9A5C00;">Aviso</span>
                     </div>
                   </div>
-
-                  <div class="muro-item" data-tipo="info">
-                    <div class="muro-dot" style="background:#EF9F27;"></div>
-                    <div class="muro-content">
-                      <div class="muro-item-title">ℹ️ Acceso cortado · Av. del Cid tramo norte</div>
-                      <div class="muro-item-body">Agua acumulada impide paso de vehículos. Usar alternativa por Ronda Interior hacia el sur.</div>
-                      <div class="muro-item-footer">
-                        <span class="muro-item-time">Hace 20 min</span>
-                        <span class="muro-item-tag" style="background:#FEF5EC;color:#9A5C00;">Aviso</span>
-                      </div>
+                </div>
+                <div class="muro-item" data-tipo="voluntario">
+                  <div class="muro-dot" style="background:#7B5EA7;"></div>
+                  <div class="muro-content">
+                    <div class="muro-title">🤝 Checkpoint · Plaza Ayuntamiento</div>
+                    <div class="muro-body">15 voluntarios disponibles con vehículo 4×4. Necesitan coordinador de zona.</div>
+                    <div class="muro-footer">
+                      <span class="muro-time">Hace 5 min</span>
+                      <span class="muro-tag" style="background:#F5F0FB;color:#6C3483;">Voluntarios</span>
+                      <button class="muro-claim-btn" onclick="claimMuro(this)">Coordinar</button>
                     </div>
                   </div>
-
-                  <div class="muro-item" data-tipo="voluntario">
-                    <div class="muro-dot" style="background:#7B5EA7;"></div>
-                    <div class="muro-content">
-                      <div class="muro-item-title">🤝 Checkpoint voluntarios · Plaza Ayuntamiento</div>
-                      <div class="muro-item-body">15 voluntarios disponibles. Necesitan coordinador de zona. Traen vehículo 4×4 y equipo básico.</div>
-                      <div class="muro-item-footer">
-                        <span class="muro-item-time">Hace 5 min</span>
-                        <span class="muro-item-tag" style="background:#F5F0FB;color:#6C3483;">Voluntarios</span>
-                        <button class="muro-claim-btn" onclick="claimMuro(this)">Coordinar</button>
-                      </div>
+                </div>
+                <div class="muro-item" data-tipo="urgente" id="muroNecDinamica" style="display:none;">
+                  <div class="muro-dot" style="background:#E24B4A;"></div>
+                  <div class="muro-content">
+                    <div class="muro-title">🍱 Necesidad alimentaria · C/ Sueca, 22</div>
+                    <div class="muro-body">Familia 2 menores + anciano. Sin víveres 2 días. 6 personas. Prioridad media.</div>
+                    <div class="muro-footer">
+                      <span class="muro-time">Recién validada</span>
+                      <span class="muro-tag" style="background:#FDEDEC;color:#922B21;">Nueva</span>
+                      <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
                     </div>
                   </div>
-
-                  <div class="muro-item" data-tipo="urgente" id="muroNecDinamica" style="display:none;">
-                    <div class="muro-dot" style="background:#E24B4A;"></div>
-                    <div class="muro-content">
-                      <div class="muro-item-title">🍱 Necesidad alimentaria · C/ Sueca, 22</div>
-                      <div class="muro-item-body">Familia con 2 menores y anciano. Sin víveres 2 días. 6 personas. Prioridad media.</div>
-                      <div class="muro-item-footer">
-                        <span class="muro-item-time">Recién validada</span>
-                        <span class="muro-item-tag" style="background:#FDEDEC;color:#922B21;">Nueva</span>
-                        <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
-                      </div>
-                    </div>
-                  </div>
-
                 </div>
               </div>
-              <div style="margin-top:14px;display:flex;justify-content:flex-end;">
-                <button class="btn-submit" style="width:auto;padding:10px 24px;font-size:13px;" onclick="switchDemo('kits')">Configurar kits →</button>
-              </div>
+              <div class="d-btn-next"><button onclick="switchDemo('kits')">Configurar kits →</button></div>
             </div>
 
-            <!-- ════ TAB 4: CONFIGURAR KITS ════ -->
+            <!-- ══ TAB 4: KITS ══ -->
             <div class="demo-panel" id="tab-kits">
+              <div class="d-panel-title">📦 Configurar kits de ayuda</div>
+              <div class="d-panel-sub">Crea kits diferenciados por tipo y color. Edita los elementos y cantidades.</div>
               <div style="display:flex;flex-direction:column;gap:14px;">
-                <!-- Type selector -->
                 <div>
                   <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Tipo de kit</div>
                   <div class="kit-type-grid" style="grid-template-columns:repeat(3,1fr);">
                     <div class="kit-type-card kit-food selected" onclick="selectKitType(this,'food')" data-type="food">
-                      <div class="kit-type-badge">✓</div>
-                      <div class="kit-type-icon">🍱</div>
-                      <div class="kit-type-name">Alimenticio</div>
-                      <div class="kit-type-desc">Agua y comida</div>
+                      <div class="kit-type-badge">✓</div><div class="kit-type-icon">🍱</div>
+                      <div class="kit-type-name">Alimenticio</div><div class="kit-type-desc">Agua y comida</div>
                     </div>
                     <div class="kit-type-card kit-med" onclick="selectKitType(this,'med')" data-type="med">
-                      <div class="kit-type-badge">✓</div>
-                      <div class="kit-type-icon">💊</div>
-                      <div class="kit-type-name">Sanitario</div>
-                      <div class="kit-type-desc">Medicamentos</div>
+                      <div class="kit-type-badge">✓</div><div class="kit-type-icon">💊</div>
+                      <div class="kit-type-name">Sanitario</div><div class="kit-type-desc">Medicamentos</div>
                     </div>
                     <div class="kit-type-card kit-clothes" onclick="selectKitType(this,'clothes')" data-type="clothes">
-                      <div class="kit-type-badge">✓</div>
-                      <div class="kit-type-icon">🧥</div>
-                      <div class="kit-type-name">Ropa</div>
-                      <div class="kit-type-desc">Abrigo y mantas</div>
+                      <div class="kit-type-badge">✓</div><div class="kit-type-icon">🧥</div>
+                      <div class="kit-type-name">Ropa</div><div class="kit-type-desc">Abrigo y mantas</div>
                     </div>
                     <div class="kit-type-card kit-tools" onclick="selectKitType(this,'tools')" data-type="tools">
-                      <div class="kit-type-badge">✓</div>
-                      <div class="kit-type-icon">🔧</div>
-                      <div class="kit-type-name">Herramientas</div>
-                      <div class="kit-type-desc">Equipamiento</div>
+                      <div class="kit-type-badge">✓</div><div class="kit-type-icon">🔧</div>
+                      <div class="kit-type-name">Herramientas</div><div class="kit-type-desc">Equipamiento</div>
                     </div>
                     <div class="kit-type-card kit-custom" onclick="selectKitType(this,'custom')" data-type="custom" style="grid-column:span 2;">
-                      <div class="kit-type-badge">✓</div>
-                      <div class="kit-type-icon">✏️</div>
-                      <div class="kit-type-name">Personalizado</div>
-                      <div class="kit-type-desc">Crea tu propio kit</div>
+                      <div class="kit-type-badge">✓</div><div class="kit-type-icon">✏️</div>
+                      <div class="kit-type-name">Personalizado</div><div class="kit-type-desc">Crea tu propio kit</div>
                     </div>
                   </div>
                 </div>
-                <!-- Builder -->
                 <div class="kit-builder" id="kitBuilderPanel">
                   <div class="kit-color-strip" id="kitColorStrip" style="background:#C0392B;"></div>
                   <div class="kit-builder-header">
@@ -1758,13 +1840,13 @@
                     <span style="font-size:11px;color:var(--muted);" id="kitBuilderSub">Edita cantidades o añade elementos</span>
                   </div>
                   <div class="kit-custom-name-wrap" id="kitCustomNameWrap" style="display:none;">
-                    <input class="kit-custom-name-input" id="kitCustomName" placeholder="Nombre del kit personalizado...">
+                    <input class="kit-custom-name-input" id="kitCustomName" placeholder="Nombre del kit...">
                   </div>
                   <div class="kit-items" id="kitItemsList"></div>
-                  <div class="kit-add-row" id="kitAddRow">
-                    <div class="kit-add-emoji" id="kitAddEmoji" onclick="cycleEmoji(this)" title="Cambiar icono">📦</div>
-                    <input class="kit-add-input" id="kitAddName" placeholder="Nombre del elemento...">
-                    <button class="kit-add-btn" onclick="addKitItem()" title="Añadir">+</button>
+                  <div class="kit-add-row">
+                    <div class="kit-add-emoji" id="kitAddEmoji" onclick="cycleEmoji(this)">📦</div>
+                    <input class="kit-add-input" id="kitAddName" placeholder="Añadir elemento...">
+                    <button class="kit-add-btn" onclick="addKitItem()">+</button>
                   </div>
                   <div class="kit-footer">
                     <div class="kit-total">
@@ -1776,144 +1858,110 @@
                 </div>
                 <div id="kitCreatedList" class="kit-created-list"></div>
               </div>
-              <div style="margin-top:4px;display:flex;justify-content:flex-end;">
-                <button class="btn-submit" style="width:auto;padding:10px 24px;font-size:13px;" onclick="switchDemo('traza')">Ver trazabilidad →</button>
-              </div>
+              <div class="d-btn-next"><button onclick="switchDemo('traza')">Ver trazabilidad →</button></div>
             </div>
 
-            <!-- ════ TAB 5: TRAZABILIDAD ════ -->
+            <!-- ══ TAB 5: TRAZABILIDAD ══ -->
             <div class="demo-panel" id="tab-traza">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-                <div>
-                  <div style="font-family:Syne,sans-serif;font-size:15px;font-weight:600;color:var(--dark);">✅ Trazabilidad y entrega verificada</div>
-                  <div style="font-size:12px;color:var(--muted);margin-top:2px;">Cada kit — desde la preparación hasta la entrega confirmada</div>
-                </div>
-              </div>
-              <div class="traza-list" id="trazaList">
-
+              <div class="d-panel-title">✅ Trazabilidad y entrega verificada</div>
+              <div class="d-panel-sub">Cada kit — desde la preparación hasta la confirmación de entrega.</div>
+              <div class="traza-list">
                 <!-- Kit 1 -->
                 <div class="traza-card" id="trazaCard1">
-                  <div class="traza-card-header" onclick="toggleTraza('trazaSteps1')">
+                  <div class="traza-header" onclick="toggleTraza('trazaSteps1')">
                     <div class="traza-box" style="background:#FDF0EF;color:#C0392B;">🍱</div>
                     <div class="traza-info">
                       <div class="traza-name">Kit Alimenticio · C/ Sueca, 22</div>
                       <div class="traza-sub">6 personas · Asignado hace 5 min</div>
                     </div>
-                    <span class="traza-status" style="background:#FEF5EC;color:#9A5C00;">En tránsito</span>
+                    <span class="traza-status-badge" style="background:#FEF5EC;color:#9A5C00;">En tránsito</span>
                   </div>
                   <div class="traza-steps" id="trazaSteps1">
-                    <div class="traza-timeline" id="trazaTl1">
+                    <div class="traza-timeline">
                       <div class="traza-tl-item">
-                        <div class="traza-tl-dot-wrap">
-                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                          <div class="traza-tl-line" style="background:var(--border);"></div>
-                        </div>
-                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Necesidad validada</div><div class="traza-tl-meta">Hace 18 min · Coordinador: Elena M.</div></div>
+                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div><div class="traza-tl-line"></div></div>
+                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Necesidad validada</div><div class="traza-tl-meta">Hace 18 min · Coordinadora: Elena M.</div></div>
                       </div>
                       <div class="traza-tl-item">
-                        <div class="traza-tl-dot-wrap">
-                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                          <div class="traza-tl-line" style="background:var(--border);"></div>
-                        </div>
+                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div><div class="traza-tl-line"></div></div>
                         <div class="traza-tl-text"><div class="traza-tl-label">✓ Kit preparado</div><div class="traza-tl-meta">Hace 12 min · Punto Colón · 18 artículos</div></div>
                       </div>
                       <div class="traza-tl-item">
-                        <div class="traza-tl-dot-wrap">
-                          <div class="traza-tl-dot" style="background:#EF9F27;color:#EF9F27;"></div>
-                          <div class="traza-tl-line" style="background:var(--border);"></div>
-                        </div>
+                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#EF9F27;color:#EF9F27;"></div><div class="traza-tl-line"></div></div>
                         <div class="traza-tl-text"><div class="traza-tl-label" style="color:#EF9F27;">→ En camino</div><div class="traza-tl-meta">Voluntario: Marcos T. · ETA 6 min</div></div>
                       </div>
                       <div class="traza-tl-item" id="trazaTlEntrega1" style="opacity:0.4;">
-                        <div class="traza-tl-dot-wrap">
-                          <div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div>
-                        </div>
-                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:var(--muted);">Pendiente entrega</div><div class="traza-tl-meta">Esperando confirmación del receptor</div></div>
+                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div></div>
+                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:var(--muted);">Pendiente entrega</div><div class="traza-tl-meta">Esperando confirmación</div></div>
                       </div>
                     </div>
-                    <button class="traza-confirm-btn" id="trazaBtn1" onclick="confirmarEntrega('trazaCard1','trazaBtn1','trazaTlEntrega1','trazaStatus1')">
+                    <button class="traza-confirm-btn" id="trazaBtn1" onclick="confirmarEntrega('trazaCard1','trazaBtn1','trazaTlEntrega1')">
                       📲 Confirmar entrega recibida
                     </button>
                   </div>
                 </div>
-
-                <!-- Kit 2 — ya entregado -->
+                <!-- Kit 2 entregado -->
                 <div class="traza-card">
-                  <div class="traza-card-header" onclick="toggleTraza('trazaSteps2')">
+                  <div class="traza-header" onclick="toggleTraza('trazaSteps2')">
                     <div class="traza-box" style="background:#EAFAF1;color:#27AE60;">🧥</div>
                     <div class="traza-info">
                       <div class="traza-name">Kit Ropa · Av. Mistral, 3</div>
                       <div class="traza-sub">3 personas · Entregado hace 22 min</div>
                     </div>
-                    <span class="traza-status" style="background:#EAFAF1;color:#1D6A3A;">✓ Entregado</span>
+                    <span class="traza-status-badge" style="background:#EAFAF1;color:#1D6A3A;">✓ Entregado</span>
                   </div>
                   <div class="traza-steps" id="trazaSteps2">
                     <div class="traza-timeline">
                       <div class="traza-tl-item">
-                        <div class="traza-tl-dot-wrap">
-                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                          <div class="traza-tl-line" style="background:var(--border);"></div>
-                        </div>
+                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div><div class="traza-tl-line"></div></div>
                         <div class="traza-tl-text"><div class="traza-tl-label">✓ Validada</div><div class="traza-tl-meta">Hace 40 min</div></div>
                       </div>
                       <div class="traza-tl-item">
-                        <div class="traza-tl-dot-wrap">
-                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                          <div class="traza-tl-line" style="background:var(--border);"></div>
-                        </div>
+                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div><div class="traza-tl-line"></div></div>
                         <div class="traza-tl-text"><div class="traza-tl-label">✓ Kit preparado y enviado</div><div class="traza-tl-meta">Hace 35 min · 11 artículos</div></div>
                       </div>
                       <div class="traza-tl-item">
-                        <div class="traza-tl-dot-wrap">
-                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                        </div>
-                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:#1D9E75;">✓ Entrega confirmada</div><div class="traza-tl-meta">Hace 22 min · Receptor: Carmen R. · Firma digital registrada</div></div>
+                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div></div>
+                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:#1D9E75;">✓ Entrega confirmada</div><div class="traza-tl-meta">Hace 22 min · Carmen R. · Firma registrada</div></div>
                       </div>
                     </div>
                   </div>
                 </div>
-
                 <!-- Kit 3 -->
                 <div class="traza-card" id="trazaCard3">
-                  <div class="traza-card-header" onclick="toggleTraza('trazaSteps3')">
+                  <div class="traza-header" onclick="toggleTraza('trazaSteps3')">
                     <div class="traza-box" style="background:#FEF5EC;color:#E67E22;">💊</div>
                     <div class="traza-info">
                       <div class="traza-name">Kit Sanitario · C/ Dénia, 8</div>
                       <div class="traza-sub">12 personas · Preparando</div>
                     </div>
-                    <span class="traza-status" id="trazaStatus3" style="background:#EEF2FF;color:#5C6BC0;">Preparando</span>
+                    <span class="traza-status-badge" id="trazaStatus3" style="background:#EEF2FF;color:#5C6BC0;">Preparando</span>
                   </div>
                   <div class="traza-steps" id="trazaSteps3">
                     <div class="traza-timeline">
                       <div class="traza-tl-item">
-                        <div class="traza-tl-dot-wrap">
-                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                          <div class="traza-tl-line" style="background:var(--border);"></div>
-                        </div>
-                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Validada — alta prioridad</div><div class="traza-tl-meta">Hace 8 min · Coordinador: Miguel R.</div></div>
+                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div><div class="traza-tl-line"></div></div>
+                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Validada — alta prioridad</div><div class="traza-tl-meta">Hace 8 min · Miguel R.</div></div>
                       </div>
                       <div class="traza-tl-item" id="trazaTlEntrega3" style="opacity:0.4;">
-                        <div class="traza-tl-dot-wrap">
-                          <div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div>
-                        </div>
-                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:var(--muted);">En preparación</div><div class="traza-tl-meta">Punto Colón · Asignando voluntario</div></div>
+                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div></div>
+                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:var(--muted);">En preparación</div><div class="traza-tl-meta">Asignando voluntario</div></div>
                       </div>
                     </div>
-                    <button class="traza-confirm-btn" id="trazaBtn3" onclick="confirmarEntrega('trazaCard3','trazaBtn3','trazaTlEntrega3','trazaStatus3')">
+                    <button class="traza-confirm-btn" id="trazaBtn3" onclick="confirmarEntrega('trazaCard3','trazaBtn3','trazaTlEntrega3')">
                       📲 Marcar como entregado
                     </button>
                   </div>
                 </div>
-
               </div>
-            </div><!-- /tab-traza -->
+            </div>
 
           </div><!-- /demo-content -->
         </div><!-- /demo-shell -->
       </div>
     </div>
 
-    <!-- LIVE MAP -->
+<!-- LIVE MAP -->
     <div id="liveMap">
         <div class="inner">
             <div class="label reveal">04 — Impacto en tiempo real</div>
@@ -2688,7 +2736,172 @@
 
 
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+// ══════════════════════════════════════════════
+// DEMO — 5 tabs (mobile-first)
+// ══════════════════════════════════════════════
+
+// ── switchDemo ──
+window.switchDemo = function(tab) {
+  document.querySelectorAll('.demo-panel').forEach(function(p){ p.classList.remove('active'); });
+  var panel = document.getElementById('tab-' + tab);
+  if (panel) panel.classList.add('active');
+  var order = ['necesidad','validacion','muro','kits','traza'];
+  var idx = order.indexOf(tab);
+  document.querySelectorAll('.demo-step').forEach(function(s, i){
+    s.classList.remove('active','done');
+    if (i < idx) s.classList.add('done');
+    else if (i === idx) s.classList.add('active');
+  });
+  if (tab === 'muro' && window._necValidada) {
+    var d = document.getElementById('muroNecDinamica');
+    if (d) d.style.display = 'flex';
+  }
+  if (tab === 'kits' && typeof renderKitItems === 'function') {
+    renderKitItems(window.currentKitType || 'food');
+  }
+};
+
+// ── chip / prio helpers ──
+window.selectChipIn = function(el, groupId) {
+  var g = document.getElementById(groupId);
+  if (g) g.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+};
+window.selectPrioIn = function(el, rowId, level) {
+  var g = document.getElementById(rowId);
+  if (g) g.querySelectorAll('.prio-btn').forEach(function(b){ b.className = 'prio-btn'; });
+  el.classList.add('active-' + level);
+};
+
+// ── TAB 1 ──
+window.enviarNecesidad = function() {
+  var btn = document.getElementById('necBtn');
+  btn.textContent = '✓ Enviando...'; btn.style.background = '#085041'; btn.disabled = true;
+  setTimeout(function(){
+    var np = document.getElementById('necNewPoint');
+    if (np) np.style.opacity = '1';
+    var ubic = document.getElementById('necUbic');
+    var pers = document.getElementById('necPersonas');
+    var catEl = document.querySelector('#necCatChips .chip.active');
+    var prioEl = document.querySelector('#necPrioRow .prio-btn[class*="active"]');
+    var summary = document.getElementById('necSummary');
+    if (summary) {
+      var rows = [
+        ['Ubicación', ubic ? ubic.value : '—'],
+        ['Categoría', catEl ? catEl.textContent : '—'],
+        ['Prioridad',  prioEl ? prioEl.textContent : '—'],
+        ['Personas',  pers ? pers.value : '—'],
+      ];
+      summary.innerHTML = rows.map(function(r){
+        return '<div class="nec-summary-row"><span style="color:var(--muted);">' + r[0] + '</span><span style="font-weight:500;">' + r[1] + '</span></div>';
+      }).join('');
+    }
+    var conf = document.getElementById('necConfirm');
+    if (conf) conf.classList.add('visible');
+    btn.textContent = '✓ Enviada'; btn.style.background = ''; btn.disabled = false;
+    window._necEnviada = true;
+  }, 700);
+};
+
+// ── TAB 2 ──
+window.toggleValExpand = function(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+};
+window.validarNec = function(e, cardId, actId, doneId, ok) {
+  e.stopPropagation();
+  var card   = document.getElementById(cardId);
+  var doneEl = document.getElementById(doneId);
+  // Hide action buttons
+  var actEls = card.querySelectorAll('.val-btn');
+  actEls.forEach(function(b){ b.style.display = 'none'; });
+  if (doneEl) {
+    doneEl.style.display = 'block';
+    if (ok) {
+      doneEl.style.cssText += 'background:#EAFAF1;color:#1D6A3A;';
+      doneEl.textContent = '✓ Validada — publicada en el muro de coordinación';
+      if (card) card.dataset.estado = 'validada';
+      window._necValidada = true;
+    } else {
+      doneEl.style.cssText += 'background:#FDEDEC;color:#922B21;';
+      doneEl.textContent = '✕ Rechazada — solicitante notificado';
+      if (card) card.dataset.estado = 'rechazada';
+    }
+    var badge = card.querySelector('.d-badge');
+    if (badge) {
+      badge.className = 'd-badge ' + (ok ? 'd-badge-ok' : 'nec-badge-rej');
+      badge.textContent = ok ? '✓ Validada' : '✕ Rechazada';
+    }
+    var expandId = doneId.replace('valDone','valExpand');
+    var expEl = document.getElementById(expandId);
+    if (expEl && !expEl.classList.contains('open')) expEl.classList.add('open');
+  }
+};
+window.filtrarVal = function(estado, btn) {
+  document.querySelectorAll('.val-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.val-list .val-card').forEach(function(c){
+    c.style.display = (estado === 'todas' || c.dataset.estado === estado) ? '' : 'none';
+  });
+};
+
+// ── TAB 3 ──
+window.filtrarMuro = function(tipo, btn) {
+  document.querySelectorAll('.muro-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('#muroFeed .muro-item').forEach(function(item){
+    item.classList.toggle('hidden', tipo !== 'todas' && item.dataset.tipo !== tipo);
+  });
+};
+window.claimMuro = function(btn) {
+  btn.textContent = '✓ Asignado';
+  btn.style.cssText += 'background:var(--teal);color:#fff;border:none;cursor:default;';
+  btn.disabled = true;
+  btn.className = 'muro-claimed';
+};
+
+// ── TAB 5 ──
+window.toggleTraza = function(id) {
+  document.querySelectorAll('.traza-steps').forEach(function(s){
+    if (s.id !== id) s.classList.remove('open');
+  });
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+};
+window.confirmarEntrega = function(cardId, btnId, tlItemId) {
+  var btn    = document.getElementById(btnId);
+  var tlItem = document.getElementById(tlItemId);
+  var card   = document.getElementById(cardId);
+  if (btn) { btn.textContent = 'Confirmando...'; btn.disabled = true; }
+  setTimeout(function(){
+    if (tlItem) {
+      tlItem.style.opacity = '1';
+      var dot   = tlItem.querySelector('.traza-tl-dot');
+      var label = tlItem.querySelector('.traza-tl-label');
+      var meta  = tlItem.querySelector('.traza-tl-meta');
+      if (dot)   { dot.style.background = '#1D9E75'; dot.style.color = '#1D9E75'; }
+      if (label) { label.textContent = '✓ Entrega confirmada'; label.style.color = '#1D9E75'; }
+      if (meta)  { meta.textContent = 'Ahora · Receptor confirmado'; }
+    }
+    var statusEl = card ? card.querySelector('.traza-status-badge') : null;
+    if (statusEl) { statusEl.style.background = '#EAFAF1'; statusEl.style.color = '#1D6A3A'; statusEl.textContent = '✓ Entregado'; }
+    if (btn) { btn.textContent = '✓ Entrega registrada'; btn.style.background = '#085041'; }
+  }, 600);
+};
+
+// Legacy tab switching kept for any residual onclick calls
+window.switchTab = function(name) {
+  var map = { emergencia:'necesidad', chat:'muro', kit:'kits' };
+  window.switchDemo(map[name] || name);
+};
+
+document.addEventListener('DOMContentLoaded', function(){
+  if (typeof renderKitItems === 'function') renderKitItems('food');
+});
+</script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         (function() {
         // ── MARKER DATA ──
@@ -2837,210 +3050,7 @@
         }
         
         })();
-    
-// ══════════════════════════════════════════════
-// DEMO v2 — 5 funcionalidades
-// ══════════════════════════════════════════════
-
-// ── switchDemo: navigate between 5 tabs ──
-window.switchDemo = function(tab, stepEl) {
-  // Hide all panels
-  document.querySelectorAll('.demo-panel').forEach(function(p){ p.classList.remove('active'); });
-  var panel = document.getElementById('tab-' + tab);
-  if (panel) panel.classList.add('active');
-
-  // Update step indicators
-  var steps = document.querySelectorAll('.demo-step');
-  var tabOrder = ['necesidad','validacion','muro','kits','traza'];
-  var targetIdx = tabOrder.indexOf(tab);
-  steps.forEach(function(s, i){
-    s.classList.remove('active','done');
-    if (i < targetIdx) s.classList.add('done');
-    else if (i === targetIdx) s.classList.add('active');
-  });
-
-  // Show muro dynamic item if previously validated
-  if (tab === 'muro') {
-    var din = document.getElementById('muroNecDinamica');
-    if (din && window._necValidada) din.style.display = 'flex';
-  }
-};
-
-// ── selectChipGroup / selectPrioGroup ──
-window.selectChipGroup = function(el, groupId) {
-  var g = document.getElementById(groupId) || el.closest('.type-chips');
-  if (g) g.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
-  el.classList.add('active');
-};
-window.selectPrioGroup = function(el, groupId, level) {
-  var g = document.getElementById(groupId) || el.closest('.priority-row');
-  if (g) g.querySelectorAll('.prio-btn').forEach(function(b){ b.className='prio-btn'; });
-  el.classList.add('active-' + level);
-};
-
-// ── TAB 1: Enviar necesidad ──
-window.enviarNecesidad = function() {
-  var btn = document.getElementById('necBtn');
-  var ubic = document.getElementById('necUbic');
-  var personas = document.getElementById('necPersonas');
-  var desc = document.getElementById('necDesc');
-  var catEl = document.querySelector('#necCat .chip.active');
-  var prioEl = document.querySelector('#necPrio .prio-btn.active-high, #necPrio .prio-btn.active-mid, #necPrio .prio-btn.active-low');
-
-  btn.textContent = '✓ Enviando...';
-  btn.style.background = '#085041';
-  btn.disabled = true;
-
-  setTimeout(function(){
-    // Show on map
-    var np = document.getElementById('necNewPoint');
-    if (np) np.style.opacity = '1';
-
-    // Fill summary
-    var summary = document.getElementById('necSummary');
-    if (summary) {
-      var cat = catEl ? catEl.textContent : 'Alimentación';
-      var prio = prioEl ? prioEl.textContent : 'Media';
-      summary.innerHTML =
-        '<div class="nec-row"><span class="nec-key">Ubicación</span><span class="nec-val">'+(ubic?ubic.value:'—')+'</span></div>'+
-        '<div class="nec-row"><span class="nec-key">Categoría</span><span class="nec-val">'+cat+'</span></div>'+
-        '<div class="nec-row"><span class="nec-key">Prioridad</span><span class="nec-val">'+prio+'</span></div>'+
-        '<div class="nec-row"><span class="nec-key">Personas</span><span class="nec-val">'+(personas?personas.value:'—')+'</span></div>';
-    }
-
-    var preview = document.getElementById('necPreview');
-    if (preview) preview.classList.add('visible');
-
-    btn.textContent = '✓ Necesidad enviada';
-    btn.style.background = '';
-    btn.disabled = false;
-    window._necEnviada = true;
-  }, 700);
-};
-
-// ── TAB 2: Validar/rechazar ──
-window.toggleValExpand = function(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.classList.toggle('open');
-};
-
-window.validarNec = function(e, cardId, actId, doneId, aprobado) {
-  e.stopPropagation();
-  var actEl  = document.getElementById(actId);
-  var doneEl = document.getElementById(doneId);
-  var card   = document.getElementById(cardId);
-
-  if (actEl) actEl.style.display = 'none';
-  if (doneEl) {
-    doneEl.style.display = 'block';
-    if (aprobado) {
-      doneEl.style.cssText += 'background:#EAFAF1;color:#1D6A3A;';
-      doneEl.textContent = '✓ Validada y publicada en el muro de coordinación';
-      if (card) card.dataset.estado = 'validada';
-      window._necValidada = true;
-    } else {
-      doneEl.style.cssText += 'background:#FDEDEC;color:#922B21;';
-      doneEl.textContent = '✕ Rechazada — el solicitante será notificado';
-      if (card) card.dataset.estado = 'rechazada';
-    }
-    // Update badge in header
-    var metaEl = card ? card.querySelector('.val-meta .nec-badge') : null;
-    if (metaEl) {
-      metaEl.className = 'nec-badge ' + (aprobado ? 'nec-badge-ok' : 'nec-badge-rej');
-      metaEl.textContent = aprobado ? '✓ Validada' : '✕ Rechazada';
-    }
-    // Open expand if not already open
-    var expandId = actId.replace('valAct','valExpand');
-    var expandEl = document.getElementById(expandId);
-    if (expandEl && !expandEl.classList.contains('open')) expandEl.classList.add('open');
-  }
-};
-
-window.filtrarVal = function(estado, btn) {
-  document.querySelectorAll('#valFilterBtns .val-btn').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
-  document.querySelectorAll('#valList .val-card').forEach(function(c){
-    if (estado === 'todas') c.style.display = '';
-    else c.style.display = c.dataset.estado === estado ? '' : 'none';
-  });
-};
-
-// ── TAB 3: Muro filtros + claim ──
-window.filtrarMuro = function(tipo, btn) {
-  document.querySelectorAll('.muro-filter-btn').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
-  document.querySelectorAll('#muroFeed .muro-item').forEach(function(item){
-    if (tipo === 'todas') item.classList.remove('hidden');
-    else item.classList.toggle('hidden', item.dataset.tipo !== tipo);
-  });
-};
-
-window.claimMuro = function(btn) {
-  btn.textContent = '✓ Asignado';
-  btn.style.background = 'var(--teal)';
-  btn.style.color = '#fff';
-  btn.style.border = 'none';
-  btn.disabled = true;
-  btn.classList.remove('muro-claim-btn');
-  btn.classList.add('muro-claimed');
-};
-
-// ── TAB 5: Trazabilidad ──
-window.toggleTraza = function(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  // Close others
-  document.querySelectorAll('.traza-steps').forEach(function(s){
-    if (s.id !== id) s.classList.remove('open');
-  });
-  el.classList.toggle('open');
-};
-
-window.confirmarEntrega = function(cardId, btnId, tlItemId, statusId) {
-  var btn    = document.getElementById(btnId);
-  var tlItem = document.getElementById(tlItemId);
-  var card   = document.getElementById(cardId);
-  var statusEl = card ? card.querySelector('.traza-status') : null;
-
-  if (btn) { btn.textContent = 'Confirmando...'; btn.disabled = true; }
-
-  setTimeout(function(){
-    if (tlItem) {
-      tlItem.style.opacity = '1';
-      var dotEl = tlItem.querySelector('.traza-tl-dot');
-      var labelEl = tlItem.querySelector('.traza-tl-label');
-      var metaEl  = tlItem.querySelector('.traza-tl-meta');
-      if (dotEl)  { dotEl.style.background = '#1D9E75'; dotEl.style.color = '#1D9E75'; }
-      if (labelEl){ labelEl.textContent = '✓ Entrega confirmada'; labelEl.style.color = '#1D9E75'; }
-      if (metaEl) { metaEl.textContent = 'Ahora · Receptor confirmado · Registro actualizado'; }
-    }
-    if (statusEl) {
-      statusEl.style.background = '#EAFAF1';
-      statusEl.style.color = '#1D6A3A';
-      statusEl.textContent = '✓ Entregado';
-    }
-    if (btn) {
-      btn.textContent = '✓ Entrega registrada';
-      btn.style.background = '#085041';
-    }
-  }, 600);
-};
-
-// ── Keep legacy switchTab for backward compat ──
-window.switchTab = function(name) {
-  // map old tab names to new
-  var map = { emergencia:'necesidad', chat:'muro', kit:'kits' };
-  switchDemo(map[name] || name);
-};
-
-// Init demo
-document.addEventListener('DOMContentLoaded', function(){
-  // Init kit builder on kits tab
-  if (typeof renderKitItems === 'function') renderKitItems('food');
-});
-
-</script>
+    </script>
 </body>
 
 </html>
