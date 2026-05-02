@@ -1069,7 +1069,158 @@
           .coord-divider::before, .coord-divider::after {
             content: ''; flex: 1; height: 1px; background: var(--border);
           }
-    </style>
+    
+/* ══════════════════════════════════════════════
+   DEMO v2 — 5 funcionalidades
+══════════════════════════════════════════════ */
+
+/* Step indicator strip above tabs */
+.demo-steps {
+  display:flex; background:#1C2D24; border-bottom:1px solid rgba(255,255,255,0.06);
+  padding:0 4px; overflow-x:auto; scrollbar-width:none;
+}
+.demo-steps::-webkit-scrollbar{display:none;}
+.demo-step {
+  flex:1; min-width:80px; display:flex; flex-direction:column; align-items:center;
+  padding:10px 6px 9px; cursor:pointer; border-bottom:3px solid transparent;
+  transition:all 0.18s; color:rgba(255,255,255,0.38); font-family:'DM Sans',sans-serif;
+  user-select:none; gap:3px; font-size:11px; font-weight:500; white-space:nowrap;
+}
+.demo-step .ds-num {
+  width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
+  transition:all 0.18s;
+}
+.demo-step.active { color:#5DCAA5; border-bottom-color:#5DCAA5; }
+.demo-step.active .ds-num { background:#5DCAA5; color:#0E1A16; }
+.demo-step.done { color:rgba(255,255,255,0.55); }
+.demo-step.done .ds-num { background:rgba(93,202,165,0.25); color:#5DCAA5; }
+.demo-step:hover:not(.active) { color:rgba(255,255,255,0.75); }
+
+/* Panel base */
+.demo-panel { display:none; padding:20px; animation:fadeUp 0.25s ease both; }
+.demo-panel.active { display:block; }
+
+/* ── TAB 1: Activar Necesidad ── */
+.nec-layout { display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
+.nec-form { background:#fff; border-radius:18px; padding:20px; border:1px solid rgba(29,158,117,0.1); }
+.nec-map { background:#1A2820; border-radius:18px; overflow:hidden; position:relative; min-height:380px; }
+.nec-preview { background:#fff; border-radius:18px; padding:18px; border:1px solid rgba(29,158,117,0.1); display:none; }
+.nec-preview.visible { display:block; animation:fadeUp 0.3s ease both; }
+.nec-badge {
+  display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;
+  padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:0.5px;
+}
+.nec-badge-pend { background:#FEF5EC;color:#9A5C00;border:1px solid #F5CBA7; }
+.nec-badge-ok   { background:#EAFAF1;color:#1D6A3A;border:1px solid #A9DFBF; }
+.nec-badge-urg  { background:#FDEDEC;color:#922B21;border:1px solid #F1948A; }
+.nec-summary { margin-top:12px;display:flex;flex-direction:column;gap:8px; }
+.nec-row { display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid var(--border); }
+.nec-row:last-child{border-bottom:none;}
+.nec-key{color:var(--muted);}
+.nec-val{font-weight:500;color:var(--dark);text-align:right;}
+
+/* ── TAB 2: Panel de validación ── */
+.val-list { display:flex;flex-direction:column;gap:10px; }
+.val-card {
+  background:#fff;border-radius:14px;border:1px solid var(--border);
+  overflow:hidden;transition:box-shadow 0.18s;
+}
+.val-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.07);}
+.val-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;}
+.val-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.val-info{flex:1;min-width:0;}
+.val-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--dark);}
+.val-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.val-actions{display:flex;gap:6px;flex-shrink:0;}
+.val-btn{padding:6px 12px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.val-btn-ok{background:#EAFAF1;color:#1D6A3A;}
+.val-btn-ok:hover{background:#A9DFBF;}
+.val-btn-rej{background:#FDEDEC;color:#922B21;}
+.val-btn-rej:hover{background:#F1948A;}
+.val-btn-more{background:var(--bg);color:var(--muted);border:1px solid var(--border)!important;}
+.val-expand{display:none;padding:10px 14px 14px;border-top:1px solid var(--border);background:var(--bg);}
+.val-expand.open{display:block;animation:fadeUp 0.2s ease both;}
+.val-expand-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.val-field{font-size:12px;color:var(--muted);}
+.val-field span{display:block;color:var(--dark);font-weight:500;margin-top:2px;}
+.val-done-msg{display:none;font-size:12px;font-weight:500;padding:6px 10px;border-radius:8px;margin-top:4px;}
+
+/* ── TAB 3: Muro de coordinación ── */
+.muro-layout{display:grid;grid-template-columns:200px 1fr;gap:14px;}
+.muro-sidebar{display:flex;flex-direction:column;gap:8px;}
+.muro-filter-btn{
+  display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;
+  border:1px solid var(--border);background:#fff;cursor:pointer;font-size:13px;
+  font-family:'DM Sans',sans-serif;transition:all 0.15s;color:var(--text);width:100%;text-align:left;
+}
+.muro-filter-btn.active{background:var(--green-50);border-color:var(--teal);color:var(--teal);font-weight:500;}
+.muro-filter-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.muro-feed{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto;padding-right:4px;}
+.muro-feed::-webkit-scrollbar{width:4px;}
+.muro-feed::-webkit-scrollbar-track{background:transparent;}
+.muro-feed::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.muro-item{background:#fff;border-radius:14px;border:1px solid var(--border);padding:14px;display:flex;gap:12px;align-items:flex-start;transition:border-color 0.15s;}
+.muro-item:hover{border-color:rgba(29,158,117,0.25);}
+.muro-item.hidden{display:none;}
+.muro-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.muro-content{flex:1;min-width:0;}
+.muro-item-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;}
+.muro-item-body{font-size:12px;color:var(--muted);line-height:1.55;}
+.muro-item-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;flex-wrap:wrap;gap:4px;}
+.muro-item-time{font-size:11px;color:var(--muted);}
+.muro-item-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:0.4px;}
+.muro-claim-btn{font-size:11px;padding:4px 10px;border-radius:7px;border:1px solid var(--teal);background:transparent;color:var(--teal);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.muro-claim-btn:hover{background:var(--teal);color:#fff;}
+.muro-claimed{font-size:11px;color:var(--teal);font-weight:500;}
+
+/* ── TAB 4: Kits — same styles kept + traza section ── */
+
+/* ── TAB 5: Trazabilidad ── */
+.traza-layout{display:flex;flex-direction:column;gap:14px;}
+.traza-list{display:flex;flex-direction:column;gap:8px;}
+.traza-card{background:#fff;border-radius:14px;border:1px solid var(--border);overflow:hidden;}
+.traza-card-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;}
+.traza-box{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.traza-info{flex:1;min-width:0;}
+.traza-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--dark);}
+.traza-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.traza-status{font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;}
+.traza-steps{display:none;padding:0 14px 14px;}
+.traza-steps.open{display:block;animation:fadeUp 0.2s ease both;}
+.traza-timeline{display:flex;flex-direction:column;gap:0;margin-top:10px;position:relative;}
+.traza-tl-item{display:flex;gap:12px;align-items:flex-start;position:relative;padding-bottom:14px;}
+.traza-tl-item:last-child{padding-bottom:0;}
+.traza-tl-dot-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:20px;}
+.traza-tl-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:2px;border:2px solid #fff;box-shadow:0 0 0 2px currentColor;}
+.traza-tl-line{width:2px;flex:1;margin-top:2px;min-height:18px;}
+.traza-tl-text{flex:1;font-size:12px;}
+.traza-tl-label{font-weight:600;color:var(--dark);}
+.traza-tl-meta{color:var(--muted);margin-top:1px;}
+.traza-confirm-btn{
+  display:block;width:100%;margin-top:12px;padding:10px;border-radius:12px;border:none;
+  background:var(--teal);color:#fff;font-size:13px;font-weight:500;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:background 0.18s;
+}
+.traza-confirm-btn:hover{background:var(--green-600);}
+.traza-confirm-btn:disabled{background:var(--muted);cursor:default;}
+
+/* ── MOBILE responsive for new demo ── */
+@media(max-width:640px){
+  .nec-layout{grid-template-columns:1fr;}
+  .nec-map{min-height:200px;}
+  .muro-layout{grid-template-columns:1fr;}
+  .muro-sidebar{flex-direction:row;flex-wrap:wrap;}
+  .muro-filter-btn{flex:1;min-width:90px;font-size:12px;padding:7px 8px;}
+  .muro-feed{max-height:340px;}
+  .val-expand-grid{grid-template-columns:1fr;}
+  .val-actions{flex-wrap:wrap;}
+  .demo-step{min-width:60px;font-size:10px;padding:8px 4px;}
+  .demo-step .ds-num{width:18px;height:18px;font-size:10px;}
+  .demo-panel{padding:14px;}
+}
+
+</style>
 </head>
 
 <body>
@@ -1211,352 +1362,555 @@
 
     <!-- DEMO -->
     <div id="demo">
-        <div class="inner">
-            <div class="label reveal">03 — Demo interactiva</div>
-            <h2 class="section-title reveal reveal-delay-1">Pruébalo tú mismo</h2>
-            <p class="section-sub reveal reveal-delay-2">Explora las principales funcionalidades de Kit2Help sin crear ninguna cuenta.</p>
+      <div class="inner">
+        <div class="label reveal">03 — Demo interactiva</div>
+        <h2 class="section-title reveal reveal-delay-1">Pruébalo tú mismo</h2>
+        <p class="section-sub reveal reveal-delay-2">Cinco funcionalidades conectadas: desde la necesidad detectada hasta la entrega verificada.</p>
 
-            <div class="demo-shell reveal">
-                <!-- topbar -->
-                <div class="demo-topbar">
-                    <div class="dot dot-red"></div>
-                    <div class="dot dot-yellow"></div>
-                    <div class="dot dot-green"></div>
-                    <span class="demo-url">kit2help.es / demo prototipo</span>
-                </div>
-                <!-- tabs -->
-                <div class="demo-tabs">
-                    <div class="demo-tab active" onclick="switchTab('emergencia')">🚨 Emergencia</div>
-                    <div class="demo-tab" onclick="switchTab('chat')">📋 Coordinación</div>
-                    <div class="demo-tab" onclick="switchTab('kit')">📦 Kit</div>
-                </div>
-                <!-- content -->
-                <div class="demo-content">
+        <div class="demo-shell reveal">
+          <!-- topbar -->
+          <div class="demo-topbar">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+            <span class="demo-url">kit2help.app / demo</span>
+          </div>
 
-                    <!-- TAB: EMERGENCIA -->
-                    <div class="demo-panel active" id="tab-emergencia">
-                        <div class="emergency-layout">
-                            <!-- LEFT: form -->
-                            <div class="emergency-form">
-                                <div class="form-title">Nueva emergencia</div>
-                                <div class="form-group">
-                                    <label>Ubicación detectada</label>
-                                    <input type="text" value="Plaça de l'Ajuntament, 1 — Valencia, 46002" readonly style="background:#f7faf8;color:var(--muted)">
-                                </div>
-                                <div class="form-group">
-                                    <label>Tipo de emergencia</label>
-                                    <div class="type-chips">
-                                        <div class="chip active" onclick="selectChip(this)">🌊 Inundación</div>
-                                        <div class="chip" onclick="selectChip(this)">🔥 Incendio</div>
-                                        <div class="chip" onclick="selectChip(this)">🏔️ Terremoto</div>
-                                        <div class="chip" onclick="selectChip(this)">⚡ Otro</div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Descripción breve</label>
-                                    <textarea rows="2" placeholder="Describe la situación..." style="resize:none"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label>Nivel de prioridad</label>
-                                    <div class="priority-row">
-                                        <div class="prio-btn" onclick="selectPrio(this,'low')">Baja</div>
-                                        <div class="prio-btn" onclick="selectPrio(this,'mid')">Media</div>
-                                        <div class="prio-btn active-high" onclick="selectPrio(this,'high')">Alta</div>
-                                    </div>
-                                </div>
-                                <button class="btn-submit" id="emergBtn" onclick="activarEmergencia()">Activar emergencia</button>
-                            </div>
-                            <!-- RIGHT: mini map -->
-                            <div class="emergency-map-col" id="emergMap">
-                                <div class="emap-header">
-                                    <div class="emap-badge">
-                                        <div class="rdot"></div> Mapa en vivo</div>
-                                    <div class="emap-zoom">
-                                        <button onclick="this.closest('.emergency-map-col').querySelector('svg').style.transform='scale('+(parseFloat(this.closest('.emergency-map-col').querySelector('svg').style.transform.replace(/[^0-9.]/g,''))||1)+0.15+')'">+</button>
-                                        <div class="zdivider"></div>
-                                        <button>−</button>
-                                    </div>
-                                </div>
-                                <!-- new point marker (hidden until activate) -->
-                                <div class="new-point-marker" id="newPointMarker" style="top:42%;left:30%;">
-                                    <div class="npm-dot"></div>
-                                    <div class="npm-ring"></div>
-                                    <div class="npm-label">¡Nueva emergencia!</div>
-                                </div>
-                                <!-- SVG mini-map of Valencia -->
-                                <svg id="emergSvg" viewBox="0 0 420 420" style="width:100%;height:100%;position:absolute;inset:0;transition:transform 0.5s ease;" xmlns="http://www.w3.org/2000/svg">
-                                    <!-- base fill -->
-                                    <rect width="420" height="420" fill="#1A2820" />
-                                    <!-- district blocks -->
-                                    <rect x="20" y="20" width="90" height="70" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="120" y="20" width="80" height="50" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="210" y="20" width="100" height="80" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="320" y="20" width="80" height="60" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="20" y="110" width="70" height="90" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="100" y="90" width="110" height="100" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="220" y="110" width="90" height="80" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="320" y="90" width="80" height="100" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="20" y="220" width="80" height="90" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="110" y="200" width="100" height="110" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="220" y="200" width="90" height="90" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="320" y="200" width="80" height="100" rx="4" fill="rgba(255,255,255,0.04)" />
-                                    <rect x="20" y="330" width="380" height="70" rx="4" fill="rgba(255,255,255,0.03)" />
-                                    <!-- streets -->
-                                    <g stroke="rgba(255,255,255,0.09)" stroke-width="1" fill="none">
-                                        <line x1="0" y1="80" x2="420" y2="80" />
-                                        <line x1="0" y1="180" x2="420" y2="180" />
-                                        <line x1="0" y1="310" x2="420" y2="310" />
-                                        <line x1="95" y1="0" x2="95" y2="420" />
-                                        <line x1="215" y1="0" x2="215" y2="420" />
-                                        <line x1="315" y1="0" x2="315" y2="420" />
-                                    </g>
-                                    <!-- main avenues -->
-                                    <g stroke="rgba(255,255,255,0.16)" stroke-width="2.5" fill="none">
-                                        <line x1="0" y1="195" x2="420" y2="195" />
-                                        <line x1="160" y1="0" x2="160" y2="420" />
-                                    </g>
-                                    <!-- river hint -->
-                                    <path d="M 0 360 Q 80 340 160 360 Q 240 380 340 355 Q 380 348 420 355" stroke="rgba(100,180,255,0.2)" stroke-width="8" fill="none" />
-                                    <!-- heat zones -->
-                                    <circle cx="125" cy="140" r="60" fill="rgba(226,75,74,0.15)" />
-                                    <circle cx="125" cy="140" r="35" fill="rgba(226,75,74,0.25)" />
-                                    <circle cx="280" cy="250" r="48" fill="rgba(226,75,74,0.12)" />
-                                    <circle cx="280" cy="250" r="25" fill="rgba(226,75,74,0.2)" />
-                                    <circle cx="60" cy="270" r="35" fill="rgba(239,159,39,0.18)" />
-                                    <!-- kit points -->
-                                    <circle cx="200" cy="90" r="10" fill="#1D9E75" opacity="0.95" />
-                                    <text x="200" y="94" text-anchor="middle" fill="white" font-size="9" font-weight="bold">K</text>
-                                    <circle cx="330" cy="160" r="10" fill="#1D9E75" opacity="0.95" />
-                                    <text x="330" y="164" text-anchor="middle" fill="white" font-size="9" font-weight="bold">K</text>
-                                    <!-- volunteer points -->
-                                    <circle cx="170" cy="220" r="9" fill="#EF9F27" opacity="0.9" />
-                                    <text x="170" y="224" text-anchor="middle" fill="white" font-size="8" font-weight="bold">V</text>
-                                    <circle cx="255" cy="130" r="9" fill="#EF9F27" opacity="0.9" />
-                                    <text x="255" y="134" text-anchor="middle" fill="white" font-size="8" font-weight="bold">V</text>
-                                    <!-- existing emergencies -->
-                                    <circle cx="125" cy="140" r="7" fill="#E24B4A" />
-                                    <text x="125" y="144" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
-                                    <circle cx="280" cy="250" r="7" fill="#E24B4A" />
-                                    <text x="280" y="254" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
-                                    <!-- pulse on existing -->
-                                    <circle cx="125" cy="140" r="18" fill="none" stroke="#E24B4A" stroke-width="1.5">
-                                        <animate attributeName="r" values="18;30;18" dur="2s" repeatCount="indefinite" />
-                                        <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite" />
-                                    </circle>
-                                    <!-- new emergency marker (hidden, revealed by JS) -->
-                                    <g id="svgNewPoint" opacity="0" style="transition:opacity 0.5s;">
-                                        <circle cx="128" cy="178" r="35" fill="rgba(226,75,74,0.18)" />
-                                        <circle cx="128" cy="178" r="7" fill="#E24B4A" />
-                                        <text x="128" y="182" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
-                                        <circle cx="128" cy="178" r="18" fill="none" stroke="#E24B4A" stroke-width="1.5">
-                                            <animate attributeName="r" values="18;32;18" dur="1.5s" repeatCount="indefinite" />
-                                            <animate attributeName="opacity" values="0.7;0;0.7" dur="1.5s" repeatCount="indefinite" />
-                                        </circle>
-                                    </g>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB: COORDINACIÓN -->
-                    <div class="demo-panel" id="tab-chat">
-                        <div class="coord-panel">
-
-                            <!-- header con pills de paso -->
-                            <div class="coord-header">
-                                <span class="coord-header-title">📋 Canal de coordinación</span>
-                                <div class="coord-step-pills">
-                                    <div class="coord-pill active" id="pill-1" onclick="coordGoStep(1)">1 Detectar</div>
-                                    <div class="coord-pill" id="pill-2" onclick="coordGoStep(2)">2 Reportar</div>
-                                    <div class="coord-pill" id="pill-3" onclick="coordGoStep(3)">3 Coordinar</div>
-                                </div>
-                            </div>
-
-                            <!-- progress bar -->
-                            <div class="coord-progress">
-                                <div class="coord-progress-bar" id="coordProgressBar" style="width:33%"></div>
-                            </div>
-
-                            <div class="coord-body">
-
-                                <!-- PASO 1: usuario detecta emergencia -->
-                                <div class="coord-screen active" id="coord-step-1">
-                                    <div style="font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Paso 1 de 3 · Detectar situación</div>
-                                    <div class="coord-alert-card">
-                                        <div class="coord-alert-icon">🌊</div>
-                                        <div>
-                                            <div class="coord-alert-title">Alerta activa en tu zona</div>
-                                            <div class="coord-alert-body">Se ha detectado una inundación en Ruzafa, Valencia. 3 zonas afectadas reportadas en los últimos 20 minutos.</div>
-                                            <div class="coord-alert-meta">
-                                                <span class="coord-tag coord-tag-red">🔴 Prioridad Alta</span>
-                                                <span class="coord-tag coord-tag-orange">📍 Ruzafa, Valencia</span>
-                                                <span class="coord-tag coord-tag-green">⏱ Hace 4 min</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style="font-size:13px;color:var(--muted);line-height:1.6;padding:0 2px;">
-                                        Ves agua en la calle y vecinos sin poder salir. Kit2Help ya tiene la alerta activa. Ahora puedes reportar lo que estás viendo directamente desde aquí.
-                                    </div>
-                                    <div class="coord-nav-row">
-                                        <button class="coord-btn-next" onclick="coordGoStep(2)">Reportar lo que veo →</button>
-                                    </div>
-                                </div>
-
-                                <!-- PASO 2: reporta información estructurada -->
-                                <div class="coord-screen" id="coord-step-2">
-                                    <div style="font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Paso 2 de 3 · Reportar información</div>
-                                    <div class="coord-report-form">
-                                        <div class="coord-report-label">¿Qué estás viendo?</div>
-                                        <select class="coord-report-select" id="coordTipo">
-                                            <option value="necesidad" selected>Necesidad urgente</option>
-                                            <option value="recurso">Recurso disponible</option>
-                                            <option value="bloqueo">Acceso bloqueado</option>
-                                            <option value="evacuacion">Evacuación necesaria</option>
-                                        </select>
-                                        <div class="coord-report-row">
-                                            <div>
-                                                <div class="coord-report-label">Zona</div>
-                                                <input class="coord-report-input" id="coordZona" value="C/ Dénia, 14 — Ruzafa" />
-                                            </div>
-                                            <div>
-                                                <div class="coord-report-label">Personas afectadas</div>
-                                                <input class="coord-report-input" id="coordPersonas" type="number" value="8" min="1" />
-                                            </div>
-                                        </div>
-                                        <div class="coord-report-label">Detalle (opcional)</div>
-                                        <input class="coord-report-input" id="coordDetalle" placeholder="Familias en planta baja, sin acceso a escaleras..." value="Familias en planta baja, sin acceso a escaleras" />
-                                    </div>
-                                    <div class="coord-nav-row">
-                                        <button class="coord-btn-back" onclick="coordGoStep(1)">← Volver</button>
-                                        <button class="coord-btn-next" onclick="coordEnviarReporte()">Enviar reporte →</button>
-                                    </div>
-                                </div>
-
-                                <!-- PASO 3: ve información coordinada resultante -->
-                                <div class="coord-screen" id="coord-step-3">
-                                    <div style="font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Paso 3 de 3 · Panel coordinado</div>
-
-                                    <!-- User report injected here by JS -->
-                                    <div id="coordUserReportSlot"></div>
-
-                                    <div class="coord-aviso coord-aviso-urgente">
-                                        <div class="coord-aviso-icon">🚨</div>
-                                        <div class="coord-aviso-content">
-                                            <div class="coord-aviso-label coord-aviso-label-red">Acción urgente</div>
-                                            <div class="coord-aviso-text">8 personas atrapadas en C/ Dénia, 14. Se necesitan voluntarios con barca o acceso elevado. Coordinador asignado: Miguel R.</div>
-                                            <div class="coord-aviso-time">Publicado hace 30 seg · procesado por coordinación</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="coord-aviso coord-aviso-recurso">
-                                        <div class="coord-aviso-icon">📦</div>
-                                        <div class="coord-aviso-content">
-                                            <div class="coord-aviso-label coord-aviso-label-orange">Recurso asignado</div>
-                                            <div class="coord-aviso-text">Kit de emergencia básico (×8) enviado desde Punto Colón. ETA estimada: 12 minutos.</div>
-                                            <div class="coord-aviso-time">Hace 1 min · actualización automática</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="coord-aviso coord-aviso-info">
-                                        <div class="coord-aviso-icon">✅</div>
-                                        <div class="coord-aviso-content">
-                                            <div class="coord-aviso-label coord-aviso-label-green">Aviso verificado</div>
-                                            <div class="coord-aviso-text">Zona C/ Dénia confirmada en mapa. Voluntarios de Checkpoint Russafa redirigidos. Sin duplicados con otros reportes activos.</div>
-                                            <div class="coord-aviso-time">Hace 2 min · triado por coordinación</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="coord-nav-row">
-                                        <button class="coord-btn-back" onclick="coordGoStep(1)" style="font-size:12px;padding:8px 14px;">↺ Reiniciar demo</button>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <!-- /coord-body -->
-                        </div>
-                        <!-- /coord-panel -->
-                    </div>
-
-                    <!-- TAB: KIT -->
-                    <div class="demo-panel" id="tab-kit">
-                        <div style="display:flex;flex-direction:column;gap:14px;">
-
-                            <!-- Type selector -->
-                            <div>
-                                <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Tipo de kit</div>
-                                <div class="kit-type-grid" style="grid-template-columns:repeat(3,1fr);">
-                                    <div class="kit-type-card kit-food selected" onclick="selectKitType(this,'food')" data-type="food">
-                                        <div class="kit-type-badge">✓</div>
-                                        <div class="kit-type-icon">🍱</div>
-                                        <div class="kit-type-name">Alimenticio</div>
-                                        <div class="kit-type-desc">Agua y comida</div>
-                                    </div>
-                                    <div class="kit-type-card kit-med" onclick="selectKitType(this,'med')" data-type="med">
-                                        <div class="kit-type-badge">✓</div>
-                                        <div class="kit-type-icon">💊</div>
-                                        <div class="kit-type-name">Sanitario</div>
-                                        <div class="kit-type-desc">Medicamentos</div>
-                                    </div>
-                                    <div class="kit-type-card kit-clothes" onclick="selectKitType(this,'clothes')" data-type="clothes">
-                                        <div class="kit-type-badge">✓</div>
-                                        <div class="kit-type-icon">🧥</div>
-                                        <div class="kit-type-name">Ropa</div>
-                                        <div class="kit-type-desc">Abrigo y mantas</div>
-                                    </div>
-                                    <div class="kit-type-card kit-tools" onclick="selectKitType(this,'tools')" data-type="tools">
-                                        <div class="kit-type-badge">✓</div>
-                                        <div class="kit-type-icon">🔧</div>
-                                        <div class="kit-type-name">Herramientas</div>
-                                        <div class="kit-type-desc">Equipamiento</div>
-                                    </div>
-                                    <div class="kit-type-card kit-custom" onclick="selectKitType(this,'custom')" data-type="custom" style="grid-column:span 2;">
-                                        <div class="kit-type-badge">✓</div>
-                                        <div class="kit-type-icon">✏️</div>
-                                        <div class="kit-type-name">Personalizado</div>
-                                        <div class="kit-type-desc">Crea tu propio kit</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Builder panel -->
-                            <div class="kit-builder" id="kitBuilderPanel">
-                                <div class="kit-color-strip" id="kitColorStrip" style="background:#C0392B;"></div>
-                                <div class="kit-builder-header">
-                                    <span class="kit-builder-header-title" id="kitBuilderTitle">🍱 Kit Alimenticio</span>
-                                    <span style="font-size:11px;color:var(--muted);" id="kitBuilderSub">Edita cantidades o añade elementos</span>
-                                </div>
-                                <!-- Custom name input (hidden by default) -->
-                                <div class="kit-custom-name-wrap" id="kitCustomNameWrap" style="display:none;">
-                                    <input class="kit-custom-name-input" id="kitCustomName" placeholder="Nombre del kit...">
-                                </div>
-                                <!-- Items list -->
-                                <div class="kit-items" id="kitItemsList"></div>
-                                <!-- Add element row -->
-                                <div class="kit-add-row" id="kitAddRow">
-                                    <div class="kit-add-emoji" id="kitAddEmoji" onclick="cycleEmoji(this)" title="Cambiar icono">📦</div>
-                                    <input class="kit-add-input" id="kitAddName" placeholder="Nombre del elemento...">
-                                    <button class="kit-add-btn" onclick="addKitItem()" title="Añadir">+</button>
-                                </div>
-                                <div class="kit-footer">
-                                    <div class="kit-total">
-                                        <span class="kit-total-label">Total elementos</span>
-                                        <span class="kit-total-num" id="kitTotal">0</span>
-                                    </div>
-                                    <button class="btn-submit" id="kitBtn" onclick="crearKit()">Crear kit</button>
-                                </div>
-                            </div>
-
-                            <!-- Created kits list -->
-                            <div id="kitCreatedList" class="kit-created-list"></div>
-
-                        </div>
-                    </div>
-
-                </div>
-                <!-- /demo-content -->
+          <!-- Step indicators -->
+          <div class="demo-steps" id="demoSteps">
+            <div class="demo-step active" data-tab="necesidad" onclick="switchDemo('necesidad',this)">
+              <div class="ds-num">1</div>
+              <span>Necesidad</span>
             </div>
-            <!-- /demo-shell -->
-        </div>
+            <div class="demo-step" data-tab="validacion" onclick="switchDemo('validacion',this)">
+              <div class="ds-num">2</div>
+              <span>Triaje</span>
+            </div>
+            <div class="demo-step" data-tab="muro" onclick="switchDemo('muro',this)">
+              <div class="ds-num">3</div>
+              <span>Coordinación</span>
+            </div>
+            <div class="demo-step" data-tab="kits" onclick="switchDemo('kits',this)">
+              <div class="ds-num">4</div>
+              <span>Kits</span>
+            </div>
+            <div class="demo-step" data-tab="traza" onclick="switchDemo('traza',this)">
+              <div class="ds-num">5</div>
+              <span>Trazabilidad</span>
+            </div>
+          </div>
+
+          <!-- CONTENT -->
+          <div class="demo-content" style="min-height:460px;">
+
+            <!-- ════ TAB 1: ACTIVAR NECESIDAD ════ -->
+            <div class="demo-panel active" id="tab-necesidad">
+              <div class="nec-layout">
+                <!-- Formulario -->
+                <div>
+                  <div class="nec-form">
+                    <div class="form-title" style="font-size:16px;margin-bottom:16px;">📝 Nueva necesidad</div>
+                    <div class="form-group">
+                      <label>Ubicación</label>
+                      <input type="text" id="necUbic" value="C/ Sueca, 22 — Ruzafa, Valencia">
+                    </div>
+                    <div class="form-group">
+                      <label>Categoría</label>
+                      <div class="type-chips" id="necCat">
+                        <div class="chip active" onclick="selectChipGroup(this,'necCat')">🍱 Alimentación</div>
+                        <div class="chip" onclick="selectChipGroup(this,'necCat')">💊 Salud</div>
+                        <div class="chip" onclick="selectChipGroup(this,'necCat')">🧥 Ropa</div>
+                        <div class="chip" onclick="selectChipGroup(this,'necCat')">🏠 Refugio</div>
+                        <div class="chip" onclick="selectChipGroup(this,'necCat')">🔧 Útiles</div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Prioridad</label>
+                      <div class="priority-row" id="necPrio">
+                        <div class="prio-btn" onclick="selectPrioGroup(this,'necPrio','low')">Baja</div>
+                        <div class="prio-btn active-mid" onclick="selectPrioGroup(this,'necPrio','mid')">Media</div>
+                        <div class="prio-btn" onclick="selectPrioGroup(this,'necPrio','high')">Alta</div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Personas afectadas</label>
+                      <input type="number" id="necPersonas" value="6" min="1">
+                    </div>
+                    <div class="form-group">
+                      <label>Descripción</label>
+                      <textarea id="necDesc" rows="2" style="resize:none;">Familia con 2 menores y anciano. Sin acceso a víveres desde hace 2 días.</textarea>
+                    </div>
+                    <button class="btn-submit" id="necBtn" onclick="enviarNecesidad()">Enviar necesidad</button>
+                  </div>
+                </div>
+                <!-- Right: map + preview -->
+                <div style="display:flex;flex-direction:column;gap:14px;">
+                  <div class="nec-map" id="necMap">
+                    <div class="emap-header">
+                      <div class="emap-badge"><div class="rdot"></div>Mapa en vivo</div>
+                    </div>
+                    <svg viewBox="0 0 420 380" style="width:100%;height:100%;position:absolute;inset:0;" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="420" height="380" fill="#1A2820"/>
+                      <g stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none">
+                        <line x1="0" y1="80" x2="420" y2="80"/><line x1="0" y1="160" x2="420" y2="160"/>
+                        <line x1="0" y1="240" x2="420" y2="240"/><line x1="0" y1="320" x2="420" y2="320"/>
+                        <line x1="90" y1="0" x2="90" y2="380"/><line x1="180" y1="0" x2="180" y2="380"/>
+                        <line x1="270" y1="0" x2="270" y2="380"/><line x1="360" y1="0" x2="360" y2="380"/>
+                      </g>
+                      <g stroke="rgba(255,255,255,0.15)" stroke-width="2.5" fill="none">
+                        <line x1="0" y1="190" x2="420" y2="190"/><line x1="160" y1="0" x2="160" y2="380"/>
+                      </g>
+                      <path d="M0 350 Q100 330 200 348 Q300 366 420 345" stroke="rgba(100,180,255,0.18)" stroke-width="7" fill="none"/>
+                      <!-- existing markers -->
+                      <circle cx="120" cy="140" r="28" fill="rgba(226,75,74,0.2)"/>
+                      <circle cx="120" cy="140" r="7" fill="#E24B4A"/>
+                      <text x="120" y="144" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
+                      <circle cx="120" cy="140" r="18" fill="none" stroke="#E24B4A" stroke-width="1.5">
+                        <animate attributeName="r" values="18;30;18" dur="2s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+                      </circle>
+                      <circle cx="280" cy="220" r="22" fill="rgba(226,75,74,0.15)"/>
+                      <circle cx="280" cy="220" r="7" fill="#EF9F27"/>
+                      <text x="280" y="224" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
+                      <circle cx="200" cy="90" r="9" fill="#1D9E75"/>
+                      <text x="200" y="94" text-anchor="middle" fill="white" font-size="8" font-weight="bold">K</text>
+                      <!-- new point revealed on submit -->
+                      <g id="necNewPoint" opacity="0" style="transition:opacity 0.5s;">
+                        <circle cx="155" cy="195" r="30" fill="rgba(226,75,74,0.18)"/>
+                        <circle cx="155" cy="195" r="7" fill="#E24B4A"/>
+                        <text x="155" y="199" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
+                        <circle cx="155" cy="195" r="18" fill="none" stroke="#E24B4A" stroke-width="1.5">
+                          <animate attributeName="r" values="18;32;18" dur="1.5s" repeatCount="indefinite"/>
+                          <animate attributeName="opacity" values="0.7;0;0.7" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                      </g>
+                    </svg>
+                  </div>
+                  <!-- Confirmation card -->
+                  <div class="nec-preview" id="necPreview">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                      <span style="font-family:Syne,sans-serif;font-size:13px;font-weight:600;color:var(--dark);">Necesidad registrada</span>
+                      <span class="nec-badge nec-badge-pend" id="necStatus">● Pendiente validación</span>
+                    </div>
+                    <div class="nec-summary" id="necSummary"></div>
+                    <div style="margin-top:12px;font-size:12px;color:var(--muted);background:var(--bg);border-radius:10px;padding:10px;">
+                      📬 La necesidad ha entrado en el panel de triaje. Un coordinador la revisará en los próximos minutos.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+                <button class="btn-submit" style="width:auto;padding:10px 24px;font-size:13px;" onclick="switchDemo('validacion')">Ver en triaje →</button>
+              </div>
+            </div>
+
+            <!-- ════ TAB 2: PANEL DE VALIDACIÓN ════ -->
+            <div class="demo-panel" id="tab-validacion">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+                <div>
+                  <div style="font-family:Syne,sans-serif;font-size:15px;font-weight:600;color:var(--dark);">🔎 Panel de validación y triaje</div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:2px;">Revisa, prioriza y valida cada solicitud antes de publicarla</div>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;" id="valFilterBtns">
+                  <button class="val-btn val-btn-more active" onclick="filtrarVal('todas',this)" style="font-size:11px;">Todas (4)</button>
+                  <button class="val-btn val-btn-more" onclick="filtrarVal('pendiente',this)" style="font-size:11px;">Pendientes</button>
+                  <button class="val-btn val-btn-more" onclick="filtrarVal('validada',this)" style="font-size:11px;">Validadas</button>
+                </div>
+              </div>
+              <div class="val-list" id="valList">
+
+                <!-- Card 1 — pendiente (recién enviada) -->
+                <div class="val-card" id="valCard1" data-estado="pendiente">
+                  <div class="val-header" onclick="toggleValExpand('valExpand1')">
+                    <div class="val-icon" style="background:#FDF0EF;">🍱</div>
+                    <div class="val-info">
+                      <div class="val-title">Necesidad alimentaria · C/ Sueca, 22</div>
+                      <div class="val-meta">📍 Ruzafa · 6 personas · <span class="nec-badge nec-badge-pend" style="font-size:10px;padding:1px 7px;">Pendiente</span></div>
+                    </div>
+                    <div class="val-actions" id="valAct1">
+                      <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard1','valAct1','valDone1',true)">✓ Validar</button>
+                      <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard1','valAct1','valDone1',false)">✕ Rechazar</button>
+                      <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand1');event.stopPropagation()">Detalles</button>
+                    </div>
+                  </div>
+                  <div class="val-expand" id="valExpand1">
+                    <div class="val-expand-grid">
+                      <div class="val-field">Descripción<span>Familia con 2 menores y anciano. Sin acceso a víveres desde hace 2 días.</span></div>
+                      <div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
+                      <div class="val-field">Solicitante<span>Ciudadano anónimo</span></div>
+                      <div class="val-field">Recibida<span>Hace 2 min</span></div>
+                    </div>
+                    <div class="val-done-msg" id="valDone1"></div>
+                  </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="val-card" id="valCard2" data-estado="pendiente">
+                  <div class="val-header" onclick="toggleValExpand('valExpand2')">
+                    <div class="val-icon" style="background:#FDEDEC;">🚨</div>
+                    <div class="val-info">
+                      <div class="val-title">Evacuación urgente · C/ Dénia, 8</div>
+                      <div class="val-meta">📍 Ruzafa · 12 personas · <span class="nec-badge nec-badge-urg" style="font-size:10px;padding:1px 7px;">Alta prioridad</span></div>
+                    </div>
+                    <div class="val-actions" id="valAct2">
+                      <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard2','valAct2','valDone2',true)">✓ Validar</button>
+                      <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard2','valAct2','valDone2',false)">✕ Rechazar</button>
+                      <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand2');event.stopPropagation()">Detalles</button>
+                    </div>
+                  </div>
+                  <div class="val-expand" id="valExpand2">
+                    <div class="val-expand-grid">
+                      <div class="val-field">Descripción<span>Planta baja inundada. Familia mayor sin movilidad. Necesitan evacuación inmediata.</span></div>
+                      <div class="val-field">Prioridad<span style="color:#E24B4A;">Alta</span></div>
+                      <div class="val-field">Solicitante<span>Bomberos voluntarios</span></div>
+                      <div class="val-field">Recibida<span>Hace 8 min</span></div>
+                    </div>
+                    <div class="val-done-msg" id="valDone2"></div>
+                  </div>
+                </div>
+
+                <!-- Card 3 — ya validada -->
+                <div class="val-card" id="valCard3" data-estado="validada">
+                  <div class="val-header">
+                    <div class="val-icon" style="background:#EAFAF1;">💊</div>
+                    <div class="val-info">
+                      <div class="val-title">Medicación urgente · Av. Mistral, 3</div>
+                      <div class="val-meta">📍 Eixample · 3 personas · <span class="nec-badge nec-badge-ok" style="font-size:10px;padding:1px 7px;">✓ Validada</span></div>
+                    </div>
+                    <div class="val-actions">
+                      <span style="font-size:12px;color:var(--teal);font-weight:500;">✓ Publicada en muro</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="val-card" id="valCard4" data-estado="pendiente">
+                  <div class="val-header" onclick="toggleValExpand('valExpand4')">
+                    <div class="val-icon" style="background:#F0F2F4;">🧥</div>
+                    <div class="val-info">
+                      <div class="val-title">Ropa de abrigo · C/ Cuba, 17</div>
+                      <div class="val-meta">📍 Russafa · 9 personas · <span class="nec-badge nec-badge-pend" style="font-size:10px;padding:1px 7px;">Pendiente</span></div>
+                    </div>
+                    <div class="val-actions" id="valAct4">
+                      <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard4','valAct4','valDone4',true)">✓ Validar</button>
+                      <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard4','valAct4','valDone4',false)">✕ Rechazar</button>
+                      <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand4');event.stopPropagation()">Detalles</button>
+                    </div>
+                  </div>
+                  <div class="val-expand" id="valExpand4">
+                    <div class="val-expand-grid">
+                      <div class="val-field">Descripción<span>Grupo de personas mayores sin ropa de abrigo suficiente. Noche fría prevista.</span></div>
+                      <div class="val-field">Prioridad<span style="color:#1D9E75;">Baja</span></div>
+                      <div class="val-field">Solicitante<span>Cruz Roja local</span></div>
+                      <div class="val-field">Recibida<span>Hace 15 min</span></div>
+                    </div>
+                    <div class="val-done-msg" id="valDone4"></div>
+                  </div>
+                </div>
+
+              </div>
+              <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+                <button class="btn-submit" style="width:auto;padding:10px 24px;font-size:13px;" onclick="switchDemo('muro')">Ver en muro →</button>
+              </div>
+            </div>
+
+            <!-- ════ TAB 3: MURO DE COORDINACIÓN ════ -->
+            <div class="demo-panel" id="tab-muro">
+              <div style="font-family:Syne,sans-serif;font-size:15px;font-weight:600;color:var(--dark);margin-bottom:14px;">📢 Muro de coordinación</div>
+              <div class="muro-layout">
+                <!-- Sidebar filtros -->
+                <div class="muro-sidebar">
+                  <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Filtrar</div>
+                  <button class="muro-filter-btn active" onclick="filtrarMuro('todas',this)">
+                    <div class="muro-filter-dot" style="background:var(--teal);"></div>Todas
+                  </button>
+                  <button class="muro-filter-btn" onclick="filtrarMuro('urgente',this)">
+                    <div class="muro-filter-dot" style="background:#E24B4A;"></div>Urgentes
+                  </button>
+                  <button class="muro-filter-btn" onclick="filtrarMuro('recurso',this)">
+                    <div class="muro-filter-dot" style="background:#1D9E75;"></div>Recursos
+                  </button>
+                  <button class="muro-filter-btn" onclick="filtrarMuro('info',this)">
+                    <div class="muro-filter-dot" style="background:#EF9F27;"></div>Información
+                  </button>
+                  <button class="muro-filter-btn" onclick="filtrarMuro('voluntario',this)">
+                    <div class="muro-filter-dot" style="background:#7B5EA7;"></div>Voluntarios
+                  </button>
+                </div>
+                <!-- Feed -->
+                <div class="muro-feed" id="muroFeed">
+
+                  <div class="muro-item" data-tipo="urgente">
+                    <div class="muro-dot" style="background:#E24B4A;"></div>
+                    <div class="muro-content">
+                      <div class="muro-item-title">🚨 Evacuación urgente · C/ Dénia, 8</div>
+                      <div class="muro-item-body">12 personas incluyendo mayores sin movilidad. Planta baja inundada. Acceso por C/ Cuba.</div>
+                      <div class="muro-item-footer">
+                        <span class="muro-item-time">Hace 8 min · Validado</span>
+                        <span class="muro-item-tag" style="background:#FDEDEC;color:#922B21;">Urgente</span>
+                        <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="muro-item" data-tipo="recurso">
+                    <div class="muro-dot" style="background:#1D9E75;"></div>
+                    <div class="muro-content">
+                      <div class="muro-item-title">📦 Kit alimentario disponible · Punto Colón</div>
+                      <div class="muro-item-body">25 kits básicos disponibles. Incluye agua 1.5L ×6, conservas ×4 y barras energéticas ×8.</div>
+                      <div class="muro-item-footer">
+                        <span class="muro-item-time">Hace 12 min</span>
+                        <span class="muro-item-tag" style="background:#EAFAF1;color:#1D6A3A;">Recurso</span>
+                        <button class="muro-claim-btn" onclick="claimMuro(this)">Reservar</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="muro-item" data-tipo="info">
+                    <div class="muro-dot" style="background:#EF9F27;"></div>
+                    <div class="muro-content">
+                      <div class="muro-item-title">ℹ️ Acceso cortado · Av. del Cid tramo norte</div>
+                      <div class="muro-item-body">Agua acumulada impide paso de vehículos. Usar alternativa por Ronda Interior hacia el sur.</div>
+                      <div class="muro-item-footer">
+                        <span class="muro-item-time">Hace 20 min</span>
+                        <span class="muro-item-tag" style="background:#FEF5EC;color:#9A5C00;">Aviso</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="muro-item" data-tipo="voluntario">
+                    <div class="muro-dot" style="background:#7B5EA7;"></div>
+                    <div class="muro-content">
+                      <div class="muro-item-title">🤝 Checkpoint voluntarios · Plaza Ayuntamiento</div>
+                      <div class="muro-item-body">15 voluntarios disponibles. Necesitan coordinador de zona. Traen vehículo 4×4 y equipo básico.</div>
+                      <div class="muro-item-footer">
+                        <span class="muro-item-time">Hace 5 min</span>
+                        <span class="muro-item-tag" style="background:#F5F0FB;color:#6C3483;">Voluntarios</span>
+                        <button class="muro-claim-btn" onclick="claimMuro(this)">Coordinar</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="muro-item" data-tipo="urgente" id="muroNecDinamica" style="display:none;">
+                    <div class="muro-dot" style="background:#E24B4A;"></div>
+                    <div class="muro-content">
+                      <div class="muro-item-title">🍱 Necesidad alimentaria · C/ Sueca, 22</div>
+                      <div class="muro-item-body">Familia con 2 menores y anciano. Sin víveres 2 días. 6 personas. Prioridad media.</div>
+                      <div class="muro-item-footer">
+                        <span class="muro-item-time">Recién validada</span>
+                        <span class="muro-item-tag" style="background:#FDEDEC;color:#922B21;">Nueva</span>
+                        <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+                <button class="btn-submit" style="width:auto;padding:10px 24px;font-size:13px;" onclick="switchDemo('kits')">Configurar kits →</button>
+              </div>
+            </div>
+
+            <!-- ════ TAB 4: CONFIGURAR KITS ════ -->
+            <div class="demo-panel" id="tab-kits">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <!-- Type selector -->
+                <div>
+                  <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Tipo de kit</div>
+                  <div class="kit-type-grid" style="grid-template-columns:repeat(3,1fr);">
+                    <div class="kit-type-card kit-food selected" onclick="selectKitType(this,'food')" data-type="food">
+                      <div class="kit-type-badge">✓</div>
+                      <div class="kit-type-icon">🍱</div>
+                      <div class="kit-type-name">Alimenticio</div>
+                      <div class="kit-type-desc">Agua y comida</div>
+                    </div>
+                    <div class="kit-type-card kit-med" onclick="selectKitType(this,'med')" data-type="med">
+                      <div class="kit-type-badge">✓</div>
+                      <div class="kit-type-icon">💊</div>
+                      <div class="kit-type-name">Sanitario</div>
+                      <div class="kit-type-desc">Medicamentos</div>
+                    </div>
+                    <div class="kit-type-card kit-clothes" onclick="selectKitType(this,'clothes')" data-type="clothes">
+                      <div class="kit-type-badge">✓</div>
+                      <div class="kit-type-icon">🧥</div>
+                      <div class="kit-type-name">Ropa</div>
+                      <div class="kit-type-desc">Abrigo y mantas</div>
+                    </div>
+                    <div class="kit-type-card kit-tools" onclick="selectKitType(this,'tools')" data-type="tools">
+                      <div class="kit-type-badge">✓</div>
+                      <div class="kit-type-icon">🔧</div>
+                      <div class="kit-type-name">Herramientas</div>
+                      <div class="kit-type-desc">Equipamiento</div>
+                    </div>
+                    <div class="kit-type-card kit-custom" onclick="selectKitType(this,'custom')" data-type="custom" style="grid-column:span 2;">
+                      <div class="kit-type-badge">✓</div>
+                      <div class="kit-type-icon">✏️</div>
+                      <div class="kit-type-name">Personalizado</div>
+                      <div class="kit-type-desc">Crea tu propio kit</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Builder -->
+                <div class="kit-builder" id="kitBuilderPanel">
+                  <div class="kit-color-strip" id="kitColorStrip" style="background:#C0392B;"></div>
+                  <div class="kit-builder-header">
+                    <span class="kit-builder-header-title" id="kitBuilderTitle">🍱 Kit Alimenticio</span>
+                    <span style="font-size:11px;color:var(--muted);" id="kitBuilderSub">Edita cantidades o añade elementos</span>
+                  </div>
+                  <div class="kit-custom-name-wrap" id="kitCustomNameWrap" style="display:none;">
+                    <input class="kit-custom-name-input" id="kitCustomName" placeholder="Nombre del kit personalizado...">
+                  </div>
+                  <div class="kit-items" id="kitItemsList"></div>
+                  <div class="kit-add-row" id="kitAddRow">
+                    <div class="kit-add-emoji" id="kitAddEmoji" onclick="cycleEmoji(this)" title="Cambiar icono">📦</div>
+                    <input class="kit-add-input" id="kitAddName" placeholder="Nombre del elemento...">
+                    <button class="kit-add-btn" onclick="addKitItem()" title="Añadir">+</button>
+                  </div>
+                  <div class="kit-footer">
+                    <div class="kit-total">
+                      <span class="kit-total-label">Total elementos</span>
+                      <span class="kit-total-num" id="kitTotal">0</span>
+                    </div>
+                    <button class="btn-submit" id="kitBtn" onclick="crearKit()">Crear kit</button>
+                  </div>
+                </div>
+                <div id="kitCreatedList" class="kit-created-list"></div>
+              </div>
+              <div style="margin-top:4px;display:flex;justify-content:flex-end;">
+                <button class="btn-submit" style="width:auto;padding:10px 24px;font-size:13px;" onclick="switchDemo('traza')">Ver trazabilidad →</button>
+              </div>
+            </div>
+
+            <!-- ════ TAB 5: TRAZABILIDAD ════ -->
+            <div class="demo-panel" id="tab-traza">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+                <div>
+                  <div style="font-family:Syne,sans-serif;font-size:15px;font-weight:600;color:var(--dark);">✅ Trazabilidad y entrega verificada</div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:2px;">Cada kit — desde la preparación hasta la entrega confirmada</div>
+                </div>
+              </div>
+              <div class="traza-list" id="trazaList">
+
+                <!-- Kit 1 -->
+                <div class="traza-card" id="trazaCard1">
+                  <div class="traza-card-header" onclick="toggleTraza('trazaSteps1')">
+                    <div class="traza-box" style="background:#FDF0EF;color:#C0392B;">🍱</div>
+                    <div class="traza-info">
+                      <div class="traza-name">Kit Alimenticio · C/ Sueca, 22</div>
+                      <div class="traza-sub">6 personas · Asignado hace 5 min</div>
+                    </div>
+                    <span class="traza-status" style="background:#FEF5EC;color:#9A5C00;">En tránsito</span>
+                  </div>
+                  <div class="traza-steps" id="trazaSteps1">
+                    <div class="traza-timeline" id="trazaTl1">
+                      <div class="traza-tl-item">
+                        <div class="traza-tl-dot-wrap">
+                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                          <div class="traza-tl-line" style="background:var(--border);"></div>
+                        </div>
+                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Necesidad validada</div><div class="traza-tl-meta">Hace 18 min · Coordinador: Elena M.</div></div>
+                      </div>
+                      <div class="traza-tl-item">
+                        <div class="traza-tl-dot-wrap">
+                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                          <div class="traza-tl-line" style="background:var(--border);"></div>
+                        </div>
+                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Kit preparado</div><div class="traza-tl-meta">Hace 12 min · Punto Colón · 18 artículos</div></div>
+                      </div>
+                      <div class="traza-tl-item">
+                        <div class="traza-tl-dot-wrap">
+                          <div class="traza-tl-dot" style="background:#EF9F27;color:#EF9F27;"></div>
+                          <div class="traza-tl-line" style="background:var(--border);"></div>
+                        </div>
+                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:#EF9F27;">→ En camino</div><div class="traza-tl-meta">Voluntario: Marcos T. · ETA 6 min</div></div>
+                      </div>
+                      <div class="traza-tl-item" id="trazaTlEntrega1" style="opacity:0.4;">
+                        <div class="traza-tl-dot-wrap">
+                          <div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div>
+                        </div>
+                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:var(--muted);">Pendiente entrega</div><div class="traza-tl-meta">Esperando confirmación del receptor</div></div>
+                      </div>
+                    </div>
+                    <button class="traza-confirm-btn" id="trazaBtn1" onclick="confirmarEntrega('trazaCard1','trazaBtn1','trazaTlEntrega1','trazaStatus1')">
+                      📲 Confirmar entrega recibida
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Kit 2 — ya entregado -->
+                <div class="traza-card">
+                  <div class="traza-card-header" onclick="toggleTraza('trazaSteps2')">
+                    <div class="traza-box" style="background:#EAFAF1;color:#27AE60;">🧥</div>
+                    <div class="traza-info">
+                      <div class="traza-name">Kit Ropa · Av. Mistral, 3</div>
+                      <div class="traza-sub">3 personas · Entregado hace 22 min</div>
+                    </div>
+                    <span class="traza-status" style="background:#EAFAF1;color:#1D6A3A;">✓ Entregado</span>
+                  </div>
+                  <div class="traza-steps" id="trazaSteps2">
+                    <div class="traza-timeline">
+                      <div class="traza-tl-item">
+                        <div class="traza-tl-dot-wrap">
+                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                          <div class="traza-tl-line" style="background:var(--border);"></div>
+                        </div>
+                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Validada</div><div class="traza-tl-meta">Hace 40 min</div></div>
+                      </div>
+                      <div class="traza-tl-item">
+                        <div class="traza-tl-dot-wrap">
+                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                          <div class="traza-tl-line" style="background:var(--border);"></div>
+                        </div>
+                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Kit preparado y enviado</div><div class="traza-tl-meta">Hace 35 min · 11 artículos</div></div>
+                      </div>
+                      <div class="traza-tl-item">
+                        <div class="traza-tl-dot-wrap">
+                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                        </div>
+                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:#1D9E75;">✓ Entrega confirmada</div><div class="traza-tl-meta">Hace 22 min · Receptor: Carmen R. · Firma digital registrada</div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Kit 3 -->
+                <div class="traza-card" id="trazaCard3">
+                  <div class="traza-card-header" onclick="toggleTraza('trazaSteps3')">
+                    <div class="traza-box" style="background:#FEF5EC;color:#E67E22;">💊</div>
+                    <div class="traza-info">
+                      <div class="traza-name">Kit Sanitario · C/ Dénia, 8</div>
+                      <div class="traza-sub">12 personas · Preparando</div>
+                    </div>
+                    <span class="traza-status" id="trazaStatus3" style="background:#EEF2FF;color:#5C6BC0;">Preparando</span>
+                  </div>
+                  <div class="traza-steps" id="trazaSteps3">
+                    <div class="traza-timeline">
+                      <div class="traza-tl-item">
+                        <div class="traza-tl-dot-wrap">
+                          <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                          <div class="traza-tl-line" style="background:var(--border);"></div>
+                        </div>
+                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Validada — alta prioridad</div><div class="traza-tl-meta">Hace 8 min · Coordinador: Miguel R.</div></div>
+                      </div>
+                      <div class="traza-tl-item" id="trazaTlEntrega3" style="opacity:0.4;">
+                        <div class="traza-tl-dot-wrap">
+                          <div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div>
+                        </div>
+                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:var(--muted);">En preparación</div><div class="traza-tl-meta">Punto Colón · Asignando voluntario</div></div>
+                      </div>
+                    </div>
+                    <button class="traza-confirm-btn" id="trazaBtn3" onclick="confirmarEntrega('trazaCard3','trazaBtn3','trazaTlEntrega3','trazaStatus3')">
+                      📲 Marcar como entregado
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- /tab-traza -->
+
+          </div><!-- /demo-content -->
+        </div><!-- /demo-shell -->
+      </div>
     </div>
 
     <!-- LIVE MAP -->
@@ -2483,7 +2837,210 @@
         }
         
         })();
-    </script>
+    
+// ══════════════════════════════════════════════
+// DEMO v2 — 5 funcionalidades
+// ══════════════════════════════════════════════
+
+// ── switchDemo: navigate between 5 tabs ──
+window.switchDemo = function(tab, stepEl) {
+  // Hide all panels
+  document.querySelectorAll('.demo-panel').forEach(function(p){ p.classList.remove('active'); });
+  var panel = document.getElementById('tab-' + tab);
+  if (panel) panel.classList.add('active');
+
+  // Update step indicators
+  var steps = document.querySelectorAll('.demo-step');
+  var tabOrder = ['necesidad','validacion','muro','kits','traza'];
+  var targetIdx = tabOrder.indexOf(tab);
+  steps.forEach(function(s, i){
+    s.classList.remove('active','done');
+    if (i < targetIdx) s.classList.add('done');
+    else if (i === targetIdx) s.classList.add('active');
+  });
+
+  // Show muro dynamic item if previously validated
+  if (tab === 'muro') {
+    var din = document.getElementById('muroNecDinamica');
+    if (din && window._necValidada) din.style.display = 'flex';
+  }
+};
+
+// ── selectChipGroup / selectPrioGroup ──
+window.selectChipGroup = function(el, groupId) {
+  var g = document.getElementById(groupId) || el.closest('.type-chips');
+  if (g) g.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+};
+window.selectPrioGroup = function(el, groupId, level) {
+  var g = document.getElementById(groupId) || el.closest('.priority-row');
+  if (g) g.querySelectorAll('.prio-btn').forEach(function(b){ b.className='prio-btn'; });
+  el.classList.add('active-' + level);
+};
+
+// ── TAB 1: Enviar necesidad ──
+window.enviarNecesidad = function() {
+  var btn = document.getElementById('necBtn');
+  var ubic = document.getElementById('necUbic');
+  var personas = document.getElementById('necPersonas');
+  var desc = document.getElementById('necDesc');
+  var catEl = document.querySelector('#necCat .chip.active');
+  var prioEl = document.querySelector('#necPrio .prio-btn.active-high, #necPrio .prio-btn.active-mid, #necPrio .prio-btn.active-low');
+
+  btn.textContent = '✓ Enviando...';
+  btn.style.background = '#085041';
+  btn.disabled = true;
+
+  setTimeout(function(){
+    // Show on map
+    var np = document.getElementById('necNewPoint');
+    if (np) np.style.opacity = '1';
+
+    // Fill summary
+    var summary = document.getElementById('necSummary');
+    if (summary) {
+      var cat = catEl ? catEl.textContent : 'Alimentación';
+      var prio = prioEl ? prioEl.textContent : 'Media';
+      summary.innerHTML =
+        '<div class="nec-row"><span class="nec-key">Ubicación</span><span class="nec-val">'+(ubic?ubic.value:'—')+'</span></div>'+
+        '<div class="nec-row"><span class="nec-key">Categoría</span><span class="nec-val">'+cat+'</span></div>'+
+        '<div class="nec-row"><span class="nec-key">Prioridad</span><span class="nec-val">'+prio+'</span></div>'+
+        '<div class="nec-row"><span class="nec-key">Personas</span><span class="nec-val">'+(personas?personas.value:'—')+'</span></div>';
+    }
+
+    var preview = document.getElementById('necPreview');
+    if (preview) preview.classList.add('visible');
+
+    btn.textContent = '✓ Necesidad enviada';
+    btn.style.background = '';
+    btn.disabled = false;
+    window._necEnviada = true;
+  }, 700);
+};
+
+// ── TAB 2: Validar/rechazar ──
+window.toggleValExpand = function(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open');
+};
+
+window.validarNec = function(e, cardId, actId, doneId, aprobado) {
+  e.stopPropagation();
+  var actEl  = document.getElementById(actId);
+  var doneEl = document.getElementById(doneId);
+  var card   = document.getElementById(cardId);
+
+  if (actEl) actEl.style.display = 'none';
+  if (doneEl) {
+    doneEl.style.display = 'block';
+    if (aprobado) {
+      doneEl.style.cssText += 'background:#EAFAF1;color:#1D6A3A;';
+      doneEl.textContent = '✓ Validada y publicada en el muro de coordinación';
+      if (card) card.dataset.estado = 'validada';
+      window._necValidada = true;
+    } else {
+      doneEl.style.cssText += 'background:#FDEDEC;color:#922B21;';
+      doneEl.textContent = '✕ Rechazada — el solicitante será notificado';
+      if (card) card.dataset.estado = 'rechazada';
+    }
+    // Update badge in header
+    var metaEl = card ? card.querySelector('.val-meta .nec-badge') : null;
+    if (metaEl) {
+      metaEl.className = 'nec-badge ' + (aprobado ? 'nec-badge-ok' : 'nec-badge-rej');
+      metaEl.textContent = aprobado ? '✓ Validada' : '✕ Rechazada';
+    }
+    // Open expand if not already open
+    var expandId = actId.replace('valAct','valExpand');
+    var expandEl = document.getElementById(expandId);
+    if (expandEl && !expandEl.classList.contains('open')) expandEl.classList.add('open');
+  }
+};
+
+window.filtrarVal = function(estado, btn) {
+  document.querySelectorAll('#valFilterBtns .val-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('#valList .val-card').forEach(function(c){
+    if (estado === 'todas') c.style.display = '';
+    else c.style.display = c.dataset.estado === estado ? '' : 'none';
+  });
+};
+
+// ── TAB 3: Muro filtros + claim ──
+window.filtrarMuro = function(tipo, btn) {
+  document.querySelectorAll('.muro-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('#muroFeed .muro-item').forEach(function(item){
+    if (tipo === 'todas') item.classList.remove('hidden');
+    else item.classList.toggle('hidden', item.dataset.tipo !== tipo);
+  });
+};
+
+window.claimMuro = function(btn) {
+  btn.textContent = '✓ Asignado';
+  btn.style.background = 'var(--teal)';
+  btn.style.color = '#fff';
+  btn.style.border = 'none';
+  btn.disabled = true;
+  btn.classList.remove('muro-claim-btn');
+  btn.classList.add('muro-claimed');
+};
+
+// ── TAB 5: Trazabilidad ──
+window.toggleTraza = function(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  // Close others
+  document.querySelectorAll('.traza-steps').forEach(function(s){
+    if (s.id !== id) s.classList.remove('open');
+  });
+  el.classList.toggle('open');
+};
+
+window.confirmarEntrega = function(cardId, btnId, tlItemId, statusId) {
+  var btn    = document.getElementById(btnId);
+  var tlItem = document.getElementById(tlItemId);
+  var card   = document.getElementById(cardId);
+  var statusEl = card ? card.querySelector('.traza-status') : null;
+
+  if (btn) { btn.textContent = 'Confirmando...'; btn.disabled = true; }
+
+  setTimeout(function(){
+    if (tlItem) {
+      tlItem.style.opacity = '1';
+      var dotEl = tlItem.querySelector('.traza-tl-dot');
+      var labelEl = tlItem.querySelector('.traza-tl-label');
+      var metaEl  = tlItem.querySelector('.traza-tl-meta');
+      if (dotEl)  { dotEl.style.background = '#1D9E75'; dotEl.style.color = '#1D9E75'; }
+      if (labelEl){ labelEl.textContent = '✓ Entrega confirmada'; labelEl.style.color = '#1D9E75'; }
+      if (metaEl) { metaEl.textContent = 'Ahora · Receptor confirmado · Registro actualizado'; }
+    }
+    if (statusEl) {
+      statusEl.style.background = '#EAFAF1';
+      statusEl.style.color = '#1D6A3A';
+      statusEl.textContent = '✓ Entregado';
+    }
+    if (btn) {
+      btn.textContent = '✓ Entrega registrada';
+      btn.style.background = '#085041';
+    }
+  }, 600);
+};
+
+// ── Keep legacy switchTab for backward compat ──
+window.switchTab = function(name) {
+  // map old tab names to new
+  var map = { emergencia:'necesidad', chat:'muro', kit:'kits' };
+  switchDemo(map[name] || name);
+};
+
+// Init demo
+document.addEventListener('DOMContentLoaded', function(){
+  // Init kit builder on kits tab
+  if (typeof renderKitItems === 'function') renderKitItems('food');
+});
+
+</script>
 </body>
 
 </html>
