@@ -1162,10 +1162,16 @@
 .nec-layout { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .nec-form { background:#fff; border-radius:16px; padding:18px; border:1px solid rgba(29,158,117,0.1); }
 .nec-map-col { display:flex; flex-direction:column; gap:12px; }
-.nec-map-box {
+.nec-map-box2 {
   background:#1A2820; border-radius:16px; overflow:hidden;
   position:relative; min-height:220px; flex:1;
 }
+
+.nec-map-box {
+  background:#1A2820; border-radius:16px; overflow:hidden;
+  position:relative; height:280px; flex:1;
+}
+
 .nec-confirm {
   display:none; background:#fff; border-radius:14px; padding:16px;
   border:1px solid rgba(29,158,117,0.12); animation:fadeUp 0.3s ease both;
@@ -1176,6 +1182,59 @@
   padding:6px 0; border-bottom:1px solid var(--border);
 }
 .nec-summary-row:last-child { border-bottom:none; }
+
+#necVolSubRow,
+#necShelSubRow {
+  margin-top: px;
+  padding: 6px 10px;
+  border-radius: 0 8px 8px 0;
+  gap: 6px;
+  flex-wrap: wrap;
+   background: rgba(58,123,213,0.07);
+  border-left: 2px solid #3A7BD5;
+}
+
+#necVolSubRow {
+  background: rgba(123,94,167,0.07);
+  border-left: 2px solid #7B5EA7;
+}
+
+
+#necVolSubRow .chip,
+#necShelSubRow .chip {
+  font-size: 11px;
+  padding: 4px 10px;
+}
+
+/* Contenedor del submenú */
+.type-chips[id$="SubRow"] {
+    margin-left: 15px;      /* Indentación para mostrar jerarquía */
+    padding-left: 10px;
+    border-left: 2px solid #e0e0e0; /* Línea sutil que conecta con el padre */
+    margin-bottom: 15px;    /* Espacio extra abajo para separar del siguiente bloque */
+    position: relative;
+}
+
+/* Opcional: Un pequeño indicador visual de "hijo" */
+.type-chips[id$="SubRow"]::before {
+    content: "↳";
+    position: absolute;
+    left: -12px;
+    top: -2px;
+    color: #bdbdbd;
+    font-size: 1.2rem;
+}
+
+/* Ajuste de los chips dentro del submenú para que se vean más como "opciones" */
+.type-chips[id$="SubRow"] .chip {
+    font-size: 0.85rem;     /* Ligeramente más pequeño que el menú principal */
+    opacity: 0.9;
+}
+
+.type-chips[id$="SubRow"] .chip.active {
+    opacity: 1;
+    transform: scale(1.02); /* Pequeño realce al estar activo */
+}
 
 /* ══════════════════════════════
    TAB 2 — Validación / Triaje
@@ -1581,17 +1640,29 @@
                   <div class="d-form-group">
                     <label>Categoría</label>
                     <div class="type-chips" id="necCatChips">
-                      <div class="chip chip-emergency active" onclick="selectCat(this,'necCatChips')">🚨 Emergencia</div>
-                      <div class="chip chip-volunteer" onclick="selectCat(this,'necCatChips')">🤝 Voluntarios</div>
+                      <div class="chip chip-emergency active" onclick="selectCat(this,'necCatChips')">🚨 Emergencia</div>                      
                       <div class="chip chip-checkpoint" onclick="selectCat(this,'necCatChips')">📍 Punto de encuentro</div>
                       <div class="chip chip-storage" onclick="selectCat(this,'necCatChips')">📦 Recogida de kits</div>
+					  <div class="chip chip-volunteer" onclick="selectCat(this,'necCatChips')">🤝 Voluntarios</div>
                       <div class="chip chip-shelter" onclick="selectCat(this,'necCatChips')">🏠 Refugio / Hospedaje</div>
                     </div>
                     <div id="emergencyNotice" style="display:flex;align-items:center;gap:7px;margin-top:8px;padding:8px 12px;background:#FCEBEB;border:1px solid rgba(226,75,74,0.3);border-radius:10px;font-size:12px;color:#922B21;font-weight:500;">
                       <span>🚨</span> Emergencia: se asignará prioridad <strong>Alta</strong> automáticamente
                     </div>
+                  <!-- Sub-opciones Voluntarios -->
+					<div id="necVolSubRow" style="display:none; margin-top:20px; gap:8px; flex-direction:row;" class="type-chips">
+					  <div class="chip chip-volunteer active" id="necVolReq" onclick="selectVolTipo('requerir')">Requerir voluntarios</div>
+					  <div class="chip chip-volunteer" id="necVolOfe" onclick="selectVolTipo('ofrecer')">Ofrecer voluntarios</div>
+					</div>
+					
+					
+					<!-- Sub-opciones Refugio -->
+					<div id="necShelSubRow" style="display:none; margin-top:20px; gap:8px; flex-direction:row;" class="type-chips">
+					  <div class="chip chip-shelter active" id="necShelSol" onclick="selectShelTipo('solicitud')">Solicitar plaza</div>
+					  <div class="chip chip-shelter" id="necShelOfe" onclick="selectShelTipo('oferta')">Ofrecer espacio</div>
+					</div>
                   </div>
-                  <div class="d-form-group">
+                  <div class="d-form-group" id="necPrioGroup">
                     <label>Prioridad</label>
                     <div class="priority-row" id="necPrioRow">
                       <div class="prio-btn" onclick="selectPrioIn(this,'necPrioRow','low')">Baja</div>
@@ -1599,53 +1670,25 @@
                       <div class="prio-btn" onclick="selectPrioIn(this,'necPrioRow','high')">Alta</div>
                     </div>
                   </div>
-                  <div class="d-form-group">
-                    <label>Personas afectadas</label>
+                  <div class="d-form-group" id="necPersonasGroup">
+                    <label id="necPersonasLabel">Personas afectadas</label>
                     <input class="d-input" id="necPersonas" type="number" value="6" min="1">
                   </div>
+                 
                   <div class="d-form-group">
                     <label>Descripción</label>
-                    <textarea class="d-textarea" id="necDesc" rows="2">Familia con 2 menores y anciano. Sin víveres 2 días.</textarea>
+                    <textarea class="d-textarea" id="necDesc" rows="2">Indica de forma breve la necesidad, con datos esenciales nombre de contacto, telefono.</textarea>
                   </div>
                   <button class="d-btn-primary" id="necBtn" onclick="enviarNecesidad()">Enviar necesidad</button>
                 </div>
                 <!-- Map + confirm -->
                 <div class="nec-map-col">
-                  <div class="nec-map-box">
-                    <div class="emap-header">
-                      <div class="emap-badge"><div class="rdot"></div>Mapa en vivo</div>
-                    </div>
-                    <svg viewBox="0 0 420 320" style="width:100%;height:100%;position:absolute;inset:0;" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="420" height="320" fill="#1A2820"/>
-                      <g stroke="rgba(255,255,255,0.07)" stroke-width="1" fill="none">
-                        <line x1="0" y1="80" x2="420" y2="80"/><line x1="0" y1="160" x2="420" y2="160"/>
-                        <line x1="0" y1="240" x2="420" y2="240"/>
-                        <line x1="105" y1="0" x2="105" y2="320"/><line x1="210" y1="0" x2="210" y2="320"/><line x1="315" y1="0" x2="315" y2="320"/>
-                      </g>
-                      <g stroke="rgba(255,255,255,0.14)" stroke-width="2.5" fill="none">
-                        <line x1="0" y1="165" x2="420" y2="165"/><line x1="160" y1="0" x2="160" y2="320"/>
-                      </g>
-                      <path d="M0 295 Q120 275 240 292 Q330 306 420 285" stroke="rgba(100,180,255,0.18)" stroke-width="6" fill="none"/>
-                      <circle cx="120" cy="130" r="24" fill="rgba(226,75,74,0.18)"/>
-                      <circle cx="120" cy="130" r="7" fill="#E24B4A"/>
-                      <text x="120" y="134" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
-                      <circle cx="120" cy="130" r="16" fill="none" stroke="#E24B4A" stroke-width="1.5">
-                        <animate attributeName="r" values="16;28;16" dur="2s" repeatCount="indefinite"/>
-                        <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
-                      </circle>
-                      <circle cx="280" cy="200" r="7" fill="#1D9E75"/>
-                      <text x="280" y="204" text-anchor="middle" fill="white" font-size="8" font-weight="bold">K</text>
-                      <g id="necNewPoint" opacity="0" style="transition:opacity 0.5s;">
-                        <circle cx="158" cy="172" r="22" fill="rgba(226,75,74,0.2)"/>
-                        <circle cx="158" cy="172" r="7" fill="#E24B4A"/>
-                        <text x="158" y="176" text-anchor="middle" fill="white" font-size="7" font-weight="bold">!</text>
-                        <circle cx="158" cy="172" r="16" fill="none" stroke="#E24B4A" stroke-width="1.5">
-                          <animate attributeName="r" values="16;28;16" dur="1.5s" repeatCount="indefinite"/>
-                          <animate attributeName="opacity" values="0.7;0;0.7" dur="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                      </g>
-                    </svg>
-                  </div>
+                  <div class="nec-map-box" id="necMapBox">
+					  <div class="emap-header" style="position:absolute;top:12px;left:12px;right:12px;z-index:20;pointer-events:none;">
+						<div class="emap-badge"><div class="rdot"></div>Mapa en vivo</div>
+					  </div>
+					  <div id="necMap" style="width:100%;height:100%;position:absolute;inset:0;z-index:1;"></div>
+					</div>
                   <!-- Confirm card -->
                   <div class="nec-confirm" id="necConfirm">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
@@ -2927,44 +2970,205 @@ window.selectPrioIn = function(el, rowId, level) {
   el.classList.add('active-' + level);
 };
 
+// ── Estado interno Tab 1 ──
+var _necVolTipo  = 'requerir';   // 'requerir' | 'ofrecer'
+var _necShelTipo = 'solicitud';  // 'solicitud' | 'oferta'
+
+// Actualiza visibilidad de campos según categoría + sub-tipo
+function _necUpdateFields() {
+  var catEl     = document.querySelector('#necCatChips .chip.active');
+  var isEmerg   = catEl && catEl.classList.contains('chip-emergency');
+  var isVol     = catEl && catEl.classList.contains('chip-volunteer');
+  var isShelter = catEl && catEl.classList.contains('chip-shelter');
+  var isOferVol = isVol && _necVolTipo === 'ofrecer';
+  var activeShelChip = document.querySelector('#necShelSubRow .chip.active');
+  var isOferSh  = isShelter && (activeShelChip ? activeShelChip.id === 'necShelOfe' : _necShelTipo === 'oferta');
+
+  // Prioridad: ocultar si ofrece voluntarios
+  var prioGroup = document.getElementById('necPrioGroup');
+  if (prioGroup) prioGroup.style.display = isOferVol ? 'none' : '';
+
+  // Personas afectadas: solo en Emergencia, Requerir-voluntarios, refugio,
+  var persGroup = document.getElementById('necPersonasGroup');
+  var persLabel = document.getElementById('necPersonasLabel');
+  var showPers  = isEmerg || (isVol && _necVolTipo === 'requerir') || (isShelter);
+  
+  if (persGroup) persGroup.style.display = showPers ? '' : 'none';
+  if (persLabel) {
+    if (isVol && _necVolTipo === 'requerir') persLabel.textContent = 'Voluntarios requeridos (aprox.)';
+    else if (isShelter && _necShelTipo === 'solicitud') persLabel.textContent = 'Personas a alojar';
+	else if (isShelter && _necShelTipo === 'oferta') persLabel.textContent = 'Capacidad de personas';
+    else persLabel.textContent = 'Personas afectadas';
+  }
+
+  
+
+  // Sub-rows
+  var volSub  = document.getElementById('necVolSubRow');
+  var shelSub = document.getElementById('necShelSubRow');
+  if (volSub)  volSub.style.display  = isVol     ? 'flex' : 'none';
+  
+  if (shelSub) {
+    shelSub.style.display = isShelter ? 'flex' : 'none';
+    if (isShelter && shelSub.style.display === 'flex') {
+      var activeShel = shelSub.querySelector('.chip.active');
+      if (!activeShel) {
+        var firstShel = shelSub.querySelector('.chip');
+        if (firstShel) firstShel.classList.add('active');
+      }
+    }
+  }if (shelSub) shelSub.style.display = isShelter ? 'flex' : 'none';
+}
+
+window.selectVolTipo = function(tipo) {
+  _necVolTipo = tipo;
+  var req = document.getElementById('necVolReq');
+  var ofe = document.getElementById('necVolOfe');
+  if (req) req.classList.toggle('active', tipo === 'requerir');
+  if (ofe) ofe.classList.toggle('active', tipo === 'ofrecer');
+  _necUpdateFields();
+};
+
+window.selectShelTipo = function(tipo) {
+  _necShelTipo = tipo;
+  var sol = document.getElementById('necShelSol');
+  var ofe = document.getElementById('necShelOfe');
+  if (sol) sol.classList.toggle('active', tipo === 'solicitud');
+  if (ofe) ofe.classList.toggle('active', tipo === 'oferta');
+  _necUpdateFields();
+};
+
 // ── Categoría con lógica especial de Emergencia ──
 window.selectCat = function(el, groupId) {
   var g = document.getElementById(groupId);
   if (g) g.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
   el.classList.add('active');
   var isEmergency = el.classList.contains('chip-emergency');
-  var notice = document.getElementById('emergencyNotice');
+  var notice  = document.getElementById('emergencyNotice');
   var prioRow = document.getElementById('necPrioRow');
   if (isEmergency) {
-    // Force Alta priority
     if (notice) notice.style.display = 'flex';
     if (prioRow) {
-      prioRow.querySelectorAll('.prio-btn').forEach(function(b){ b.className = 'prio-btn'; b.style.opacity='0.4'; b.style.pointerEvents='none'; });
+      prioRow.querySelectorAll('.prio-btn').forEach(function(b){ b.className='prio-btn'; b.style.opacity='0.4'; b.style.pointerEvents='none'; });
       var highBtn = prioRow.querySelector('.prio-btn:last-child');
-      if (highBtn) { highBtn.className = 'prio-btn active-high'; highBtn.style.opacity='1'; }
+      if (highBtn) { highBtn.className='prio-btn active-high'; highBtn.style.opacity='1'; }
     }
   } else {
     if (notice) notice.style.display = 'none';
-    if (prioRow) {
-      prioRow.querySelectorAll('.prio-btn').forEach(function(b){ b.style.opacity=''; b.style.pointerEvents=''; });
-    }
+    if (prioRow) prioRow.querySelectorAll('.prio-btn').forEach(function(b){ b.style.opacity=''; b.style.pointerEvents=''; });
   }
+  // Reset sub-tipo state on category change
+  _necVolTipo  = 'requerir';
+  _necShelTipo = 'solicitud';
+  var req = document.getElementById('necVolReq'); if (req) req.classList.add('active');
+  var ofe = document.getElementById('necVolOfe'); if (ofe) ofe.classList.remove('active');
+  var sol = document.getElementById('necShelSol'); if (sol) sol.classList.add('active');
+  var ofe2 = document.getElementById('necShelOfe'); if (ofe2) ofe2.classList.remove('active');
+  _necUpdateFields();
 };
 
 // ── TAB 1 ──
+
+
+// ══ MAPA DE NECESIDAD ══
+var _necMap = null;
+var _necMarker = null;
+
+function _necMakeIcon(color, icon, size) {
+  return L.divIcon({
+    className: '',
+    html: '<div style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+color+';display:flex;align-items:center;justify-content:center;font-size:'+Math.round(size*0.42)+'px;font-weight:700;color:#fff;box-shadow:0 3px 10px rgba(0,0,0,0.35);border:2px solid rgba(255,255,255,0.35);">'+icon+'</div>',
+    iconSize:[size,size], iconAnchor:[size/2,size/2], popupAnchor:[0,-(size/2+4)]
+  });
+}
+
+function _necPulseIcon(color) {
+  return L.divIcon({
+    className: '',
+    html: '<div style="position:relative;width:36px;height:36px;">'+
+      '<div style="position:absolute;inset:0;border-radius:50%;background:'+color+';opacity:0.2;animation:necPulseRing 1.8s ease-out infinite;"></div>'+
+      '<div style="position:absolute;inset:7px;border-radius:50%;background:'+color+';display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;box-shadow:0 2px 10px rgba(0,0,0,0.4);">!</div>'+
+    '</div>',
+    iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-22]
+  });
+}
+
+(function(){
+  var s = document.createElement('style');
+  s.textContent='@keyframes necPulseRing{0%{transform:scale(1);opacity:0.22}70%{transform:scale(2.2);opacity:0}100%{transform:scale(2.2);opacity:0}}';
+  document.head.appendChild(s);
+})();
+
+function initNecMap() {
+  var el = document.getElementById('necMap');
+  if (!el) return;
+  if (_necMap) { _necMap.invalidateSize(); return; }
+
+  _necMap = L.map('necMap', {
+    zoomControl: false,
+    attributionControl: false,
+    scrollWheelZoom: false,
+    dragging: true,
+    doubleClickZoom: false
+  }).setView([39.4617, -0.3854], 16);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19 }).addTo(_necMap);
+
+  var ctx = [
+    { lat:39.4641, lng:-0.3879, color:'#1D9E75', icon:'K', tip:'<b>📦 Recogida de kits</b><br>Polideportivo Russafa' },
+    { lat:39.4598, lng:-0.3831, color:'#7B5EA7', icon:'V', tip:'<b>🤝 Voluntarios</b><br>12 activos' },
+    { lat:39.4633, lng:-0.3808, color:'#EF9F27', icon:'P', tip:'<b>📍 Punto de encuentro</b><br>Pl. Ayuntamiento' },
+    { lat:39.4589, lng:-0.3869, color:'#3A7BD5', icon:'R', tip:'<b>🏠 Refugio</b><br>C/ Colón 40 · 30 plazas' }
+  ];
+  ctx.forEach(function(m) {
+    L.marker([m.lat, m.lng], { icon: _necMakeIcon(m.color, m.icon, 26) })
+      .bindPopup(m.tip, { className:'k2-popup', maxWidth:180 })
+      .addTo(_necMap);
+  });
+
+  _necMarker = L.marker([39.4617, -0.3854], { icon: _necPulseIcon('#E24B4A'), zIndexOffset:1000 })
+    .bindPopup('<b>🚨 Necesidad activa</b><br>C/ Sueca, 22 · Ruzafa', { className:'k2-popup', maxWidth:200 })
+    .addTo(_necMap)
+    .openPopup();
+
+  _necMap.on('click', function(e) {
+    _necMarker.setLatLng(e.latlng);
+    _necMarker.setIcon(_necPulseIcon('#E24B4A'));
+    var ubic = document.getElementById('necUbic');
+    if (ubic) ubic.value = e.latlng.lat.toFixed(5) + ', ' + e.latlng.lng.toFixed(5);
+    _necMarker.openPopup();
+  });
+}
+
+setTimeout(initNecMap, 400);
+
+var _origSwitchDemoNec = window.switchDemo;
+window.switchDemo = function(tab) {
+  _origSwitchDemoNec(tab);
+  if (tab === 'necesidad') setTimeout(initNecMap, 150);
+};
+
+var _origEnviarNec = window.enviarNecesidad;
+window.enviarNecesidad = function() {
+  if (_necMarker) {
+    var me = _necMarker.getElement ? _necMarker.getElement() : null;
+    if (me) { me.style.filter='brightness(2) drop-shadow(0 0 8px #E24B4A)'; setTimeout(function(){ if(me) me.style.filter=''; },700); }
+  }
+  _origEnviarNec && _origEnviarNec();
+};
+
+
 window.enviarNecesidad = function() {
   var btn = document.getElementById('necBtn');
   btn.textContent = '✓ Enviando...'; btn.style.background = '#085041'; btn.disabled = true;
   setTimeout(function(){
-    var np = document.getElementById('necNewPoint');
-    if (np) np.style.opacity = '1';
-    var ubic = document.getElementById('necUbic');
-    var pers = document.getElementById('necPersonas');
-    var catEl = document.querySelector('#necCatChips .chip.active');
-    var isEmergency = catEl && catEl.classList.contains('chip-emergency');
-    var prioEl = document.querySelector('#necPrioRow .prio-btn[class*="active"]');
-    var prioText = isEmergency ? 'Alta 🚨' : (prioEl ? prioEl.textContent : '—');
-    // Category labels mapping
+    var catEl     = document.querySelector('#necCatChips .chip.active');
+    var isEmerg   = catEl && catEl.classList.contains('chip-emergency');
+    var isVol     = catEl && catEl.classList.contains('chip-volunteer');
+    var isShelter = catEl && catEl.classList.contains('chip-shelter');
+    var prioEl    = document.querySelector('#necPrioRow .prio-btn[class*="active"]');
+    var prioText  = isEmerg ? 'Alta 🚨' : (prioEl ? prioEl.textContent : '—');
+
     var catLabels = {
       'chip-emergency':  '🚨 Emergencia',
       'chip-volunteer':  '🤝 Voluntarios',
@@ -2973,20 +3177,52 @@ window.enviarNecesidad = function() {
       'chip-shelter':    '🏠 Refugio / Hospedaje'
     };
     var catClass = catEl ? Array.from(catEl.classList).find(function(c){ return catLabels[c]; }) : null;
-    var catText = catClass ? catLabels[catClass] : (catEl ? catEl.textContent : '—');
+    var catText  = catClass ? catLabels[catClass] : (catEl ? catEl.textContent : '—');
+    if (isVol)     catText += ' · ' + (_necVolTipo  === 'requerir' ? 'Requerir' : 'Ofrecer');
+    if (isShelter) catText += ' · ' + (_necShelTipo === 'solicitud' ? 'Solicitud' : 'Oferta');
+
+    var rows = [
+      ['Ubicación', (document.getElementById('necUbic') || {}).value || '—'],
+      ['Categoría', catText],
+    ];
+
+    // Prioridad — oculta si ofrece voluntarios
+    if (!isVol || _necVolTipo !== 'ofrecer') rows.push(['Prioridad', prioText]);
+
+    // Personas / capacidad según reglas de visibilidad
+    var persGroup = document.getElementById('necPersonasGroup');
+    if (persGroup && persGroup.style.display !== 'none') {
+      var persLabel = (document.getElementById('necPersonasLabel') || {}).textContent || 'Personas';
+      rows.push([persLabel, (document.getElementById('necPersonas') || {}).value || '—']);
+    }
+    var capGroup = document.getElementById('necVolGroup');
+    if (capGroup && capGroup.style.display !== 'none') {
+      var capLabel = (capGroup.querySelector('label') || {}).textContent || 'Cantidad';
+      rows.push([capLabel, (document.getElementById('necPersonas') || {}).value || '—']);
+    }
+
     var summary = document.getElementById('necSummary');
     if (summary) {
-      var rows = [
-        ['Ubicación', ubic ? ubic.value : '—'],
-        ['Categoría', catText],
-        ['Prioridad',  prioText],
-        ['Personas',  pers ? pers.value : '—'],
-      ];
       summary.innerHTML = rows.map(function(r){
-        var valStyle = isEmergency && r[0]==='Prioridad' ? 'font-weight:600;color:#E24B4A;' : 'font-weight:500;';
+        var valStyle = isEmerg && r[0]==='Prioridad' ? 'font-weight:600;color:#E24B4A;' : 'font-weight:500;';
         return '<div class="nec-summary-row"><span style="color:var(--muted);">' + r[0] + '</span><span style="' + valStyle + '">' + r[1] + '</span></div>';
       }).join('');
     }
+
+    // Callback especial: ofrecer voluntarios → punto de encuentro asignado
+    if (isVol && _necVolTipo === 'ofrecer') {
+      window._necCheckpointCallback = true;
+      var extraMsg = document.getElementById('necConfirmExtra');
+      if (!extraMsg) {
+        extraMsg = document.createElement('div');
+        extraMsg.id = 'necConfirmExtra';
+        extraMsg.style.cssText = 'margin-top:8px;font-size:12px;color:#EF9F27;background:#FEF5EC;border-radius:10px;padding:10px;line-height:1.5;';
+        var conf = document.getElementById('necConfirm');
+        if (conf) conf.appendChild(extraMsg);
+      }
+      extraMsg.textContent = '📍 Punto de encuentro asignado automáticamente al finalizar triaje.';
+    }
+
     var conf = document.getElementById('necConfirm');
     if (conf) conf.classList.add('visible');
     btn.textContent = '✓ Enviada'; btn.style.background = ''; btn.disabled = false;
@@ -3135,6 +3371,8 @@ document.addEventListener('DOMContentLoaded', function(){
   if (emergChip && emergChip.classList.contains('active')) {
     window.selectCat(emergChip, 'necCatChips');
   }
+   // Init campo visibilidad
+  if (typeof _necUpdateFields === 'function') _necUpdateFields();
 });
 </script>
 
