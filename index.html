@@ -487,6 +487,9 @@
 			  cursor: pointer; background: transparent; font-family: DM Sans, sans-serif;
 			  transition: background 0.15s, color 0.15s;
 			}
+			
+			.kit-action-btn.del  { color: #999; }
+			.kit-action-btn.del:hover { background: #999; color: #fff; }
 			.kit-action-btn.edit  { color: #1D9E75; }
 			.kit-action-btn.edit:hover  { background: #1D9E75; color: #fff; }
 			.kit-action-btn.deact { color: #E24B4A; }
@@ -2945,9 +2948,10 @@
 			  '</div>' +
 			  '<div class="kit-created-elements">' + elHtml + '</div>' +
 			  '<div class="kit-action-bar">' +
-				'<button class="kit-action-btn edit" onclick="editarKit(this)">✏️ Modificar</button>' +
-				'<button class="kit-action-btn deact" onclick="toggleKitActivo(this)">⏸ Desactivar</button>' +
-			  '</div>';
+				  '<button class="kit-action-btn edit" onclick="editarKit(this)">✏️ Modificar</button>' +
+				  '<button class="kit-action-btn deact" onclick="toggleKitActivo(this)">⏸ Desactivar</button>' +
+				  '<button class="kit-action-btn del" onclick="borrarKit(this)">🗑 Borrar</button>' +
+				'</div>';
 
 			listEl.insertBefore(card, listEl.firstChild);
 
@@ -3007,6 +3011,18 @@
 		  selectKitType(document.querySelector('.kit-type-card[data-type="' + type + '"]'), type);
 		  // Scroll al builder
 		  document.getElementById('kitBuilderPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+		}
+
+		// -- Borrar kit --
+		function borrarKit(btn) {
+		  var card = btn.closest('.kit-created-card');
+		  var id = card.dataset.kitId;
+		  if (!confirm('¿Eliminar este kit? Esta acción no se puede deshacer.')) return;
+		  delete activeKits[id];
+		  card.style.transition = 'opacity 0.25s, transform 0.25s';
+		  card.style.opacity = '0';
+		  card.style.transform = 'scale(0.96)';
+		  setTimeout(function() { card.remove(); renderVolKitList(); }, 260);
 		}
 
 		// ── Activar / Desactivar kit ──
