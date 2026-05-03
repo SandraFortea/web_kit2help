@@ -435,11 +435,75 @@
           .chat-send:hover { background:var(--green-600); }
         
           /* ── KIT ── */
+		  
+		  /* ── Kit modo switcher ── */
+			#kitModeCoord, #kitModeVol { font-family: DM Sans, sans-serif; }
+
+			/* ── Fila de kit activo en vista voluntario ── */
+			.vol-kit-row {
+			  display: flex;
+			  align-items: center;
+			  gap: 10px;
+			  padding: 10px 12px;
+			  border-radius: 12px;
+			  border: 1.5px solid transparent;
+			  cursor: pointer;
+			  transition: border-color 0.18s, background 0.18s;
+			  background: #f7f9f8;
+			}
+			.vol-kit-row:hover { border-color: var(--teal); background: #EDF8F4; }
+			.vol-kit-row.inactive { opacity: 0.45; cursor: not-allowed; }
+			.vol-kit-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+			.vol-kit-label { flex: 1; font-size: 13px; font-weight: 600; }
+			.vol-kit-badge {
+			  font-size: 10px; font-weight: 700; padding: 3px 8px;
+			  border-radius: 20px; background: #D4F5E9; color: #0E6E4A;
+			}
+			.vol-kit-badge.off { background: #f0f0f0; color: #999; }
+
+			/* ── Instrucciones de montaje ── */
+			.vol-instr-title { font-weight: 700; font-size: 14px; color: #0E6E4A; margin-bottom: 8px; }
+			.vol-instr-step {
+			  display: flex; gap: 8px; align-items: flex-start;
+			  font-size: 12px; color: #2D4A3E; margin-bottom: 6px; line-height: 1.45;
+			}
+			.vol-instr-num {
+			  width: 20px; height: 20px; border-radius: 50%; background: var(--teal);
+			  color: #fff; font-size: 10px; font-weight: 700;
+			  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+			}
+			.vol-color-swatch {
+			  display: inline-block; width: 14px; height: 14px;
+			  border-radius: 3px; vertical-align: middle; margin: 0 3px;
+			}
+
+			/* ── Kit creado: botones acción ── */
+			.kit-action-bar {
+			  display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;
+			}
+			.kit-action-btn {
+			  font-size: 11px; font-weight: 600; padding: 4px 10px;
+			  border-radius: 8px; border: 1.5px solid currentColor;
+			  cursor: pointer; background: transparent; font-family: DM Sans, sans-serif;
+			  transition: background 0.15s, color 0.15s;
+			}
+			.kit-action-btn.edit  { color: #1D9E75; }
+			.kit-action-btn.edit:hover  { background: #1D9E75; color: #fff; }
+			.kit-action-btn.deact { color: #E24B4A; }
+			.kit-action-btn.deact:hover { background: #E24B4A; color: #fff; }
+			.kit-action-btn.react { color: #2C7BE5; }
+			.kit-action-btn.react:hover { background: #2C7BE5; color: #fff; }
+
           /* Kit type selector */
           .kit-type-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
-            margin-bottom: 20px;
-          }
+			  display: grid;
+			  grid-template-columns: repeat(2, 1fr);
+			  gap: 10px;
+			  margin-bottom: 20px;
+			}
+			.kit-type-grid .kit-custom {
+			  grid-column: 1 / -1;
+			}
           .kit-type-card {
             border-radius: 14px; padding: 14px 12px; cursor: pointer;
             border: 2px solid transparent; transition: all 0.18s;
@@ -483,7 +547,7 @@
             background:#fff; border-radius:20px; border:1px solid rgba(29,158,117,0.1);
             overflow:hidden; display:flex; flex-direction:column;
           }
-          .kit-builder-header {
+          .kit-builder-header2 {
             padding:16px 20px; border-bottom:1px solid var(--border);
             display:flex; align-items:center; justify-content:space-between;
           }
@@ -1420,12 +1484,13 @@
   .muro-footer { flex-direction:column; align-items:flex-start; gap:6px; }
   .muro-claim-btn { align-self:flex-end; }
 
-  /* Kit type grid: 3 cols on narrow so custom fits same size */
-  .kit-type-grid { grid-template-columns:repeat(3,1fr) !important; gap:6px; }
-  .kit-type-card { padding:10px 6px; gap:3px; }
-  .kit-type-icon { font-size:18px; }
-  .kit-type-name { font-size:11px; }
-  .kit-type-desc { display:none; }
+  /* Kit type grid: 2 cols en móvil, custom ocupa fila completa */
+	.kit-type-grid { grid-template-columns: repeat(2, 1fr); gap:6px; }
+	.kit-type-grid .kit-custom { grid-column: 1 / -1; }
+	.kit-type-card { padding:10px 6px; gap:3px; }
+	.kit-type-icon { font-size:18px; }
+	.kit-type-name { font-size:11px; }
+	.kit-type-desc { display:none; }
   /* Color swatches wrap */
   #kitColorPicker { gap:6px; }
   .kit-color-swatch { width:20px; height:20px; }
@@ -1461,8 +1526,7 @@
   .val-btn { font-size:10px; padding:6px 5px; }
   .muro-claim-btn { font-size:10px; padding:4px 9px; }
 }
-
-  </style>
+    </style>
 </head>
 
 <body>
@@ -1604,542 +1668,669 @@
 
     <!-- DEMO -->
     <div id="demo">
-      <div class="inner">
-        <div class="label reveal">03 — Demo interactiva</div>
-        <h2 class="section-title reveal reveal-delay-1">Pruébalo tú mismo</h2>
-        <p class="section-sub reveal reveal-delay-2">Cinco funcionalidades conectadas: desde la necesidad detectada hasta la entrega verificada.</p>
+        <div class="inner">
+            <div class="label reveal">03 — Demo interactiva</div>
+            <h2 class="section-title reveal reveal-delay-1">Pruébalo tú mismo</h2>
+            <p class="section-sub reveal reveal-delay-2">Cinco funcionalidades conectadas: desde la necesidad detectada hasta la entrega verificada.</p>
 
-        <div class="demo-shell reveal">
-          <div class="demo-topbar">
-            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
-            <span class="demo-url">kit2help.es / demo</span>
-          </div>
-
-          <!-- Step indicators -->
-          <div class="demo-steps">
-            <div class="demo-step active" onclick="switchDemo('necesidad')"><div class="ds-num">1</div><span>Necesidad</span></div>
-            <div class="demo-step"        onclick="switchDemo('validacion')"><div class="ds-num">2</div><span>Triaje</span></div>
-            <div class="demo-step"        onclick="switchDemo('muro')">      <div class="ds-num">3</div><span>Coordinación</span></div>
-            <div class="demo-step"        onclick="switchDemo('kits')">      <div class="ds-num">4</div><span>Kits</span></div>
-            <div class="demo-step"        onclick="switchDemo('traza')">     <div class="ds-num">5</div><span>Trazabilidad</span></div>
-          </div>
-
-          <div class="demo-content" style="min-height:420px;">
-
-            <!-- ══ TAB 1: ACTIVAR NECESIDAD ══ -->
-            <div class="demo-panel active" id="tab-necesidad">
-              <div class="d-panel-title">📝 Activar Necesidad</div>
-              <div class="d-panel-sub">Reporta una necesidad de forma estructurada para que llegue al coordinador correcto.</div>
-              <div class="nec-layout">
-                <!-- Form -->
-                <div class="nec-form">
-                  <div class="d-form-group">
-                    <label>Ubicación</label>
-                    <input class="d-input" id="necUbic" type="text" value="C/ Sueca, 22 — Ruzafa, Valencia">
-                  </div>
-                  <div class="d-form-group">
-                    <label>Categoría</label>
-                    <div class="type-chips" id="necCatChips">
-                      <div class="chip chip-emergency active" onclick="selectCat(this,'necCatChips')">🚨 Emergencia</div>                      
-                      <div class="chip chip-checkpoint" onclick="selectCat(this,'necCatChips')">📍 Punto de encuentro</div>
-                      <div class="chip chip-storage" onclick="selectCat(this,'necCatChips')">📦 Recogida de kits</div>
-					  <div class="chip chip-volunteer" onclick="selectCat(this,'necCatChips')">🤝 Voluntarios</div>
-                      <div class="chip chip-shelter" onclick="selectCat(this,'necCatChips')">🏠 Refugio / Hospedaje</div>
-                    </div>
-                    <div id="emergencyNotice" style="display:flex;align-items:center;gap:7px;margin-top:8px;padding:8px 12px;background:#FCEBEB;border:1px solid rgba(226,75,74,0.3);border-radius:10px;font-size:12px;color:#922B21;font-weight:500;">
-                      <span>🚨</span> Emergencia: se asignará prioridad <strong>Alta</strong> automáticamente
-                    </div>
-                  <!-- Sub-opciones Voluntarios -->
-					<div id="necVolSubRow" style="display:none; margin-top:20px; gap:8px; flex-direction:row;" class="type-chips">
-					  <div class="chip chip-volunteer active" id="necVolReq" onclick="selectVolTipo('requerir')">Requerir voluntarios</div>
-					  <div class="chip chip-volunteer" id="necVolOfe" onclick="selectVolTipo('ofrecer')">Ofrecer voluntarios</div>
-					</div>
-					
-					
-					<!-- Sub-opciones Refugio -->
-					<div id="necShelSubRow" style="display:none; margin-top:20px; gap:8px; flex-direction:row;" class="type-chips">
-					  <div class="chip chip-shelter active" id="necShelSol" onclick="selectShelTipo('solicitud')">Solicitar plaza</div>
-					  <div class="chip chip-shelter" id="necShelOfe" onclick="selectShelTipo('oferta')">Ofrecer espacio</div>
-					</div>
-                  </div>
-                  <div class="d-form-group" id="necPrioGroup">
-                    <label>Prioridad</label>
-                    <div class="priority-row" id="necPrioRow">
-                      <div class="prio-btn" onclick="selectPrioIn(this,'necPrioRow','low')">Baja</div>
-                      <div class="prio-btn active-mid" onclick="selectPrioIn(this,'necPrioRow','mid')">Media</div>
-                      <div class="prio-btn" onclick="selectPrioIn(this,'necPrioRow','high')">Alta</div>
-                    </div>
-                  </div>
-                  <div class="d-form-group" id="necPersonasGroup">
-                    <label id="necPersonasLabel">Personas afectadas</label>
-                    <input class="d-input" id="necPersonas" type="number" value="6" min="1">
-                  </div>
-                 
-                  <div class="d-form-group">
-                    <label>Descripción</label>
-                    <textarea class="d-textarea" id="necDesc" rows="2">Indica de forma breve la necesidad, con datos esenciales nombre de contacto, telefono.</textarea>
-                  </div>
-                  <button class="d-btn-primary" id="necBtn" onclick="enviarNecesidad()">Enviar necesidad</button>
+            <div class="demo-shell reveal">
+                <div class="demo-topbar">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                    <span class="demo-url">kit2help.es / demo</span>
                 </div>
-                <!-- Map + confirm -->
-                <div class="nec-map-col">
-                  <div class="nec-map-box" id="necMapBox">
-					  <div class="emap-header" style="position:absolute;top:12px;left:12px;right:12px;z-index:20;pointer-events:none;">
-						<div class="emap-badge"><div class="rdot"></div>Mapa en vivo</div>
+
+                <!-- Step indicators -->
+                <div class="demo-steps">
+                    <div class="demo-step active" onclick="switchDemo('necesidad')">
+                        <div class="ds-num">1</div><span>Necesidad</span></div>
+                    <div class="demo-step" onclick="switchDemo('validacion')">
+                        <div class="ds-num">2</div><span>Triaje</span></div>
+                    <div class="demo-step" onclick="switchDemo('muro')">
+                        <div class="ds-num">3</div><span>Coordinación</span></div>
+                    <div class="demo-step" onclick="switchDemo('kits')">
+                        <div class="ds-num">4</div><span>Kits</span></div>
+                    <div class="demo-step" onclick="switchDemo('traza')">
+                        <div class="ds-num">5</div><span>Trazabilidad</span></div>
+                </div>
+
+                <div class="demo-content" style="min-height:420px;">
+
+                    <!-- ══ TAB 1: ACTIVAR NECESIDAD ══ -->
+                    <div class="demo-panel active" id="tab-necesidad">
+                        <div class="d-panel-title">📝 Activar Necesidad</div>
+                        <div class="d-panel-sub">Reporta una necesidad de forma estructurada para que llegue al coordinador correcto.</div>
+                        <div class="nec-layout">
+                            <!-- Form -->
+                            <div class="nec-form">
+                                <div class="d-form-group">
+                                    <label>Ubicación</label>
+                                    <input class="d-input" id="necUbic" type="text" value="C/ Sueca, 22 — Ruzafa, Valencia">
+                                </div>
+                                <div class="d-form-group">
+                                    <label>Categoría</label>
+                                    <div class="type-chips" id="necCatChips">
+                                        <div class="chip chip-emergency active" onclick="selectCat(this,'necCatChips')">🚨 Emergencia</div>
+                                        <div class="chip chip-checkpoint" onclick="selectCat(this,'necCatChips')">📍 Punto de encuentro</div>
+                                        <div class="chip chip-storage" onclick="selectCat(this,'necCatChips')">📦 Recogida de kits</div>
+                                        <div class="chip chip-volunteer" onclick="selectCat(this,'necCatChips')">🤝 Voluntarios</div>
+                                        <div class="chip chip-shelter" onclick="selectCat(this,'necCatChips')">🏠 Refugio / Hospedaje</div>
+                                    </div>
+                                    <div id="emergencyNotice" style="display:flex;align-items:center;gap:7px;margin-top:8px;padding:8px 12px;background:#FCEBEB;border:1px solid rgba(226,75,74,0.3);border-radius:10px;font-size:12px;color:#922B21;font-weight:500;">
+                                        <span>🚨</span> Emergencia: se asignará prioridad <strong>Alta</strong> automáticamente
+                                    </div>
+                                    <!-- Sub-opciones Voluntarios -->
+                                    <div id="necVolSubRow" style="display:none; margin-top:20px; gap:8px; flex-direction:row;" class="type-chips">
+                                        <div class="chip chip-volunteer active" id="necVolReq" onclick="selectVolTipo('requerir')">Requerir voluntarios</div>
+                                        <div class="chip chip-volunteer" id="necVolOfe" onclick="selectVolTipo('ofrecer')">Ofrecer voluntarios</div>
+                                    </div>
+
+
+                                    <!-- Sub-opciones Refugio -->
+                                    <div id="necShelSubRow" style="display:none; margin-top:20px; gap:8px; flex-direction:row;" class="type-chips">
+                                        <div class="chip chip-shelter active" id="necShelSol" onclick="selectShelTipo('solicitud')">Solicitar plaza</div>
+                                        <div class="chip chip-shelter" id="necShelOfe" onclick="selectShelTipo('oferta')">Ofrecer espacio</div>
+                                    </div>
+                                </div>
+                                <div class="d-form-group" id="necPrioGroup">
+                                    <label>Prioridad</label>
+                                    <div class="priority-row" id="necPrioRow">
+                                        <div class="prio-btn" onclick="selectPrioIn(this,'necPrioRow','low')">Baja</div>
+                                        <div class="prio-btn active-mid" onclick="selectPrioIn(this,'necPrioRow','mid')">Media</div>
+                                        <div class="prio-btn" onclick="selectPrioIn(this,'necPrioRow','high')">Alta</div>
+                                    </div>
+                                </div>
+                                <div class="d-form-group" id="necPersonasGroup">
+                                    <label id="necPersonasLabel">Personas afectadas</label>
+                                    <input class="d-input" id="necPersonas" type="number" value="6" min="1">
+                                </div>
+
+                                <div class="d-form-group">
+                                    <label>Descripción</label>
+                                    <textarea class="d-textarea" id="necDesc" rows="2">Indica de forma breve la necesidad, con datos esenciales nombre de contacto, telefono.</textarea>
+                                </div>
+                                <button class="d-btn-primary" id="necBtn" onclick="enviarNecesidad()">Enviar necesidad</button>
+                            </div>
+                            <!-- Map + confirm -->
+                            <div class="nec-map-col">
+                                <div class="nec-map-box" id="necMapBox">
+                                    <div class="emap-header" style="position:absolute;top:12px;left:12px;right:12px;z-index:20;pointer-events:none;">
+                                        <div class="emap-badge">
+                                            <div class="rdot"></div>Mapa en vivo</div>
+                                    </div>
+                                    <div id="necMap" style="width:100%;height:100%;position:absolute;inset:0;z-index:1;"></div>
+                                </div>
+                                <!-- Confirm card -->
+                                <div class="nec-confirm" id="necConfirm">
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+                                        <span style="font-family:Syne,sans-serif;font-size:13px;font-weight:600;color:var(--dark);">Necesidad registrada</span>
+                                        <span class="d-badge d-badge-pend">● Pendiente validación</span>
+                                    </div>
+                                    <div id="necSummary"></div>
+                                    <div style="margin-top:10px;font-size:12px;color:var(--muted);background:var(--bg);border-radius:10px;padding:10px;line-height:1.5;">
+                                        📬 Entrando en panel de triaje. Un coordinador la revisará pronto.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-btn-next">
+                            <button onclick="switchDemo('validacion')">Ver en triaje →</button>
+                        </div>
+                    </div>
+
+                    <!-- ══ TAB 2: VALIDACIÓN / TRIAJE ══ -->
+                    <div class="demo-panel" id="tab-validacion">
+                        <div class="d-panel-title">🔎 Panel de validación y triaje</div>
+                        <div class="d-panel-sub">Revisa, prioriza y valida cada solicitud antes de publicarla en el muro.</div>
+                        <div class="val-filters">
+                            <button class="val-filter-btn active" onclick="filtrarVal('todas',this)">Todas (5)</button>
+                            <button class="val-filter-btn" onclick="filtrarVal('pendiente',this)">Pendientes</button>
+                            <button class="val-filter-btn" onclick="filtrarVal('validada',this)">Validadas</button>
+                        </div>
+                        <div class="val-list">
+
+                            <!-- Card 1 — Emergencia (prioridad alta forzada) -->
+                            <div class="val-card" id="valCard1" data-estado="pendiente" style="border-left:3px solid #E24B4A;">
+                                <div class="val-header">
+                                    <div class="val-header-top">
+                                        <div class="val-icon" style="background:#FDEDEC;">🚨</div>
+                                        <div class="val-info">
+                                            <div class="val-title">Emergencia · C/ Sueca, 22</div>
+                                            <div class="val-meta">📍 Ruzafa · 6 personas <span class="d-badge d-badge-urg">🔴 Alta — Emergencia</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="val-actions">
+                                        <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard1','valAct1','valDone1',true)">✓ Validar</button>
+                                        <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard1','valAct1','valDone1',false)">✕ Rechazar</button>
+                                        <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand1');event.stopPropagation()">Detalles</button>
+                                    </div>
+                                </div>
+                                <div class="val-expand" id="valExpand1">
+                                    <div class="val-expand-grid">
+                                        <div class="val-field">Descripción<span>Familia con 2 menores y anciano. Sin víveres 2 días.</span></div>
+                                        <div class="val-field">Prioridad<span style="color:#E24B4A;font-weight:700;">🔴 Alta (automática)</span></div>
+                                        <div class="val-field">Solicitante<span>Ciudadano</span></div>
+                                        <div class="val-field">Recibida<span>Hace 2 min</span></div>
+                                    </div>
+                                    <div style="margin:8px 0 4px;padding:8px 10px;background:#FDEDEC;border-radius:8px;font-size:11px;color:#922B21;">⚠️ Emergencia declarada — prioridad Alta asignada automáticamente al sistema</div>
+                                    <div class="val-done-msg" id="valDone1"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2 — Voluntarios (prioridad libre) -->
+                            <div class="val-card" id="valCard2" data-estado="pendiente" style="border-left:3px solid #7B5EA7;">
+                                <div class="val-header">
+                                    <div class="val-header-top">
+                                        <div class="val-icon" style="background:#F5F0FB;">🤝</div>
+                                        <div class="val-info">
+                                            <div class="val-title">Voluntarios · Campus Blasco Ibáñez</div>
+                                            <div class="val-meta">📍 Benimaclet · 20 disponibles <span class="d-badge d-badge-info">Voluntarios</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="val-actions">
+                                        <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard2','valAct2','valDone2',true)">✓ Validar</button>
+                                        <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard2','valAct2','valDone2',false)">✕ Rechazar</button>
+                                        <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand2');event.stopPropagation()">Detalles</button>
+                                    </div>
+                                </div>
+                                <div class="val-expand" id="valExpand2">
+                                    <div class="val-expand-grid">
+                                        <div class="val-field">Descripción<span>Grupo de 20 voluntarios con vehículo. Buscan zona de asignación.</span></div>
+                                        <div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
+                                        <div class="val-field">Responsable de asignación<span id="respAsig2">— Sin asignar</span></div>
+                                        <div class="val-field">Recibida<span>Hace 5 min</span></div>
+                                    </div>
+                                    <div style="margin:8px 0 4px;">
+                                        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar coordinador responsable</label>
+                                        <div style="display:flex;gap:6px;">
+                                            <input class="d-input" id="respInput2" placeholder="Nombre del coordinador..." style="font-size:12px;padding:7px 10px;">
+                                            <button onclick="asignarResp('respInput2','respAsig2')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
+                                        </div>
+                                    </div>
+                                    <div class="val-done-msg" id="valDone2"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card 3 — Punto de encuentro -->
+                            <div class="val-card" id="valCard3" data-estado="pendiente" style="border-left:3px solid #EF9F27;">
+                                <div class="val-header">
+                                    <div class="val-header-top">
+                                        <div class="val-icon" style="background:#FEF5EC;">📍</div>
+                                        <div class="val-info">
+                                            <div class="val-title">Punto de encuentro · Plaza del Ayuntamiento</div>
+                                            <div class="val-meta">📍 Centro · Apertura solicitada <span class="d-badge d-badge-pend">Pendiente</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="val-actions">
+                                        <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard3','valAct3','valDone3',true)">✓ Validar</button>
+                                        <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard3','valAct3','valDone3',false)">✕ Rechazar</button>
+                                        <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand3');event.stopPropagation()">Detalles</button>
+                                    </div>
+                                </div>
+                                <div class="val-expand" id="valExpand3">
+                                    <div class="val-expand-grid">
+                                        <div class="val-field">Descripción<span>Espacio habilitado para reunir y redistribuir voluntarios. Capacidad 150 personas.</span></div>
+                                        <div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
+                                        <div class="val-field">Responsable de apertura<span id="respAsig3">— Sin asignar</span></div>
+                                        <div class="val-field">Recibida<span>Hace 10 min</span></div>
+                                    </div>
+                                    <div style="margin:8px 0 4px;">
+                                        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar responsable del punto</label>
+                                        <div style="display:flex;gap:6px;">
+                                            <input class="d-input" id="respInput3" placeholder="Nombre del responsable..." style="font-size:12px;padding:7px 10px;">
+                                            <button onclick="asignarResp('respInput3','respAsig3')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
+                                        </div>
+                                    </div>
+                                    <div class="val-done-msg" id="valDone3"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card 4 — Recogida de kits -->
+                            <div class="val-card" id="valCard4" data-estado="pendiente" style="border-left:3px solid #1D9E75;">
+                                <div class="val-header">
+                                    <div class="val-header-top">
+                                        <div class="val-icon" style="background:#E1F5EE;">📦</div>
+                                        <div class="val-info">
+                                            <div class="val-title">Recogida de kits · Polideportivo Russafa</div>
+                                            <div class="val-meta">📍 Russafa · Almacén habilitado <span class="d-badge d-badge-pend">Pendiente</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="val-actions">
+                                        <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard4','valAct4','valDone4',true)">✓ Validar</button>
+                                        <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard4','valAct4','valDone4',false)">✕ Rechazar</button>
+                                        <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand4');event.stopPropagation()">Detalles</button>
+                                    </div>
+                                </div>
+                                <div class="val-expand" id="valExpand4">
+                                    <div class="val-expand-grid">
+                                        <div class="val-field">Descripción<span>Espacio para recibir y almacenar kits de ayuda. Acceso por entrada lateral.</span></div>
+                                        <div class="val-field">Prioridad<span style="color:#1D9E75;">Baja</span></div>
+                                        <div class="val-field">Responsable del almacén<span id="respAsig4">— Sin asignar</span></div>
+                                        <div class="val-field">Recibida<span>Hace 15 min</span></div>
+                                    </div>
+                                    <div style="margin:8px 0 4px;">
+                                        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar responsable del almacén</label>
+                                        <div style="display:flex;gap:6px;">
+                                            <input class="d-input" id="respInput4" placeholder="Nombre del responsable..." style="font-size:12px;padding:7px 10px;">
+                                            <button onclick="asignarResp('respInput4','respAsig4')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
+                                        </div>
+                                    </div>
+                                    <div class="val-done-msg" id="valDone4"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card 5 — Refugio/Hospedaje (ya validada) -->
+                            <div class="val-card" id="valCard5" data-estado="validada" style="border-left:3px solid #3A7BD5;">
+                                <div class="val-header">
+                                    <div class="val-header-top">
+                                        <div class="val-icon" style="background:#EEF4FC;">🏠</div>
+                                        <div class="val-info">
+                                            <div class="val-title">Refugio / Hospedaje · C/ Colón, 40</div>
+                                            <div class="val-meta">📍 Eixample · Capacidad 30 personas <span class="d-badge d-badge-ok">✓ Validada</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="val-actions" style="border-top:none;padding-top:0;">
+                                        <span style="font-size:12px;color:var(--teal);font-weight:500;">✓ Publicado en muro · Resp.: Ana G.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="d-btn-next">
+                            <button onclick="switchDemo('muro')">Ver en muro →</button>
+                        </div>
+                    </div>
+
+                    <!-- ══ TAB 3: MURO DE COORDINACIÓN ══ -->
+                    <div class="demo-panel" id="tab-muro">
+                        <div class="d-panel-title">📢 Muro de coordinación</div>
+                        <div class="d-panel-sub">Información validada, priorizada y lista para actuar. Sin ruido.</div>
+                        <!-- Filters as pill row -->
+                        <div class="muro-filters">
+                            <button class="muro-filter-btn active" onclick="filtrarMuro('todas',this)">
+                                <span class="mf-dot" style="background:var(--teal);"></span>Todas
+                            </button>
+                            <button class="muro-filter-btn" onclick="filtrarMuro('urgente',this)">
+                                <span class="mf-dot" style="background:#E24B4A;"></span>Urgentes
+                            </button>
+                            <button class="muro-filter-btn" onclick="filtrarMuro('recurso',this)">
+                                <span class="mf-dot" style="background:#1D9E75;"></span>Recursos
+                            </button>
+                            <button class="muro-filter-btn" onclick="filtrarMuro('info',this)">
+                                <span class="mf-dot" style="background:#EF9F27;"></span>Avisos
+                            </button>
+                            <button class="muro-filter-btn" onclick="filtrarMuro('voluntario',this)">
+                                <span class="mf-dot" style="background:#7B5EA7;"></span>Voluntarios
+                            </button>
+                        </div>
+                        <div class="muro-feed" id="muroFeed">
+                            <div class="muro-item" data-tipo="urgente">
+                                <div class="muro-dot" style="background:#E24B4A;"></div>
+                                <div class="muro-content">
+                                    <div class="muro-title">🚨 Emergencia · C/ Sueca, 22</div>
+                                    <div class="muro-body">6 personas, familia con menores y anciano. Prioridad Alta automática. Acceso sin restricción.</div>
+                                    <div class="muro-footer">
+                                        <span class="muro-time">Hace 2 min · Validado</span>
+                                        <span class="muro-tag" style="background:#FDEDEC;color:#922B21;">🚨 Emergencia</span>
+                                        <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="muro-item" data-tipo="voluntario">
+                                <div class="muro-dot" style="background:#7B5EA7;"></div>
+                                <div class="muro-content">
+                                    <div class="muro-title">🤝 Voluntarios disponibles · Campus Blasco Ibáñez</div>
+                                    <div class="muro-body">20 voluntarios con vehículo 4×4. Buscan coordinador de zona. Resp.: Miguel R.</div>
+                                    <div class="muro-footer">
+                                        <span class="muro-time">Hace 5 min · Validado</span>
+                                        <span class="muro-tag" style="background:#F5F0FB;color:#6C3483;">Voluntarios</span>
+                                        <button class="muro-claim-btn" onclick="claimMuro(this)">Coordinar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="muro-item" data-tipo="info">
+                                <div class="muro-dot" style="background:#EF9F27;"></div>
+                                <div class="muro-content">
+                                    <div class="muro-title">📍 Punto de encuentro · Plaza del Ayuntamiento</div>
+                                    <div class="muro-body">Abierto para coordinar voluntarios. Capacidad 150 personas. Resp.: Elena M.</div>
+                                    <div class="muro-footer">
+                                        <span class="muro-time">Hace 10 min · Validado</span>
+                                        <span class="muro-tag" style="background:#FEF5EC;color:#9A5C00;">Punto de encuentro</span>
+                                        <button class="muro-claim-btn" onclick="claimMuro(this)">Registrarse</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="muro-item" data-tipo="recurso">
+                                <div class="muro-dot" style="background:#1D9E75;"></div>
+                                <div class="muro-content">
+                                    <div class="muro-title">📦 Recogida de kits · Polideportivo Russafa</div>
+                                    <div class="muro-body">Almacén habilitado. Acepta kits alimenticios, sanitarios y de ropa. Abierto 8:00–20:00.</div>
+                                    <div class="muro-footer">
+                                        <span class="muro-time">Hace 15 min · Validado</span>
+                                        <span class="muro-tag" style="background:#EAFAF1;color:#1D6A3A;">Recogida kits</span>
+                                        <button class="muro-claim-btn" onclick="claimMuro(this)">Llevar kits</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="muro-item" data-tipo="info">
+                                <div class="muro-dot" style="background:#3A7BD5;"></div>
+                                <div class="muro-content">
+                                    <div class="muro-title">🏠 Refugio disponible · C/ Colón, 40</div>
+                                    <div class="muro-body">30 plazas de hospedaje. Familias y personas mayores con prioridad. Resp.: Ana G.</div>
+                                    <div class="muro-footer">
+                                        <span class="muro-time">Hace 20 min · Validado</span>
+                                        <span class="muro-tag" style="background:#EEF4FC;color:#2A5CA8;">Refugio</span>
+                                        <button class="muro-claim-btn" onclick="claimMuro(this)">Derivar persona</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="muro-item" data-tipo="urgente" id="muroNecDinamica" style="display:none;">
+                                <div class="muro-dot" style="background:#E24B4A;"></div>
+                                <div class="muro-content">
+                                    <div class="muro-title">🚨 Emergencia · C/ Sueca, 22</div>
+                                    <div class="muro-body">Familia 2 menores + anciano. Sin víveres 2 días. 6 personas. Prioridad Alta.</div>
+                                    <div class="muro-footer">
+                                        <span class="muro-time">Recién validada</span>
+                                        <span class="muro-tag" style="background:#FDEDEC;color:#922B21;">🚨 Nueva</span>
+                                        <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					<!-- TAB: KIT -->
+					<div class="demo-panel" id="tab-kits">
+					  <div style="display:flex;flex-direction:column;gap:14px;">
+
+						<!-- Selector de modo -->
+						<div style="display:flex;gap:8px;background:rgba(0,0,0,0.06);border-radius:12px;padding:4px;">
+						  <button id="kitModeCoord" onclick="switchKitMode('coord')"
+							style="flex:1;padding:8px 0;border:none;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;background:var(--teal);color:#fff;transition:all 0.2s;">
+							🦺 Coordinador
+						  </button>
+						  <button id="kitModeVol" onclick="switchKitMode('voluntario')"
+							style="flex:1;padding:8px 0;border:none;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s;">
+							🤝 Voluntario
+						  </button>
+						</div>
+
+						<!-- ══ VISTA COORDINADOR ══ -->
+						<div id="kitViewCoord">
+						  <!-- Selector tipo + builder (igual que antes, se mantiene) -->
+						  <div>
+							<div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Tipo de kit</div>
+							<div class="kit-type-grid">
+							  <div class="kit-type-card kit-food selected" onclick="selectKitType(this,'food')" data-type="food">
+								<div class="kit-type-badge">✓</div>
+								<div class="kit-type-icon">🍱</div>
+								<div class="kit-type-name">Alimenticio</div>
+								<div class="kit-type-desc">Agua y comida</div>
+							  </div>
+							  <div class="kit-type-card kit-med" onclick="selectKitType(this,'med')" data-type="med">
+								<div class="kit-type-badge">✓</div>
+								<div class="kit-type-icon">💊</div>
+								<div class="kit-type-name">Sanitario</div>
+								<div class="kit-type-desc">Medicamentos</div>
+							  </div>
+							  <div class="kit-type-card kit-clothes" onclick="selectKitType(this,'clothes')" data-type="clothes">
+								<div class="kit-type-badge">✓</div>
+								<div class="kit-type-icon">🧥</div>
+								<div class="kit-type-name">Ropa</div>
+								<div class="kit-type-desc">Abrigo y mantas</div>
+							  </div>
+							  <div class="kit-type-card kit-tools" onclick="selectKitType(this,'tools')" data-type="tools">
+								<div class="kit-type-badge">✓</div>
+								<div class="kit-type-icon">🔧</div>
+								<div class="kit-type-name">Herramientas</div>
+								<div class="kit-type-desc">Equipamiento</div>
+							  </div>
+							  <div class="kit-type-card kit-custom" onclick="selectKitType(this,'custom')" data-type="custom" >
+								<div class="kit-type-badge">✓</div>
+								<div class="kit-type-icon">✏️</div>
+								<div class="kit-type-name">Personalizado</div>
+								<div class="kit-type-desc">Crea tu propio kit</div>
+							  </div>
+							</div>
+						  </div>
+
+						  <!-- Builder (igual que antes) -->
+						  <div class="kit-builder" id="kitBuilderPanel">
+							<div class="kit-color-strip" id="kitColorStrip" style="background:#C0392B;"></div>
+							<div class="kit-builder-header">
+							  <span class="kit-builder-header-title" id="kitBuilderTitle">🍱 Kit Alimenticio</span>
+							  <span style="font-size:11px;color:var(--muted);" id="kitBuilderSub">Edita cantidades o añade elementos</span>
+							</div>
+							<div class="kit-custom-name-wrap" id="kitCustomNameWrap" style="display:none;">
+							  <input class="kit-custom-name-input" id="kitCustomName" placeholder="Nombre del kit...">
+							</div>
+							<div class="kit-items" id="kitItemsList"></div>
+							<div class="kit-add-row" id="kitAddRow">
+							  <div class="kit-add-emoji" id="kitAddEmoji" onclick="cycleEmoji(this)" title="Cambiar icono">📦</div>
+							  <input class="kit-add-input" id="kitAddName" placeholder="Nombre del elemento...">
+							  <button class="kit-add-btn" onclick="addKitItem()" title="Añadir">+</button>
+							</div>
+							<div class="kit-footer">
+							  <div class="kit-total">
+								<span class="kit-total-label">Total elementos</span>
+								<span class="kit-total-num" id="kitTotal">0</span>
+							  </div>
+							  <button class="btn-submit" id="kitBtn" onclick="crearKit()">Crear kit</button>
+							</div>
+						  </div>
+
+						  <!-- Lista kits activos/inactivos -->
+						  <div id="kitCreatedList" class="kit-created-list"></div>
+
+						</div><!-- /kitViewCoord -->
+
+						<!-- ══ VISTA VOLUNTARIO ══ -->
+						<div id="kitViewVol" style="display:none;flex-direction:column;gap:12px;">
+
+						  <!-- Paso 1: elegir kit activo -->
+						  <div id="volStep1">
+							<div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Kits activos disponibles</div>
+							<div id="volKitList" style="display:flex;flex-direction:column;gap:8px;">
+							  <!-- renderizado por JS: renderVolKitList() -->
+							</div>
+						  </div>
+
+						  <!-- Paso 2: instrucciones + QR + punto recogida -->
+						  <div id="volStep2" style="display:none;flex-direction:column;gap:12px;">
+
+							<!-- Instrucciones de montaje -->
+							<div id="volInstructions" style="background:#F0FAF6;border:1px solid #B2DFCE;border-radius:12px;padding:14px 16px;">
+							  <!-- renderizado por JS: showVolInstructions(kitKey) -->
+							</div>
+
+							<!-- Punto de recogida más cercano -->
+							<div style="background:#FFF8EC;border:1px solid #FDDFA0;border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;">
+							  <div style="font-size:20px;">📍</div>
+							  <div>
+								<div style="font-weight:700;font-size:13px;color:#92660A;margin-bottom:2px;">Punto de recogida más cercano</div>
+								<div id="volPickupPoint" style="font-size:12px;color:#6B4F10;">Cargando...</div>
+							  </div>
+							</div>
+
+							<!-- Botón generar QR -->
+							<button id="volQrBtn" onclick="generarQR()"
+							  style="width:100%;padding:12px;border:none;border-radius:12px;background:var(--teal);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+							  📲 Generar QR del kit
+							</button>
+
+							<!-- QR generado (oculto hasta clic) -->
+							<div id="volQrBox" style="display:none;text-align:center;padding:16px;background:#fff;border-radius:12px;border:1px solid #e0e0e0;">
+							  <div id="volQrImg" style="margin:0 auto 8px;"></div>
+							  <div style="font-size:11px;color:var(--muted);">Imprime o muestra este QR en el punto de recogida</div>
+							</div>
+
+							<!-- Volver -->
+							<button onclick="volGoStep1()"
+							  style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;text-align:left;padding:0;">
+							  ← Elegir otro kit
+							</button>
+
+						  </div><!-- /volStep2 -->
+
+						</div><!-- /kitViewVol -->
+
 					  </div>
-					  <div id="necMap" style="width:100%;height:100%;position:absolute;inset:0;z-index:1;"></div>
 					</div>
-                  <!-- Confirm card -->
-                  <div class="nec-confirm" id="necConfirm">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
-                      <span style="font-family:Syne,sans-serif;font-size:13px;font-weight:600;color:var(--dark);">Necesidad registrada</span>
-                      <span class="d-badge d-badge-pend">● Pendiente validación</span>
+
+                    <!-- ══ TAB 5: TRAZABILIDAD ══ -->
+                    <div class="demo-panel" id="tab-traza">
+                        <div class="d-panel-title">✅ Trazabilidad y entrega verificada</div>
+                        <div class="d-panel-sub">Cada kit — desde la preparación hasta la confirmación de entrega.</div>
+                        <div class="traza-list">
+                            <!-- Kit 1 -->
+                            <div class="traza-card" id="trazaCard1">
+                                <div class="traza-header" onclick="toggleTraza('trazaSteps1')">
+                                    <div class="traza-box" style="background:#FDF0EF;color:#C0392B;">🍱</div>
+                                    <div class="traza-info">
+                                        <div class="traza-name">Kit Alimenticio · C/ Sueca, 22</div>
+                                        <div class="traza-sub">6 personas · Asignado hace 5 min</div>
+                                    </div>
+                                    <span class="traza-status-badge" style="background:#FEF5EC;color:#9A5C00;">En tránsito</span>
+                                </div>
+                                <div class="traza-steps" id="trazaSteps1">
+                                    <div class="traza-timeline">
+                                        <div class="traza-tl-item">
+                                            <div class="traza-tl-col">
+                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                                                <div class="traza-tl-line"></div>
+                                            </div>
+                                            <div class="traza-tl-text">
+                                                <div class="traza-tl-label">✓ Necesidad validada</div>
+                                                <div class="traza-tl-meta">Hace 18 min · Coordinadora: Elena M.</div>
+                                            </div>
+                                        </div>
+                                        <div class="traza-tl-item">
+                                            <div class="traza-tl-col">
+                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                                                <div class="traza-tl-line"></div>
+                                            </div>
+                                            <div class="traza-tl-text">
+                                                <div class="traza-tl-label">✓ Kit preparado</div>
+                                                <div class="traza-tl-meta">Hace 12 min · Punto Colón · 18 artículos</div>
+                                            </div>
+                                        </div>
+                                        <div class="traza-tl-item">
+                                            <div class="traza-tl-col">
+                                                <div class="traza-tl-dot" style="background:#EF9F27;color:#EF9F27;"></div>
+                                                <div class="traza-tl-line"></div>
+                                            </div>
+                                            <div class="traza-tl-text">
+                                                <div class="traza-tl-label" style="color:#EF9F27;">→ En camino</div>
+                                                <div class="traza-tl-meta">Voluntario: Marcos T. · ETA 6 min</div>
+                                            </div>
+                                        </div>
+                                        <div class="traza-tl-item" id="trazaTlEntrega1" style="opacity:0.4;">
+                                            <div class="traza-tl-col">
+                                                <div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div>
+                                            </div>
+                                            <div class="traza-tl-text">
+                                                <div class="traza-tl-label" style="color:var(--muted);">Pendiente entrega</div>
+                                                <div class="traza-tl-meta">Esperando confirmación</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="traza-confirm-btn" id="trazaBtn1" onclick="confirmarEntrega('trazaCard1','trazaBtn1','trazaTlEntrega1')">
+                                        📲 Confirmar entrega recibida
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Kit 2 entregado -->
+                            <div class="traza-card">
+                                <div class="traza-header" onclick="toggleTraza('trazaSteps2')">
+                                    <div class="traza-box" style="background:#EAFAF1;color:#27AE60;">🧥</div>
+                                    <div class="traza-info">
+                                        <div class="traza-name">Kit Ropa · Av. Mistral, 3</div>
+                                        <div class="traza-sub">3 personas · Entregado hace 22 min</div>
+                                    </div>
+                                    <span class="traza-status-badge" style="background:#EAFAF1;color:#1D6A3A;">✓ Entregado</span>
+                                </div>
+                                <div class="traza-steps" id="trazaSteps2">
+                                    <div class="traza-timeline">
+                                        <div class="traza-tl-item">
+                                            <div class="traza-tl-col">
+                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                                                <div class="traza-tl-line"></div>
+                                            </div>
+                                            <div class="traza-tl-text">
+                                                <div class="traza-tl-label">✓ Validada</div>
+                                                <div class="traza-tl-meta">Hace 40 min</div>
+                                            </div>
+                                        </div>
+                                        <div class="traza-tl-item">
+                                            <div class="traza-tl-col">
+                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                                                <div class="traza-tl-line"></div>
+                                            </div>
+                                            <div class="traza-tl-text">
+                                                <div class="traza-tl-label">✓ Kit preparado y enviado</div>
+                                                <div class="traza-tl-meta">Hace 35 min · 11 artículos</div>
+                                            </div>
+                                        </div>
+                                        <div class="traza-tl-item">
+                                            <div class="traza-tl-col">
+                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                                            </div>
+                                            <div class="traza-tl-text">
+                                                <div class="traza-tl-label" style="color:#1D9E75;">✓ Entrega confirmada</div>
+                                                <div class="traza-tl-meta">Hace 22 min · Carmen R. · Firma registrada</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Kit 3 -->
+                            <div class="traza-card" id="trazaCard3">
+                                <div class="traza-header" onclick="toggleTraza('trazaSteps3')">
+                                    <div class="traza-box" style="background:#FEF5EC;color:#E67E22;">💊</div>
+                                    <div class="traza-info">
+                                        <div class="traza-name">Kit Sanitario · C/ Dénia, 8</div>
+                                        <div class="traza-sub">12 personas · Preparando</div>
+                                    </div>
+                                    <span class="traza-status-badge" id="trazaStatus3" style="background:#EEF2FF;color:#5C6BC0;">Preparando</span>
+                                </div>
+                                <div class="traza-steps" id="trazaSteps3">
+                                    <div class="traza-timeline">
+                                        <div class="traza-tl-item">
+                                            <div class="traza-tl-col">
+                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
+                                                <div class="traza-tl-line"></div>
+                                            </div>
+                                            <div class="traza-tl-text">
+                                                <div class="traza-tl-label">✓ Validada — alta prioridad</div>
+                                                <div class="traza-tl-meta">Hace 8 min · Miguel R.</div>
+                                            </div>
+                                        </div>
+                                        <div class="traza-tl-item" id="trazaTlEntrega3" style="opacity:0.4;">
+                                            <div class="traza-tl-col">
+                                                <div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div>
+                                            </div>
+                                            <div class="traza-tl-text">
+                                                <div class="traza-tl-label" style="color:var(--muted);">En preparación</div>
+                                                <div class="traza-tl-meta">Asignando voluntario</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="traza-confirm-btn" id="trazaBtn3" onclick="confirmarEntrega('trazaCard3','trazaBtn3','trazaTlEntrega3')">
+                                        📲 Marcar como entregado
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div id="necSummary"></div>
-                    <div style="margin-top:10px;font-size:12px;color:var(--muted);background:var(--bg);border-radius:10px;padding:10px;line-height:1.5;">
-                      📬 Entrando en panel de triaje. Un coordinador la revisará pronto.
-                    </div>
-                  </div>
+
                 </div>
-              </div>
-              <div class="d-btn-next"><button onclick="switchDemo('validacion')">Ver en triaje →</button></div>
+                <!-- /demo-content -->
             </div>
-
-            <!-- ══ TAB 2: VALIDACIÓN / TRIAJE ══ -->
-            <div class="demo-panel" id="tab-validacion">
-              <div class="d-panel-title">🔎 Panel de validación y triaje</div>
-              <div class="d-panel-sub">Revisa, prioriza y valida cada solicitud antes de publicarla en el muro.</div>
-              <div class="val-filters">
-                <button class="val-filter-btn active" onclick="filtrarVal('todas',this)">Todas (5)</button>
-                <button class="val-filter-btn" onclick="filtrarVal('pendiente',this)">Pendientes</button>
-                <button class="val-filter-btn" onclick="filtrarVal('validada',this)">Validadas</button>
-              </div>
-              <div class="val-list">
-
-                <!-- Card 1 — Emergencia (prioridad alta forzada) -->
-                <div class="val-card" id="valCard1" data-estado="pendiente" style="border-left:3px solid #E24B4A;">
-                  <div class="val-header">
-                    <div class="val-header-top">
-                      <div class="val-icon" style="background:#FDEDEC;">🚨</div>
-                      <div class="val-info">
-                        <div class="val-title">Emergencia · C/ Sueca, 22</div>
-                        <div class="val-meta">📍 Ruzafa · 6 personas <span class="d-badge d-badge-urg">🔴 Alta — Emergencia</span></div>
-                      </div>
-                    </div>
-                    <div class="val-actions">
-                      <button class="val-btn val-btn-ok"  onclick="validarNec(event,'valCard1','valAct1','valDone1',true)">✓ Validar</button>
-                      <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard1','valAct1','valDone1',false)">✕ Rechazar</button>
-                      <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand1');event.stopPropagation()">Detalles</button>
-                    </div>
-                  </div>
-                  <div class="val-expand" id="valExpand1">
-                    <div class="val-expand-grid">
-                      <div class="val-field">Descripción<span>Familia con 2 menores y anciano. Sin víveres 2 días.</span></div>
-                      <div class="val-field">Prioridad<span style="color:#E24B4A;font-weight:700;">🔴 Alta (automática)</span></div>
-                      <div class="val-field">Solicitante<span>Ciudadano</span></div>
-                      <div class="val-field">Recibida<span>Hace 2 min</span></div>
-                    </div>
-                    <div style="margin:8px 0 4px;padding:8px 10px;background:#FDEDEC;border-radius:8px;font-size:11px;color:#922B21;">⚠️ Emergencia declarada — prioridad Alta asignada automáticamente al sistema</div>
-                    <div class="val-done-msg" id="valDone1"></div>
-                  </div>
-                </div>
-
-                <!-- Card 2 — Voluntarios (prioridad libre) -->
-                <div class="val-card" id="valCard2" data-estado="pendiente" style="border-left:3px solid #7B5EA7;">
-                  <div class="val-header">
-                    <div class="val-header-top">
-                      <div class="val-icon" style="background:#F5F0FB;">🤝</div>
-                      <div class="val-info">
-                        <div class="val-title">Voluntarios · Campus Blasco Ibáñez</div>
-                        <div class="val-meta">📍 Benimaclet · 20 disponibles <span class="d-badge d-badge-info">Voluntarios</span></div>
-                      </div>
-                    </div>
-                    <div class="val-actions">
-                      <button class="val-btn val-btn-ok"  onclick="validarNec(event,'valCard2','valAct2','valDone2',true)">✓ Validar</button>
-                      <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard2','valAct2','valDone2',false)">✕ Rechazar</button>
-                      <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand2');event.stopPropagation()">Detalles</button>
-                    </div>
-                  </div>
-                  <div class="val-expand" id="valExpand2">
-                    <div class="val-expand-grid">
-                      <div class="val-field">Descripción<span>Grupo de 20 voluntarios con vehículo. Buscan zona de asignación.</span></div>
-                      <div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
-                      <div class="val-field">Responsable de asignación<span id="respAsig2">— Sin asignar</span></div>
-                      <div class="val-field">Recibida<span>Hace 5 min</span></div>
-                    </div>
-                    <div style="margin:8px 0 4px;">
-                      <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar coordinador responsable</label>
-                      <div style="display:flex;gap:6px;">
-                        <input class="d-input" id="respInput2" placeholder="Nombre del coordinador..." style="font-size:12px;padding:7px 10px;">
-                        <button onclick="asignarResp('respInput2','respAsig2')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
-                      </div>
-                    </div>
-                    <div class="val-done-msg" id="valDone2"></div>
-                  </div>
-                </div>
-
-                <!-- Card 3 — Punto de encuentro -->
-                <div class="val-card" id="valCard3" data-estado="pendiente" style="border-left:3px solid #EF9F27;">
-                  <div class="val-header">
-                    <div class="val-header-top">
-                      <div class="val-icon" style="background:#FEF5EC;">📍</div>
-                      <div class="val-info">
-                        <div class="val-title">Punto de encuentro · Plaza del Ayuntamiento</div>
-                        <div class="val-meta">📍 Centro · Apertura solicitada <span class="d-badge d-badge-pend">Pendiente</span></div>
-                      </div>
-                    </div>
-                    <div class="val-actions">
-                      <button class="val-btn val-btn-ok"  onclick="validarNec(event,'valCard3','valAct3','valDone3',true)">✓ Validar</button>
-                      <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard3','valAct3','valDone3',false)">✕ Rechazar</button>
-                      <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand3');event.stopPropagation()">Detalles</button>
-                    </div>
-                  </div>
-                  <div class="val-expand" id="valExpand3">
-                    <div class="val-expand-grid">
-                      <div class="val-field">Descripción<span>Espacio habilitado para reunir y redistribuir voluntarios. Capacidad 150 personas.</span></div>
-                      <div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
-                      <div class="val-field">Responsable de apertura<span id="respAsig3">— Sin asignar</span></div>
-                      <div class="val-field">Recibida<span>Hace 10 min</span></div>
-                    </div>
-                    <div style="margin:8px 0 4px;">
-                      <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar responsable del punto</label>
-                      <div style="display:flex;gap:6px;">
-                        <input class="d-input" id="respInput3" placeholder="Nombre del responsable..." style="font-size:12px;padding:7px 10px;">
-                        <button onclick="asignarResp('respInput3','respAsig3')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
-                      </div>
-                    </div>
-                    <div class="val-done-msg" id="valDone3"></div>
-                  </div>
-                </div>
-
-                <!-- Card 4 — Recogida de kits -->
-                <div class="val-card" id="valCard4" data-estado="pendiente" style="border-left:3px solid #1D9E75;">
-                  <div class="val-header">
-                    <div class="val-header-top">
-                      <div class="val-icon" style="background:#E1F5EE;">📦</div>
-                      <div class="val-info">
-                        <div class="val-title">Recogida de kits · Polideportivo Russafa</div>
-                        <div class="val-meta">📍 Russafa · Almacén habilitado <span class="d-badge d-badge-pend">Pendiente</span></div>
-                      </div>
-                    </div>
-                    <div class="val-actions">
-                      <button class="val-btn val-btn-ok"  onclick="validarNec(event,'valCard4','valAct4','valDone4',true)">✓ Validar</button>
-                      <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard4','valAct4','valDone4',false)">✕ Rechazar</button>
-                      <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand4');event.stopPropagation()">Detalles</button>
-                    </div>
-                  </div>
-                  <div class="val-expand" id="valExpand4">
-                    <div class="val-expand-grid">
-                      <div class="val-field">Descripción<span>Espacio para recibir y almacenar kits de ayuda. Acceso por entrada lateral.</span></div>
-                      <div class="val-field">Prioridad<span style="color:#1D9E75;">Baja</span></div>
-                      <div class="val-field">Responsable del almacén<span id="respAsig4">— Sin asignar</span></div>
-                      <div class="val-field">Recibida<span>Hace 15 min</span></div>
-                    </div>
-                    <div style="margin:8px 0 4px;">
-                      <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar responsable del almacén</label>
-                      <div style="display:flex;gap:6px;">
-                        <input class="d-input" id="respInput4" placeholder="Nombre del responsable..." style="font-size:12px;padding:7px 10px;">
-                        <button onclick="asignarResp('respInput4','respAsig4')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
-                      </div>
-                    </div>
-                    <div class="val-done-msg" id="valDone4"></div>
-                  </div>
-                </div>
-
-                <!-- Card 5 — Refugio/Hospedaje (ya validada) -->
-                <div class="val-card" id="valCard5" data-estado="validada" style="border-left:3px solid #3A7BD5;">
-                  <div class="val-header">
-                    <div class="val-header-top">
-                      <div class="val-icon" style="background:#EEF4FC;">🏠</div>
-                      <div class="val-info">
-                        <div class="val-title">Refugio / Hospedaje · C/ Colón, 40</div>
-                        <div class="val-meta">📍 Eixample · Capacidad 30 personas <span class="d-badge d-badge-ok">✓ Validada</span></div>
-                      </div>
-                    </div>
-                    <div class="val-actions" style="border-top:none;padding-top:0;">
-                      <span style="font-size:12px;color:var(--teal);font-weight:500;">✓ Publicado en muro · Resp.: Ana G.</span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-              <div class="d-btn-next"><button onclick="switchDemo('muro')">Ver en muro →</button></div>
-            </div>
-
-            <!-- ══ TAB 3: MURO DE COORDINACIÓN ══ -->
-            <div class="demo-panel" id="tab-muro">
-              <div class="d-panel-title">📢 Muro de coordinación</div>
-              <div class="d-panel-sub">Información validada, priorizada y lista para actuar. Sin ruido.</div>
-              <!-- Filters as pill row -->
-              <div class="muro-filters">
-                <button class="muro-filter-btn active" onclick="filtrarMuro('todas',this)">
-                  <span class="mf-dot" style="background:var(--teal);"></span>Todas
-                </button>
-                <button class="muro-filter-btn" onclick="filtrarMuro('urgente',this)">
-                  <span class="mf-dot" style="background:#E24B4A;"></span>Urgentes
-                </button>
-                <button class="muro-filter-btn" onclick="filtrarMuro('recurso',this)">
-                  <span class="mf-dot" style="background:#1D9E75;"></span>Recursos
-                </button>
-                <button class="muro-filter-btn" onclick="filtrarMuro('info',this)">
-                  <span class="mf-dot" style="background:#EF9F27;"></span>Avisos
-                </button>
-                <button class="muro-filter-btn" onclick="filtrarMuro('voluntario',this)">
-                  <span class="mf-dot" style="background:#7B5EA7;"></span>Voluntarios
-                </button>
-              </div>
-              <div class="muro-feed" id="muroFeed">
-                <div class="muro-item" data-tipo="urgente">
-                  <div class="muro-dot" style="background:#E24B4A;"></div>
-                  <div class="muro-content">
-                    <div class="muro-title">🚨 Emergencia · C/ Sueca, 22</div>
-                    <div class="muro-body">6 personas, familia con menores y anciano. Prioridad Alta automática. Acceso sin restricción.</div>
-                    <div class="muro-footer">
-                      <span class="muro-time">Hace 2 min · Validado</span>
-                      <span class="muro-tag" style="background:#FDEDEC;color:#922B21;">🚨 Emergencia</span>
-                      <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="muro-item" data-tipo="voluntario">
-                  <div class="muro-dot" style="background:#7B5EA7;"></div>
-                  <div class="muro-content">
-                    <div class="muro-title">🤝 Voluntarios disponibles · Campus Blasco Ibáñez</div>
-                    <div class="muro-body">20 voluntarios con vehículo 4×4. Buscan coordinador de zona. Resp.: Miguel R.</div>
-                    <div class="muro-footer">
-                      <span class="muro-time">Hace 5 min · Validado</span>
-                      <span class="muro-tag" style="background:#F5F0FB;color:#6C3483;">Voluntarios</span>
-                      <button class="muro-claim-btn" onclick="claimMuro(this)">Coordinar</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="muro-item" data-tipo="info">
-                  <div class="muro-dot" style="background:#EF9F27;"></div>
-                  <div class="muro-content">
-                    <div class="muro-title">📍 Punto de encuentro · Plaza del Ayuntamiento</div>
-                    <div class="muro-body">Abierto para coordinar voluntarios. Capacidad 150 personas. Resp.: Elena M.</div>
-                    <div class="muro-footer">
-                      <span class="muro-time">Hace 10 min · Validado</span>
-                      <span class="muro-tag" style="background:#FEF5EC;color:#9A5C00;">Punto de encuentro</span>
-                      <button class="muro-claim-btn" onclick="claimMuro(this)">Registrarse</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="muro-item" data-tipo="recurso">
-                  <div class="muro-dot" style="background:#1D9E75;"></div>
-                  <div class="muro-content">
-                    <div class="muro-title">📦 Recogida de kits · Polideportivo Russafa</div>
-                    <div class="muro-body">Almacén habilitado. Acepta kits alimenticios, sanitarios y de ropa. Abierto 8:00–20:00.</div>
-                    <div class="muro-footer">
-                      <span class="muro-time">Hace 15 min · Validado</span>
-                      <span class="muro-tag" style="background:#EAFAF1;color:#1D6A3A;">Recogida kits</span>
-                      <button class="muro-claim-btn" onclick="claimMuro(this)">Llevar kits</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="muro-item" data-tipo="info">
-                  <div class="muro-dot" style="background:#3A7BD5;"></div>
-                  <div class="muro-content">
-                    <div class="muro-title">🏠 Refugio disponible · C/ Colón, 40</div>
-                    <div class="muro-body">30 plazas de hospedaje. Familias y personas mayores con prioridad. Resp.: Ana G.</div>
-                    <div class="muro-footer">
-                      <span class="muro-time">Hace 20 min · Validado</span>
-                      <span class="muro-tag" style="background:#EEF4FC;color:#2A5CA8;">Refugio</span>
-                      <button class="muro-claim-btn" onclick="claimMuro(this)">Derivar persona</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="muro-item" data-tipo="urgente" id="muroNecDinamica" style="display:none;">
-                  <div class="muro-dot" style="background:#E24B4A;"></div>
-                  <div class="muro-content">
-                    <div class="muro-title">🚨 Emergencia · C/ Sueca, 22</div>
-                    <div class="muro-body">Familia 2 menores + anciano. Sin víveres 2 días. 6 personas. Prioridad Alta.</div>
-                    <div class="muro-footer">
-                      <span class="muro-time">Recién validada</span>
-                      <span class="muro-tag" style="background:#FDEDEC;color:#922B21;">🚨 Nueva</span>
-                      <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ══ TAB 4: KITS ══ -->
-            <div class="demo-panel" id="tab-kits">
-              <div class="d-panel-title">📦 Configurar kits de ayuda</div>
-              <div class="d-panel-sub">Crea kits diferenciados por tipo y color. Edita los elementos y cantidades.</div>
-              <div style="display:flex;flex-direction:column;gap:14px;">
-                <div>
-                  <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Tipo de kit</div>
-                  <div class="kit-type-grid" style="grid-template-columns:repeat(3,1fr);">
-                    <div class="kit-type-card kit-food selected" onclick="selectKitType(this,'food')" data-type="food">
-                      <div class="kit-type-badge">✓</div><div class="kit-type-icon">🍱</div>
-                      <div class="kit-type-name">Alimenticio</div><div class="kit-type-desc">Agua y comida</div>
-                    </div>
-                    <div class="kit-type-card kit-med" onclick="selectKitType(this,'med')" data-type="med">
-                      <div class="kit-type-badge">✓</div><div class="kit-type-icon">💊</div>
-                      <div class="kit-type-name">Sanitario</div><div class="kit-type-desc">Medicamentos</div>
-                    </div>
-                    <div class="kit-type-card kit-clothes" onclick="selectKitType(this,'clothes')" data-type="clothes">
-                      <div class="kit-type-badge">✓</div><div class="kit-type-icon">🧥</div>
-                      <div class="kit-type-name">Ropa</div><div class="kit-type-desc">Abrigo y mantas</div>
-                    </div>
-                    <div class="kit-type-card kit-tools" onclick="selectKitType(this,'tools')" data-type="tools">
-                      <div class="kit-type-badge">✓</div><div class="kit-type-icon">🔧</div>
-                      <div class="kit-type-name">Herramientas</div><div class="kit-type-desc">Equipamiento</div>
-                    </div>
-                    <div class="kit-type-card kit-custom" onclick="selectKitType(this,'custom')" data-type="custom">
-                      <div class="kit-type-badge">✓</div><div class="kit-type-icon">✏️</div>
-                      <div class="kit-type-name">Personalizado</div><div class="kit-type-desc">Crea tu propio kit</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="kit-builder" id="kitBuilderPanel">
-                  <div class="kit-color-strip" id="kitColorStrip" style="background:#C0392B;"></div>
-                  <div class="kit-builder-header">
-                    <span class="kit-builder-header-title" id="kitBuilderTitle">🍱 Kit Alimenticio</span>
-                    <span style="font-size:11px;color:var(--muted);" id="kitBuilderSub">Edita cantidades o añade elementos</span>
-                  </div>
-                  <div class="kit-custom-name-wrap" id="kitCustomNameWrap" style="display:none;">
-                    <input class="kit-custom-name-input" id="kitCustomName" placeholder="Nombre del kit personalizado...">
-                    <div style="margin-top:10px;">
-                      <div style="font-size:11px;font-weight:500;color:var(--muted);margin-bottom:7px;">Color identificativo del kit</div>
-                      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;" id="kitColorPicker">
-                        <div class="kit-color-swatch active" data-color="#7B5EA7" style="background:#7B5EA7;" onclick="selectKitColor(this)" title="Morado"></div>
-                        <div class="kit-color-swatch" data-color="#E24B4A" style="background:#E24B4A;" onclick="selectKitColor(this)" title="Rojo"></div>
-                        <div class="kit-color-swatch" data-color="#EF9F27" style="background:#EF9F27;" onclick="selectKitColor(this)" title="Naranja"></div>
-                        <div class="kit-color-swatch" data-color="#1D9E75" style="background:#1D9E75;" onclick="selectKitColor(this)" title="Verde"></div>
-                        <div class="kit-color-swatch" data-color="#3A7BD5" style="background:#3A7BD5;" onclick="selectKitColor(this)" title="Azul"></div>
-                        <div class="kit-color-swatch" data-color="#2C3E50" style="background:#2C3E50;" onclick="selectKitColor(this)" title="Grafito"></div>
-                        <div class="kit-color-swatch" data-color="#E91E8C" style="background:#E91E8C;" onclick="selectKitColor(this)" title="Rosa"></div>
-                        <div class="kit-color-swatch" data-color="#00796B" style="background:#00796B;" onclick="selectKitColor(this)" title="Teal oscuro"></div>
-                      </div>
-                      <div id="kitColorHint" style="margin-top:7px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;">
-                        <span id="kitColorHintDot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#7B5EA7;flex-shrink:0;"></span>
-                        <span id="kitColorHintText">Crea el kit e identifícalo con el color <strong>morado</strong></span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="kit-items" id="kitItemsList"></div>
-                  <div class="kit-add-row">
-                    <div class="kit-add-emoji" id="kitAddEmoji" onclick="cycleEmoji(this)">📦</div>
-                    <input class="kit-add-input" id="kitAddName" placeholder="Añadir elemento...">
-                    <button class="kit-add-btn" onclick="addKitItem()">+</button>
-                  </div>
-                  <div class="kit-footer">
-                    <div class="kit-total">
-                      <span class="kit-total-label">Total elementos</span>
-                      <span class="kit-total-num" id="kitTotal">0</span>
-                    </div>
-                    <button class="btn-submit" id="kitBtn" onclick="crearKit()">Crear kit</button>
-                  </div>
-                </div>
-                <div id="kitCreatedList" class="kit-created-list"></div>
-              </div>
-              <div class="d-btn-next"><button onclick="switchDemo('traza')">Ver trazabilidad →</button></div>
-            </div>
-
-            <!-- ══ TAB 5: TRAZABILIDAD ══ -->
-            <div class="demo-panel" id="tab-traza">
-              <div class="d-panel-title">✅ Trazabilidad y entrega verificada</div>
-              <div class="d-panel-sub">Cada kit — desde la preparación hasta la confirmación de entrega.</div>
-              <div class="traza-list">
-                <!-- Kit 1 -->
-                <div class="traza-card" id="trazaCard1">
-                  <div class="traza-header" onclick="toggleTraza('trazaSteps1')">
-                    <div class="traza-box" style="background:#FDF0EF;color:#C0392B;">🍱</div>
-                    <div class="traza-info">
-                      <div class="traza-name">Kit Alimenticio · C/ Sueca, 22</div>
-                      <div class="traza-sub">6 personas · Asignado hace 5 min</div>
-                    </div>
-                    <span class="traza-status-badge" style="background:#FEF5EC;color:#9A5C00;">En tránsito</span>
-                  </div>
-                  <div class="traza-steps" id="trazaSteps1">
-                    <div class="traza-timeline">
-                      <div class="traza-tl-item">
-                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div><div class="traza-tl-line"></div></div>
-                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Necesidad validada</div><div class="traza-tl-meta">Hace 18 min · Coordinadora: Elena M.</div></div>
-                      </div>
-                      <div class="traza-tl-item">
-                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div><div class="traza-tl-line"></div></div>
-                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Kit preparado</div><div class="traza-tl-meta">Hace 12 min · Punto Colón · 18 artículos</div></div>
-                      </div>
-                      <div class="traza-tl-item">
-                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#EF9F27;color:#EF9F27;"></div><div class="traza-tl-line"></div></div>
-                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:#EF9F27;">→ En camino</div><div class="traza-tl-meta">Voluntario: Marcos T. · ETA 6 min</div></div>
-                      </div>
-                      <div class="traza-tl-item" id="trazaTlEntrega1" style="opacity:0.4;">
-                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div></div>
-                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:var(--muted);">Pendiente entrega</div><div class="traza-tl-meta">Esperando confirmación</div></div>
-                      </div>
-                    </div>
-                    <button class="traza-confirm-btn" id="trazaBtn1" onclick="confirmarEntrega('trazaCard1','trazaBtn1','trazaTlEntrega1')">
-                      📲 Confirmar entrega recibida
-                    </button>
-                  </div>
-                </div>
-                <!-- Kit 2 entregado -->
-                <div class="traza-card">
-                  <div class="traza-header" onclick="toggleTraza('trazaSteps2')">
-                    <div class="traza-box" style="background:#EAFAF1;color:#27AE60;">🧥</div>
-                    <div class="traza-info">
-                      <div class="traza-name">Kit Ropa · Av. Mistral, 3</div>
-                      <div class="traza-sub">3 personas · Entregado hace 22 min</div>
-                    </div>
-                    <span class="traza-status-badge" style="background:#EAFAF1;color:#1D6A3A;">✓ Entregado</span>
-                  </div>
-                  <div class="traza-steps" id="trazaSteps2">
-                    <div class="traza-timeline">
-                      <div class="traza-tl-item">
-                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div><div class="traza-tl-line"></div></div>
-                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Validada</div><div class="traza-tl-meta">Hace 40 min</div></div>
-                      </div>
-                      <div class="traza-tl-item">
-                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div><div class="traza-tl-line"></div></div>
-                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Kit preparado y enviado</div><div class="traza-tl-meta">Hace 35 min · 11 artículos</div></div>
-                      </div>
-                      <div class="traza-tl-item">
-                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div></div>
-                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:#1D9E75;">✓ Entrega confirmada</div><div class="traza-tl-meta">Hace 22 min · Carmen R. · Firma registrada</div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Kit 3 -->
-                <div class="traza-card" id="trazaCard3">
-                  <div class="traza-header" onclick="toggleTraza('trazaSteps3')">
-                    <div class="traza-box" style="background:#FEF5EC;color:#E67E22;">💊</div>
-                    <div class="traza-info">
-                      <div class="traza-name">Kit Sanitario · C/ Dénia, 8</div>
-                      <div class="traza-sub">12 personas · Preparando</div>
-                    </div>
-                    <span class="traza-status-badge" id="trazaStatus3" style="background:#EEF2FF;color:#5C6BC0;">Preparando</span>
-                  </div>
-                  <div class="traza-steps" id="trazaSteps3">
-                    <div class="traza-timeline">
-                      <div class="traza-tl-item">
-                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div><div class="traza-tl-line"></div></div>
-                        <div class="traza-tl-text"><div class="traza-tl-label">✓ Validada — alta prioridad</div><div class="traza-tl-meta">Hace 8 min · Miguel R.</div></div>
-                      </div>
-                      <div class="traza-tl-item" id="trazaTlEntrega3" style="opacity:0.4;">
-                        <div class="traza-tl-col"><div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div></div>
-                        <div class="traza-tl-text"><div class="traza-tl-label" style="color:var(--muted);">En preparación</div><div class="traza-tl-meta">Asignando voluntario</div></div>
-                      </div>
-                    </div>
-                    <button class="traza-confirm-btn" id="trazaBtn3" onclick="confirmarEntrega('trazaCard3','trazaBtn3','trazaTlEntrega3')">
-                      📲 Marcar como entregado
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div><!-- /demo-content -->
-        </div><!-- /demo-shell -->
-      </div>
+            <!-- /demo-shell -->
+        </div>
     </div>
 
-<!-- LIVE MAP -->
+    <!-- LIVE MAP -->
     <div id="liveMap">
         <div class="inner">
             <div class="label reveal">04 — Impacto en tiempo real</div>
@@ -2738,19 +2929,36 @@
               ? '<div style="font-size:11px;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + activeColor + ';flex-shrink:0;"></span>Identifícalo con el color <strong style="color:' + activeColor + ';">' + activeColorName + '</strong></div>'
               : '';
 
-            card.innerHTML =
-              '<div class="kit-created-header">' +
-                '<div class="kit-created-box" style="background:' + activeColor + '22;color:' + activeColor + ';">📦</div>' +
-                '<div style="flex:1;min-width:0;">' +
-                  '<div class="kit-created-name" style="color:' + activeColor + ';">' + displayLabel + '</div>' +
-                  '<div style="font-size:11px;color:var(--muted);">' + total + ' elementos · Listo para distribuir</div>' +
-                  colorHintHtml +
-                '</div>' +
-                '<div style="font-size:10px;font-weight:600;color:' + activeColor + ';background:' + activeColor + '18;padding:3px 8px;border-radius:8px;">✓ Activo</div>' +
-              '</div>' +
-              '<div class="kit-created-elements">' + elHtml + '</div>';
-        
-            listEl.insertBefore(card, listEl.firstChild);
+            var kitId = 'kit_' + Date.now();
+			card.dataset.kitId = kitId;
+			card.dataset.kitType = currentKitType;
+			card.dataset.active = 'true';
+
+			card.innerHTML =
+			  '<div class="kit-created-header">' +
+				'<div class="kit-created-box" style="background:' + data.itemBg + ';color:' + data.color + ';">📦</div>' +
+				'<div style="flex:1;min-width:0;">' +
+				  '<div class="kit-created-name" style="color:' + data.color + ';">' + displayLabel + '</div>' +
+				  '<div style="font-size:11px;color:var(--muted);" class="kit-meta-line">' + total + ' elementos · Listo para distribuir</div>' +
+				'</div>' +
+				'<div class="kit-status-badge" style="font-size:10px;font-weight:600;color:' + data.color + ';background:' + data.itemBg + ';padding:3px 8px;border-radius:8px;">✓ Activo</div>' +
+			  '</div>' +
+			  '<div class="kit-created-elements">' + elHtml + '</div>' +
+			  '<div class="kit-action-bar">' +
+				'<button class="kit-action-btn edit" onclick="editarKit(this)">✏️ Modificar</button>' +
+				'<button class="kit-action-btn deact" onclick="toggleKitActivo(this)">⏸ Desactivar</button>' +
+			  '</div>';
+
+			listEl.insertBefore(card, listEl.firstChild);
+
+			// Guardar en activeKits para la vista voluntario
+			activeKits[kitId] = {
+			  id: kitId, label: displayLabel, type: currentKitType,
+			  color: data.color, itemBg: data.itemBg, borderColor: data.borderColor,
+			  items: JSON.parse(JSON.stringify(currentItems)),
+			  active: true
+			};
+			renderVolKitList();
           }
         
           setTimeout(function() {
@@ -2765,13 +2973,166 @@
           }, 1200);
         }
         
+		
+		// ── Kits activos (registro en memoria) ──
+		var activeKits = {};
+
+		// Puntos de recogida demo
+		var PICKUP_POINTS = [
+		  'Punto Colón — Calle Colón, 23 · Abierto 8:00–20:00',
+		  'Polideportivo Russafa — Av. Pérez Galdós · Abierto 9:00–18:00',
+		  'IES Benlliure — C/ Benlliure, 1 · Abierto 8:00–20:00',
+		];
+
+		// ── Cambio de modo (Coordinador / Voluntario) ──
+		function switchKitMode(mode) {
+		  var isCoord = mode === 'coord';
+		  document.getElementById('kitViewCoord').style.display = isCoord ? 'block' : 'none';
+		  document.getElementById('kitViewVol').style.display   = isCoord ? 'none'  : 'block';
+		  document.getElementById('kitModeCoord').style.background = isCoord ? 'var(--teal)' : 'transparent';
+		  document.getElementById('kitModeCoord').style.color      = isCoord ? '#fff' : 'var(--muted)';
+		  document.getElementById('kitModeVol').style.background   = isCoord ? 'transparent' : 'var(--teal)';
+		  document.getElementById('kitModeVol').style.color        = isCoord ? 'var(--muted)' : '#fff';
+		  if (!isCoord) renderVolKitList();
+		}
+
+		// ── Editar kit (vuelve al builder con los datos del kit) ──
+		function editarKit(btn) {
+		  var card = btn.closest('.kit-created-card');
+		  var type = card.dataset.kitType;
+		  // Seleccionar la card del tipo correspondiente
+		  document.querySelectorAll('.kit-type-card').forEach(function(c) {
+			c.classList.toggle('selected', c.dataset.type === type);
+		  });
+		  selectKitType(document.querySelector('.kit-type-card[data-type="' + type + '"]'), type);
+		  // Scroll al builder
+		  document.getElementById('kitBuilderPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+		}
+
+		// ── Activar / Desactivar kit ──
+		function toggleKitActivo(btn) {
+		  var card = btn.closest('.kit-created-card');
+		  var id = card.dataset.kitId;
+		  var isActive = card.dataset.active === 'true';
+		  var newActive = !isActive;
+		  card.dataset.active = newActive;
+
+		  var badge = card.querySelector('.kit-status-badge');
+		  var meta  = card.querySelector('.kit-meta-line');
+		  if (newActive) {
+			badge.textContent = '✓ Activo';
+			badge.style.opacity = '1';
+			card.style.opacity = '1';
+			btn.textContent = '⏸ Desactivar';
+			btn.classList.replace('react', 'deact');
+			if (meta) meta.textContent = meta.textContent.replace('Inactivo', 'Listo para distribuir');
+		  } else {
+			badge.textContent = '⏸ Inactivo';
+			badge.style.opacity = '0.5';
+			card.style.opacity = '0.65';
+			btn.textContent = '▶ Reactivar';
+			btn.classList.replace('deact', 'react');
+			if (meta) meta.textContent = meta.textContent.replace('Listo para distribuir', 'Inactivo');
+		  }
+		  if (activeKits[id]) activeKits[id].active = newActive;
+		  renderVolKitList();
+		}
+
+		// ── Vista voluntario: lista de kits activos ──
+		function renderVolKitList() {
+		  var list = document.getElementById('volKitList');
+		  if (!list) return;
+		  var keys = Object.keys(activeKits);
+		  if (keys.length === 0) {
+			list.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:12px 0;">Todavía no hay kits creados. Ve a la vista Coordinador y crea uno.</div>';
+			return;
+		  }
+		  list.innerHTML = keys.map(function(id) {
+			var k = activeKits[id];
+			var inactive = !k.active;
+			return '<div class="vol-kit-row' + (inactive ? ' inactive' : '') + '" ' +
+			  (inactive ? '' : 'onclick="selectVolKit(\'' + id + '\')"') + '>' +
+			  '<div class="vol-kit-dot" style="background:' + k.color + ';"></div>' +
+			  '<span class="vol-kit-label">' + k.label + '</span>' +
+			  '<span class="vol-kit-badge' + (inactive ? ' off' : '') + '">' +
+				(inactive ? 'Inactivo' : 'Disponible') +
+			  '</span>' +
+			'</div>';
+		  }).join('');
+		}
+
+		// ── Vista voluntario: seleccionar kit → instrucciones ──
+		function selectVolKit(id) {
+		  var kit = activeKits[id];
+		  if (!kit || !kit.active) return;
+
+		  document.getElementById('volStep1').style.display = 'none';
+		  var step2 = document.getElementById('volStep2');
+		  step2.style.display = 'flex';
+
+		  // Instrucciones de montaje
+		  var instrEl = document.getElementById('volInstructions');
+		  instrEl.innerHTML =
+			'<div class="vol-instr-title">📋 Instrucciones de montaje — ' + kit.label + '</div>' +
+			'<div class="vol-instr-step"><div class="vol-instr-num">1</div>' +
+			  '<span>Consigue una caja de cartón resistente o una bolsa grande.</span></div>' +
+			'<div class="vol-instr-step"><div class="vol-instr-num">2</div>' +
+			  '<span>Introduce los elementos en este orden:<br>' +
+				kit.items.map(function(it){ return '<strong>' + it.icon + ' ' + it.name + '</strong> × ' + it.qty; }).join(', ') +
+			  '</span></div>' +
+			'<div class="vol-instr-step"><div class="vol-instr-num">3</div>' +
+			  '<span>Identifica la caja con el color asignado: ' +
+				'<span class="vol-color-swatch" style="background:' + kit.color + ';border:1px solid rgba(0,0,0,0.1);"></span>' +
+				'<strong>' + kit.label + '</strong>. Puedes usar cinta de embalar o cartulina de ese color.</span></div>' +
+			'<div class="vol-instr-step"><div class="vol-instr-num">4</div>' +
+			  '<span>Si puedes, imprime el QR y pégalo en la caja. Si no, guarda la pantalla.</span></div>' +
+			'<div class="vol-instr-step"><div class="vol-instr-num">5</div>' +
+			  '<span>Lleva la caja al punto de recogida indicado abajo.</span></div>';
+
+		  // Punto de recogida (demo: aleatorio de la lista)
+		  var pickup = PICKUP_POINTS[Math.floor(Math.random() * PICKUP_POINTS.length)];
+		  document.getElementById('volPickupPoint').textContent = pickup;
+
+		  // Reset QR
+		  document.getElementById('volQrBox').style.display = 'none';
+		  document.getElementById('volQrBtn').dataset.kitId = id;
+		}
+
+		// ── Generar QR (usando api.qrserver.com, no requiere librería) ──
+		function generarQR() {
+		  var btn = document.getElementById('volQrBtn');
+		  var id = btn.dataset.kitId;
+		  var kit = activeKits[id];
+		  if (!kit) return;
+
+		  var payload = encodeURIComponent('KIT:' + kit.label + '|ID:' + id + '|ITEMS:' + kit.items.length);
+		  var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + payload;
+
+		  var box = document.getElementById('volQrBox');
+		  var img = document.getElementById('volQrImg');
+		  img.innerHTML = '<img src="' + qrUrl + '" width="160" height="160" alt="QR del kit" style="border-radius:8px;">';
+		  box.style.display = 'block';
+		  btn.textContent = '✓ QR generado';
+		  btn.style.background = '#085041';
+		  setTimeout(function() {
+			btn.textContent = '📲 Generar QR del kit';
+			btn.style.background = 'var(--teal)';
+		  }, 3000);
+		}
+
+		// ── Voluntario: volver al paso 1 ──
+		function volGoStep1() {
+		  document.getElementById('volStep1').style.display = 'block';
+		  document.getElementById('volStep2').style.display = 'none';
+		  document.getElementById('volQrBox').style.display = 'none';
+		}
         // Init
-        document.addEventListener('DOMContentLoaded', function() {
-          renderKitItems2('food');
-          // Also support Enter on add input
-          var addInput = document.getElementById('kitAddName');
-          if(addInput) addInput.addEventListener('keydown', function(e){ if(e.key==='Enter') addKitItem(); });
-        });
+       document.addEventListener('DOMContentLoaded', function() {
+		  renderKitItems2('food');
+		  renderVolKitList();
+		  var addInput = document.getElementById('kitAddName');
+		  if(addInput) addInput.addEventListener('keydown', function(e){ if(e.key==='Enter') addKitItem(); });
+		});
         
         // Map filter/modal handled by Leaflet script below
         
@@ -2932,450 +3293,450 @@
 
 
     <script>
-// ══════════════════════════════════════════════
-// DEMO — 5 tabs (mobile-first)
-// ══════════════════════════════════════════════
+        // ══════════════════════════════════════════════
+        // DEMO — 5 tabs (mobile-first)
+        // ══════════════════════════════════════════════
+        
+        // ── switchDemo ──
+        window.switchDemo = function(tab) {
+          document.querySelectorAll('.demo-panel').forEach(function(p){ p.classList.remove('active'); });
+          var panel = document.getElementById('tab-' + tab);
+          if (panel) panel.classList.add('active');
+          var order = ['necesidad','validacion','muro','kits','traza'];
+          var idx = order.indexOf(tab);
+          document.querySelectorAll('.demo-step').forEach(function(s, i){
+            s.classList.remove('active','done');
+            if (i < idx) s.classList.add('done');
+            else if (i === idx) s.classList.add('active');
+          });
+          if (tab === 'muro' && window._necValidada) {
+            var d = document.getElementById('muroNecDinamica');
+            if (d) d.style.display = 'flex';
+          }
+          if (tab === 'kits' && typeof renderKitItems === 'function') {
+            renderKitItems(window.currentKitType || 'food');
+          }
+        };
+        
+        // ── chip / prio helpers ──
+        window.selectChipIn = function(el, groupId) {
+          var g = document.getElementById(groupId);
+          if (g) g.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+          el.classList.add('active');
+        };
+        window.selectPrioIn = function(el, rowId, level) {
+          var g = document.getElementById(rowId);
+          if (g) g.querySelectorAll('.prio-btn').forEach(function(b){ b.className = 'prio-btn'; });
+          el.classList.add('active-' + level);
+        };
+        
+        // ── Estado interno Tab 1 ──
+        var _necVolTipo  = 'requerir';   // 'requerir' | 'ofrecer'
+        var _necShelTipo = 'solicitud';  // 'solicitud' | 'oferta'
+        
+        // Actualiza visibilidad de campos según categoría + sub-tipo
+        function _necUpdateFields() {
+          var catEl     = document.querySelector('#necCatChips .chip.active');
+          var isEmerg   = catEl && catEl.classList.contains('chip-emergency');
+          var isVol     = catEl && catEl.classList.contains('chip-volunteer');
+          var isShelter = catEl && catEl.classList.contains('chip-shelter');
+          var isOferVol = isVol && _necVolTipo === 'ofrecer';
+          var activeShelChip = document.querySelector('#necShelSubRow .chip.active');
+          var isOferSh  = isShelter && (activeShelChip ? activeShelChip.id === 'necShelOfe' : _necShelTipo === 'oferta');
+        
+          // Prioridad: ocultar si ofrece voluntarios
+          var prioGroup = document.getElementById('necPrioGroup');
+          if (prioGroup) prioGroup.style.display = isOferVol ? 'none' : '';
+        
+          // Personas afectadas: solo en Emergencia, Requerir-voluntarios, refugio,
+          var persGroup = document.getElementById('necPersonasGroup');
+          var persLabel = document.getElementById('necPersonasLabel');
+          var showPers  = isEmerg || (isVol && _necVolTipo === 'requerir') || (isShelter);
+          
+          if (persGroup) persGroup.style.display = showPers ? '' : 'none';
+          if (persLabel) {
+            if (isVol && _necVolTipo === 'requerir') persLabel.textContent = 'Voluntarios requeridos (aprox.)';
+            else if (isShelter && _necShelTipo === 'solicitud') persLabel.textContent = 'Personas a alojar';
+        	else if (isShelter && _necShelTipo === 'oferta') persLabel.textContent = 'Capacidad de personas';
+            else persLabel.textContent = 'Personas afectadas';
+          }
+        
+          
+        
+          // Sub-rows
+          var volSub  = document.getElementById('necVolSubRow');
+          var shelSub = document.getElementById('necShelSubRow');
+          if (volSub)  volSub.style.display  = isVol     ? 'flex' : 'none';
+          
+          if (shelSub) {
+            shelSub.style.display = isShelter ? 'flex' : 'none';
+            if (isShelter && shelSub.style.display === 'flex') {
+              var activeShel = shelSub.querySelector('.chip.active');
+              if (!activeShel) {
+                var firstShel = shelSub.querySelector('.chip');
+                if (firstShel) firstShel.classList.add('active');
+              }
+            }
+          }if (shelSub) shelSub.style.display = isShelter ? 'flex' : 'none';
+        }
+        
+        window.selectVolTipo = function(tipo) {
+          _necVolTipo = tipo;
+          var req = document.getElementById('necVolReq');
+          var ofe = document.getElementById('necVolOfe');
+          if (req) req.classList.toggle('active', tipo === 'requerir');
+          if (ofe) ofe.classList.toggle('active', tipo === 'ofrecer');
+          _necUpdateFields();
+        };
+        
+        window.selectShelTipo = function(tipo) {
+          _necShelTipo = tipo;
+          var sol = document.getElementById('necShelSol');
+          var ofe = document.getElementById('necShelOfe');
+          if (sol) sol.classList.toggle('active', tipo === 'solicitud');
+          if (ofe) ofe.classList.toggle('active', tipo === 'oferta');
+          _necUpdateFields();
+        };
+        
+        // ── Categoría con lógica especial de Emergencia ──
+        window.selectCat = function(el, groupId) {
+          var g = document.getElementById(groupId);
+          if (g) g.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+          el.classList.add('active');
+          var isEmergency = el.classList.contains('chip-emergency');
+          var notice  = document.getElementById('emergencyNotice');
+          var prioRow = document.getElementById('necPrioRow');
+          if (isEmergency) {
+            if (notice) notice.style.display = 'flex';
+            if (prioRow) {
+              prioRow.querySelectorAll('.prio-btn').forEach(function(b){ b.className='prio-btn'; b.style.opacity='0.4'; b.style.pointerEvents='none'; });
+              var highBtn = prioRow.querySelector('.prio-btn:last-child');
+              if (highBtn) { highBtn.className='prio-btn active-high'; highBtn.style.opacity='1'; }
+            }
+          } else {
+            if (notice) notice.style.display = 'none';
+            if (prioRow) prioRow.querySelectorAll('.prio-btn').forEach(function(b){ b.style.opacity=''; b.style.pointerEvents=''; });
+          }
+          // Reset sub-tipo state on category change
+          _necVolTipo  = 'requerir';
+          _necShelTipo = 'solicitud';
+          var req = document.getElementById('necVolReq'); if (req) req.classList.add('active');
+          var ofe = document.getElementById('necVolOfe'); if (ofe) ofe.classList.remove('active');
+          var sol = document.getElementById('necShelSol'); if (sol) sol.classList.add('active');
+          var ofe2 = document.getElementById('necShelOfe'); if (ofe2) ofe2.classList.remove('active');
+          _necUpdateFields();
+        };
+        
+        // ── TAB 1 ──
+        
+        
+        // ══ MAPA DE NECESIDAD ══
+        var _necMap = null;
+        var _necMarker = null;
+        
+        function _necMakeIcon(color, icon, size) {
+          return L.divIcon({
+            className: '',
+            html: '<div style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+color+';display:flex;align-items:center;justify-content:center;font-size:'+Math.round(size*0.42)+'px;font-weight:700;color:#fff;box-shadow:0 3px 10px rgba(0,0,0,0.35);border:2px solid rgba(255,255,255,0.35);">'+icon+'</div>',
+            iconSize:[size,size], iconAnchor:[size/2,size/2], popupAnchor:[0,-(size/2+4)]
+          });
+        }
+        
+        function _necPulseIcon(color) {
+          return L.divIcon({
+            className: '',
+            html: '<div style="position:relative;width:36px;height:36px;">'+
+              '<div style="position:absolute;inset:0;border-radius:50%;background:'+color+';opacity:0.2;animation:necPulseRing 1.8s ease-out infinite;"></div>'+
+              '<div style="position:absolute;inset:7px;border-radius:50%;background:'+color+';display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;box-shadow:0 2px 10px rgba(0,0,0,0.4);">!</div>'+
+            '</div>',
+            iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-22]
+          });
+        }
+        
+        (function(){
+          var s = document.createElement('style');
+          s.textContent='@keyframes necPulseRing{0%{transform:scale(1);opacity:0.22}70%{transform:scale(2.2);opacity:0}100%{transform:scale(2.2);opacity:0}}';
+          document.head.appendChild(s);
+        })();
+        
+        function initNecMap() {
+          var el = document.getElementById('necMap');
+          if (!el) return;
+          if (_necMap) { _necMap.invalidateSize(); return; }
+        
+          _necMap = L.map('necMap', {
+            zoomControl: false,
+            attributionControl: false,
+            scrollWheelZoom: false,
+            dragging: true,
+            doubleClickZoom: false
+          }).setView([39.4617, -0.3854], 16);
+        
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19 }).addTo(_necMap);
+        
+          var ctx = [
+            { lat:39.4641, lng:-0.3879, color:'#1D9E75', icon:'K', tip:'<b>📦 Recogida de kits</b><br>Polideportivo Russafa' },
+            { lat:39.4598, lng:-0.3831, color:'#7B5EA7', icon:'V', tip:'<b>🤝 Voluntarios</b><br>12 activos' },
+            { lat:39.4633, lng:-0.3808, color:'#EF9F27', icon:'P', tip:'<b>📍 Punto de encuentro</b><br>Pl. Ayuntamiento' },
+            { lat:39.4589, lng:-0.3869, color:'#3A7BD5', icon:'R', tip:'<b>🏠 Refugio</b><br>C/ Colón 40 · 30 plazas' }
+          ];
+          ctx.forEach(function(m) {
+            L.marker([m.lat, m.lng], { icon: _necMakeIcon(m.color, m.icon, 26) })
+              .bindPopup(m.tip, { className:'k2-popup', maxWidth:180 })
+              .addTo(_necMap);
+          });
+        
+          _necMarker = L.marker([39.4617, -0.3854], { icon: _necPulseIcon('#E24B4A'), zIndexOffset:1000 })
+            .bindPopup('<b>🚨 Necesidad activa</b><br>C/ Sueca, 22 · Ruzafa', { className:'k2-popup', maxWidth:200 })
+            .addTo(_necMap)
+            .openPopup();
+        
+          _necMap.on('click', function(e) {
+            _necMarker.setLatLng(e.latlng);
+            _necMarker.setIcon(_necPulseIcon('#E24B4A'));
+            var ubic = document.getElementById('necUbic');
+            if (ubic) ubic.value = e.latlng.lat.toFixed(5) + ', ' + e.latlng.lng.toFixed(5);
+            _necMarker.openPopup();
+          });
+        }
+        
+        setTimeout(initNecMap, 400);
+        
+        var _origSwitchDemoNec = window.switchDemo;
+        window.switchDemo = function(tab) {
+          _origSwitchDemoNec(tab);
+          if (tab === 'necesidad') setTimeout(initNecMap, 150);
+        };
+        
+        var _origEnviarNec = window.enviarNecesidad;
+        window.enviarNecesidad = function() {
+          if (_necMarker) {
+            var me = _necMarker.getElement ? _necMarker.getElement() : null;
+            if (me) { me.style.filter='brightness(2) drop-shadow(0 0 8px #E24B4A)'; setTimeout(function(){ if(me) me.style.filter=''; },700); }
+          }
+          _origEnviarNec && _origEnviarNec();
+        };
+        
+        
+        window.enviarNecesidad = function() {
+          var btn = document.getElementById('necBtn');
+          btn.textContent = '✓ Enviando...'; btn.style.background = '#085041'; btn.disabled = true;
+          setTimeout(function(){
+            var catEl     = document.querySelector('#necCatChips .chip.active');
+            var isEmerg   = catEl && catEl.classList.contains('chip-emergency');
+            var isVol     = catEl && catEl.classList.contains('chip-volunteer');
+            var isShelter = catEl && catEl.classList.contains('chip-shelter');
+            var prioEl    = document.querySelector('#necPrioRow .prio-btn[class*="active"]');
+            var prioText  = isEmerg ? 'Alta 🚨' : (prioEl ? prioEl.textContent : '—');
+        
+            var catLabels = {
+              'chip-emergency':  '🚨 Emergencia',
+              'chip-volunteer':  '🤝 Voluntarios',
+              'chip-checkpoint': '📍 Punto de encuentro',
+              'chip-storage':    '📦 Recogida de kits',
+              'chip-shelter':    '🏠 Refugio / Hospedaje'
+            };
+            var catClass = catEl ? Array.from(catEl.classList).find(function(c){ return catLabels[c]; }) : null;
+            var catText  = catClass ? catLabels[catClass] : (catEl ? catEl.textContent : '—');
+            if (isVol)     catText += ' · ' + (_necVolTipo  === 'requerir' ? 'Requerir' : 'Ofrecer');
+            if (isShelter) catText += ' · ' + (_necShelTipo === 'solicitud' ? 'Solicitud' : 'Oferta');
+        
+            var rows = [
+              ['Ubicación', (document.getElementById('necUbic') || {}).value || '—'],
+              ['Categoría', catText],
+            ];
+        
+            // Prioridad — oculta si ofrece voluntarios
+            if (!isVol || _necVolTipo !== 'ofrecer') rows.push(['Prioridad', prioText]);
+        
+            // Personas / capacidad según reglas de visibilidad
+            var persGroup = document.getElementById('necPersonasGroup');
+            if (persGroup && persGroup.style.display !== 'none') {
+              var persLabel = (document.getElementById('necPersonasLabel') || {}).textContent || 'Personas';
+              rows.push([persLabel, (document.getElementById('necPersonas') || {}).value || '—']);
+            }
+            var capGroup = document.getElementById('necVolGroup');
+            if (capGroup && capGroup.style.display !== 'none') {
+              var capLabel = (capGroup.querySelector('label') || {}).textContent || 'Cantidad';
+              rows.push([capLabel, (document.getElementById('necPersonas') || {}).value || '—']);
+            }
+        
+            var summary = document.getElementById('necSummary');
+            if (summary) {
+              summary.innerHTML = rows.map(function(r){
+                var valStyle = isEmerg && r[0]==='Prioridad' ? 'font-weight:600;color:#E24B4A;' : 'font-weight:500;';
+                return '<div class="nec-summary-row"><span style="color:var(--muted);">' + r[0] + '</span><span style="' + valStyle + '">' + r[1] + '</span></div>';
+              }).join('');
+            }
+        
+            // Callback especial: ofrecer voluntarios → punto de encuentro asignado
+            if (isVol && _necVolTipo === 'ofrecer') {
+              window._necCheckpointCallback = true;
+              var extraMsg = document.getElementById('necConfirmExtra');
+              if (!extraMsg) {
+                extraMsg = document.createElement('div');
+                extraMsg.id = 'necConfirmExtra';
+                extraMsg.style.cssText = 'margin-top:8px;font-size:12px;color:#EF9F27;background:#FEF5EC;border-radius:10px;padding:10px;line-height:1.5;';
+                var conf = document.getElementById('necConfirm');
+                if (conf) conf.appendChild(extraMsg);
+              }
+              extraMsg.textContent = '📍 Punto de encuentro asignado automáticamente al finalizar triaje.';
+            }
+        
+            var conf = document.getElementById('necConfirm');
+            if (conf) conf.classList.add('visible');
+            btn.textContent = '✓ Enviada'; btn.style.background = ''; btn.disabled = false;
+            window._necEnviada = true;
+          }, 700);
+        };
+        
+        // ── Asignar responsable en triaje ──
+        window.asignarResp = function(inputId, displayId) {
+          var inp = document.getElementById(inputId);
+          var disp = document.getElementById(displayId);
+          if (!inp || !disp) return;
+          var name = inp.value.trim();
+          if (!name) { inp.focus(); return; }
+          disp.textContent = '✓ ' + name;
+          disp.style.color = 'var(--teal)';
+          disp.style.fontWeight = '600';
+          inp.value = '';
+          inp.closest('div').querySelector('button').textContent = 'Cambiar';
+        };
+        
+        // ── Color picker para kit personalizado ──
+        var _customKitColor = '#7B5EA7';
+        var _customKitColorName = 'morado';
+        var COLOR_NAMES = {
+          '#7B5EA7':'morado','#E24B4A':'rojo','#EF9F27':'naranja',
+          '#1D9E75':'verde','#3A7BD5':'azul','#2C3E50':'grafito',
+          '#E91E8C':'rosa','#00796B':'teal oscuro'
+        };
+        window.selectKitColor = function(el) {
+          document.querySelectorAll('#kitColorPicker .kit-color-swatch').forEach(function(s){ s.classList.remove('active'); });
+          el.classList.add('active');
+          _customKitColor = el.dataset.color;
+          _customKitColorName = COLOR_NAMES[_customKitColor] || _customKitColor;
+          // Update strip and hint
+          var strip = document.getElementById('kitColorStrip');
+          if (strip) strip.style.background = _customKitColor;
+          var dot = document.getElementById('kitColorHintDot');
+          var txt = document.getElementById('kitColorHintText');
+          if (dot) dot.style.background = _customKitColor;
+          if (txt) txt.innerHTML = 'Crea el kit e identifícalo con el color <strong>' + _customKitColorName + '</strong>';
+          // Update custom kit data color
+          KIT_TYPES.custom.color = _customKitColor;
+          KIT_TYPES.custom.strip = _customKitColor;
+          KIT_TYPES.custom.itemBg = _customKitColor + '18';
+          KIT_TYPES.custom.borderColor = _customKitColor;
+          if (currentKitType === 'custom') buildItemsDOM();
+        };
+        
+        // ── TAB 2 ──
+        window.toggleValExpand = function(id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.toggle('open');
+        };
+        window.validarNec = function(e, cardId, actId, doneId, ok) {
+          e.stopPropagation();
+          var card   = document.getElementById(cardId);
+          var doneEl = document.getElementById(doneId);
+          // Hide action buttons
+          var actEls = card.querySelectorAll('.val-btn');
+          actEls.forEach(function(b){ b.style.display = 'none'; });
+          if (doneEl) {
+            doneEl.style.display = 'block';
+            if (ok) {
+              doneEl.style.cssText += 'background:#EAFAF1;color:#1D6A3A;';
+              doneEl.textContent = '✓ Validada — publicada en el muro de coordinación';
+              if (card) card.dataset.estado = 'validada';
+              window._necValidada = true;
+            } else {
+              doneEl.style.cssText += 'background:#FDEDEC;color:#922B21;';
+              doneEl.textContent = '✕ Rechazada — solicitante notificado';
+              if (card) card.dataset.estado = 'rechazada';
+            }
+            var badge = card.querySelector('.d-badge');
+            if (badge) {
+              badge.className = 'd-badge ' + (ok ? 'd-badge-ok' : 'nec-badge-rej');
+              badge.textContent = ok ? '✓ Validada' : '✕ Rechazada';
+            }
+            var expandId = doneId.replace('valDone','valExpand');
+            var expEl = document.getElementById(expandId);
+            if (expEl && !expEl.classList.contains('open')) expEl.classList.add('open');
+          }
+        };
+        window.filtrarVal = function(estado, btn) {
+          document.querySelectorAll('.val-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+          document.querySelectorAll('.val-list .val-card').forEach(function(c){
+            c.style.display = (estado === 'todas' || c.dataset.estado === estado) ? '' : 'none';
+          });
+        };
+        
+        // ── TAB 3 ──
+        window.filtrarMuro = function(tipo, btn) {
+          document.querySelectorAll('.muro-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+          document.querySelectorAll('#muroFeed .muro-item').forEach(function(item){
+            item.classList.toggle('hidden', tipo !== 'todas' && item.dataset.tipo !== tipo);
+          });
+        };
+        window.claimMuro = function(btn) {
+          btn.textContent = '✓ Asignado';
+          btn.style.cssText += 'background:var(--teal);color:#fff;border:none;cursor:default;';
+          btn.disabled = true;
+          btn.className = 'muro-claimed';
+        };
+        
+        // ── TAB 5 ──
+        window.toggleTraza = function(id) {
+          document.querySelectorAll('.traza-steps').forEach(function(s){
+            if (s.id !== id) s.classList.remove('open');
+          });
+          var el = document.getElementById(id);
+          if (el) el.classList.toggle('open');
+        };
+        window.confirmarEntrega = function(cardId, btnId, tlItemId) {
+          var btn    = document.getElementById(btnId);
+          var tlItem = document.getElementById(tlItemId);
+          var card   = document.getElementById(cardId);
+          if (btn) { btn.textContent = 'Confirmando...'; btn.disabled = true; }
+          setTimeout(function(){
+            if (tlItem) {
+              tlItem.style.opacity = '1';
+              var dot   = tlItem.querySelector('.traza-tl-dot');
+              var label = tlItem.querySelector('.traza-tl-label');
+              var meta  = tlItem.querySelector('.traza-tl-meta');
+              if (dot)   { dot.style.background = '#1D9E75'; dot.style.color = '#1D9E75'; }
+              if (label) { label.textContent = '✓ Entrega confirmada'; label.style.color = '#1D9E75'; }
+              if (meta)  { meta.textContent = 'Ahora · Receptor confirmado'; }
+            }
+            var statusEl = card ? card.querySelector('.traza-status-badge') : null;
+            if (statusEl) { statusEl.style.background = '#EAFAF1'; statusEl.style.color = '#1D6A3A'; statusEl.textContent = '✓ Entregado'; }
+            if (btn) { btn.textContent = '✓ Entrega registrada'; btn.style.background = '#085041'; }
+          }, 600);
+        };
+        
+        // Legacy tab switching kept for any residual onclick calls
+        window.switchTab = function(name) {
+          var map = { emergencia:'necesidad', chat:'muro', kit:'kits' };
+          window.switchDemo(map[name] || name);
+        };
+        
+        document.addEventListener('DOMContentLoaded', function(){
+          if (typeof renderKitItems === 'function') renderKitItems('food');
+          // Initialize emergency category state (it's active by default)
+          var emergChip = document.querySelector('#necCatChips .chip-emergency');
+          if (emergChip && emergChip.classList.contains('active')) {
+            window.selectCat(emergChip, 'necCatChips');
+          }
+           // Init campo visibilidad
+          if (typeof _necUpdateFields === 'function') _necUpdateFields();
+        });
+    </script>
 
-// ── switchDemo ──
-window.switchDemo = function(tab) {
-  document.querySelectorAll('.demo-panel').forEach(function(p){ p.classList.remove('active'); });
-  var panel = document.getElementById('tab-' + tab);
-  if (panel) panel.classList.add('active');
-  var order = ['necesidad','validacion','muro','kits','traza'];
-  var idx = order.indexOf(tab);
-  document.querySelectorAll('.demo-step').forEach(function(s, i){
-    s.classList.remove('active','done');
-    if (i < idx) s.classList.add('done');
-    else if (i === idx) s.classList.add('active');
-  });
-  if (tab === 'muro' && window._necValidada) {
-    var d = document.getElementById('muroNecDinamica');
-    if (d) d.style.display = 'flex';
-  }
-  if (tab === 'kits' && typeof renderKitItems === 'function') {
-    renderKitItems(window.currentKitType || 'food');
-  }
-};
-
-// ── chip / prio helpers ──
-window.selectChipIn = function(el, groupId) {
-  var g = document.getElementById(groupId);
-  if (g) g.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
-  el.classList.add('active');
-};
-window.selectPrioIn = function(el, rowId, level) {
-  var g = document.getElementById(rowId);
-  if (g) g.querySelectorAll('.prio-btn').forEach(function(b){ b.className = 'prio-btn'; });
-  el.classList.add('active-' + level);
-};
-
-// ── Estado interno Tab 1 ──
-var _necVolTipo  = 'requerir';   // 'requerir' | 'ofrecer'
-var _necShelTipo = 'solicitud';  // 'solicitud' | 'oferta'
-
-// Actualiza visibilidad de campos según categoría + sub-tipo
-function _necUpdateFields() {
-  var catEl     = document.querySelector('#necCatChips .chip.active');
-  var isEmerg   = catEl && catEl.classList.contains('chip-emergency');
-  var isVol     = catEl && catEl.classList.contains('chip-volunteer');
-  var isShelter = catEl && catEl.classList.contains('chip-shelter');
-  var isOferVol = isVol && _necVolTipo === 'ofrecer';
-  var activeShelChip = document.querySelector('#necShelSubRow .chip.active');
-  var isOferSh  = isShelter && (activeShelChip ? activeShelChip.id === 'necShelOfe' : _necShelTipo === 'oferta');
-
-  // Prioridad: ocultar si ofrece voluntarios
-  var prioGroup = document.getElementById('necPrioGroup');
-  if (prioGroup) prioGroup.style.display = isOferVol ? 'none' : '';
-
-  // Personas afectadas: solo en Emergencia, Requerir-voluntarios, refugio,
-  var persGroup = document.getElementById('necPersonasGroup');
-  var persLabel = document.getElementById('necPersonasLabel');
-  var showPers  = isEmerg || (isVol && _necVolTipo === 'requerir') || (isShelter);
-  
-  if (persGroup) persGroup.style.display = showPers ? '' : 'none';
-  if (persLabel) {
-    if (isVol && _necVolTipo === 'requerir') persLabel.textContent = 'Voluntarios requeridos (aprox.)';
-    else if (isShelter && _necShelTipo === 'solicitud') persLabel.textContent = 'Personas a alojar';
-	else if (isShelter && _necShelTipo === 'oferta') persLabel.textContent = 'Capacidad de personas';
-    else persLabel.textContent = 'Personas afectadas';
-  }
-
-  
-
-  // Sub-rows
-  var volSub  = document.getElementById('necVolSubRow');
-  var shelSub = document.getElementById('necShelSubRow');
-  if (volSub)  volSub.style.display  = isVol     ? 'flex' : 'none';
-  
-  if (shelSub) {
-    shelSub.style.display = isShelter ? 'flex' : 'none';
-    if (isShelter && shelSub.style.display === 'flex') {
-      var activeShel = shelSub.querySelector('.chip.active');
-      if (!activeShel) {
-        var firstShel = shelSub.querySelector('.chip');
-        if (firstShel) firstShel.classList.add('active');
-      }
-    }
-  }if (shelSub) shelSub.style.display = isShelter ? 'flex' : 'none';
-}
-
-window.selectVolTipo = function(tipo) {
-  _necVolTipo = tipo;
-  var req = document.getElementById('necVolReq');
-  var ofe = document.getElementById('necVolOfe');
-  if (req) req.classList.toggle('active', tipo === 'requerir');
-  if (ofe) ofe.classList.toggle('active', tipo === 'ofrecer');
-  _necUpdateFields();
-};
-
-window.selectShelTipo = function(tipo) {
-  _necShelTipo = tipo;
-  var sol = document.getElementById('necShelSol');
-  var ofe = document.getElementById('necShelOfe');
-  if (sol) sol.classList.toggle('active', tipo === 'solicitud');
-  if (ofe) ofe.classList.toggle('active', tipo === 'oferta');
-  _necUpdateFields();
-};
-
-// ── Categoría con lógica especial de Emergencia ──
-window.selectCat = function(el, groupId) {
-  var g = document.getElementById(groupId);
-  if (g) g.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
-  el.classList.add('active');
-  var isEmergency = el.classList.contains('chip-emergency');
-  var notice  = document.getElementById('emergencyNotice');
-  var prioRow = document.getElementById('necPrioRow');
-  if (isEmergency) {
-    if (notice) notice.style.display = 'flex';
-    if (prioRow) {
-      prioRow.querySelectorAll('.prio-btn').forEach(function(b){ b.className='prio-btn'; b.style.opacity='0.4'; b.style.pointerEvents='none'; });
-      var highBtn = prioRow.querySelector('.prio-btn:last-child');
-      if (highBtn) { highBtn.className='prio-btn active-high'; highBtn.style.opacity='1'; }
-    }
-  } else {
-    if (notice) notice.style.display = 'none';
-    if (prioRow) prioRow.querySelectorAll('.prio-btn').forEach(function(b){ b.style.opacity=''; b.style.pointerEvents=''; });
-  }
-  // Reset sub-tipo state on category change
-  _necVolTipo  = 'requerir';
-  _necShelTipo = 'solicitud';
-  var req = document.getElementById('necVolReq'); if (req) req.classList.add('active');
-  var ofe = document.getElementById('necVolOfe'); if (ofe) ofe.classList.remove('active');
-  var sol = document.getElementById('necShelSol'); if (sol) sol.classList.add('active');
-  var ofe2 = document.getElementById('necShelOfe'); if (ofe2) ofe2.classList.remove('active');
-  _necUpdateFields();
-};
-
-// ── TAB 1 ──
-
-
-// ══ MAPA DE NECESIDAD ══
-var _necMap = null;
-var _necMarker = null;
-
-function _necMakeIcon(color, icon, size) {
-  return L.divIcon({
-    className: '',
-    html: '<div style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+color+';display:flex;align-items:center;justify-content:center;font-size:'+Math.round(size*0.42)+'px;font-weight:700;color:#fff;box-shadow:0 3px 10px rgba(0,0,0,0.35);border:2px solid rgba(255,255,255,0.35);">'+icon+'</div>',
-    iconSize:[size,size], iconAnchor:[size/2,size/2], popupAnchor:[0,-(size/2+4)]
-  });
-}
-
-function _necPulseIcon(color) {
-  return L.divIcon({
-    className: '',
-    html: '<div style="position:relative;width:36px;height:36px;">'+
-      '<div style="position:absolute;inset:0;border-radius:50%;background:'+color+';opacity:0.2;animation:necPulseRing 1.8s ease-out infinite;"></div>'+
-      '<div style="position:absolute;inset:7px;border-radius:50%;background:'+color+';display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;box-shadow:0 2px 10px rgba(0,0,0,0.4);">!</div>'+
-    '</div>',
-    iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-22]
-  });
-}
-
-(function(){
-  var s = document.createElement('style');
-  s.textContent='@keyframes necPulseRing{0%{transform:scale(1);opacity:0.22}70%{transform:scale(2.2);opacity:0}100%{transform:scale(2.2);opacity:0}}';
-  document.head.appendChild(s);
-})();
-
-function initNecMap() {
-  var el = document.getElementById('necMap');
-  if (!el) return;
-  if (_necMap) { _necMap.invalidateSize(); return; }
-
-  _necMap = L.map('necMap', {
-    zoomControl: false,
-    attributionControl: false,
-    scrollWheelZoom: false,
-    dragging: true,
-    doubleClickZoom: false
-  }).setView([39.4617, -0.3854], 16);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19 }).addTo(_necMap);
-
-  var ctx = [
-    { lat:39.4641, lng:-0.3879, color:'#1D9E75', icon:'K', tip:'<b>📦 Recogida de kits</b><br>Polideportivo Russafa' },
-    { lat:39.4598, lng:-0.3831, color:'#7B5EA7', icon:'V', tip:'<b>🤝 Voluntarios</b><br>12 activos' },
-    { lat:39.4633, lng:-0.3808, color:'#EF9F27', icon:'P', tip:'<b>📍 Punto de encuentro</b><br>Pl. Ayuntamiento' },
-    { lat:39.4589, lng:-0.3869, color:'#3A7BD5', icon:'R', tip:'<b>🏠 Refugio</b><br>C/ Colón 40 · 30 plazas' }
-  ];
-  ctx.forEach(function(m) {
-    L.marker([m.lat, m.lng], { icon: _necMakeIcon(m.color, m.icon, 26) })
-      .bindPopup(m.tip, { className:'k2-popup', maxWidth:180 })
-      .addTo(_necMap);
-  });
-
-  _necMarker = L.marker([39.4617, -0.3854], { icon: _necPulseIcon('#E24B4A'), zIndexOffset:1000 })
-    .bindPopup('<b>🚨 Necesidad activa</b><br>C/ Sueca, 22 · Ruzafa', { className:'k2-popup', maxWidth:200 })
-    .addTo(_necMap)
-    .openPopup();
-
-  _necMap.on('click', function(e) {
-    _necMarker.setLatLng(e.latlng);
-    _necMarker.setIcon(_necPulseIcon('#E24B4A'));
-    var ubic = document.getElementById('necUbic');
-    if (ubic) ubic.value = e.latlng.lat.toFixed(5) + ', ' + e.latlng.lng.toFixed(5);
-    _necMarker.openPopup();
-  });
-}
-
-setTimeout(initNecMap, 400);
-
-var _origSwitchDemoNec = window.switchDemo;
-window.switchDemo = function(tab) {
-  _origSwitchDemoNec(tab);
-  if (tab === 'necesidad') setTimeout(initNecMap, 150);
-};
-
-var _origEnviarNec = window.enviarNecesidad;
-window.enviarNecesidad = function() {
-  if (_necMarker) {
-    var me = _necMarker.getElement ? _necMarker.getElement() : null;
-    if (me) { me.style.filter='brightness(2) drop-shadow(0 0 8px #E24B4A)'; setTimeout(function(){ if(me) me.style.filter=''; },700); }
-  }
-  _origEnviarNec && _origEnviarNec();
-};
-
-
-window.enviarNecesidad = function() {
-  var btn = document.getElementById('necBtn');
-  btn.textContent = '✓ Enviando...'; btn.style.background = '#085041'; btn.disabled = true;
-  setTimeout(function(){
-    var catEl     = document.querySelector('#necCatChips .chip.active');
-    var isEmerg   = catEl && catEl.classList.contains('chip-emergency');
-    var isVol     = catEl && catEl.classList.contains('chip-volunteer');
-    var isShelter = catEl && catEl.classList.contains('chip-shelter');
-    var prioEl    = document.querySelector('#necPrioRow .prio-btn[class*="active"]');
-    var prioText  = isEmerg ? 'Alta 🚨' : (prioEl ? prioEl.textContent : '—');
-
-    var catLabels = {
-      'chip-emergency':  '🚨 Emergencia',
-      'chip-volunteer':  '🤝 Voluntarios',
-      'chip-checkpoint': '📍 Punto de encuentro',
-      'chip-storage':    '📦 Recogida de kits',
-      'chip-shelter':    '🏠 Refugio / Hospedaje'
-    };
-    var catClass = catEl ? Array.from(catEl.classList).find(function(c){ return catLabels[c]; }) : null;
-    var catText  = catClass ? catLabels[catClass] : (catEl ? catEl.textContent : '—');
-    if (isVol)     catText += ' · ' + (_necVolTipo  === 'requerir' ? 'Requerir' : 'Ofrecer');
-    if (isShelter) catText += ' · ' + (_necShelTipo === 'solicitud' ? 'Solicitud' : 'Oferta');
-
-    var rows = [
-      ['Ubicación', (document.getElementById('necUbic') || {}).value || '—'],
-      ['Categoría', catText],
-    ];
-
-    // Prioridad — oculta si ofrece voluntarios
-    if (!isVol || _necVolTipo !== 'ofrecer') rows.push(['Prioridad', prioText]);
-
-    // Personas / capacidad según reglas de visibilidad
-    var persGroup = document.getElementById('necPersonasGroup');
-    if (persGroup && persGroup.style.display !== 'none') {
-      var persLabel = (document.getElementById('necPersonasLabel') || {}).textContent || 'Personas';
-      rows.push([persLabel, (document.getElementById('necPersonas') || {}).value || '—']);
-    }
-    var capGroup = document.getElementById('necVolGroup');
-    if (capGroup && capGroup.style.display !== 'none') {
-      var capLabel = (capGroup.querySelector('label') || {}).textContent || 'Cantidad';
-      rows.push([capLabel, (document.getElementById('necPersonas') || {}).value || '—']);
-    }
-
-    var summary = document.getElementById('necSummary');
-    if (summary) {
-      summary.innerHTML = rows.map(function(r){
-        var valStyle = isEmerg && r[0]==='Prioridad' ? 'font-weight:600;color:#E24B4A;' : 'font-weight:500;';
-        return '<div class="nec-summary-row"><span style="color:var(--muted);">' + r[0] + '</span><span style="' + valStyle + '">' + r[1] + '</span></div>';
-      }).join('');
-    }
-
-    // Callback especial: ofrecer voluntarios → punto de encuentro asignado
-    if (isVol && _necVolTipo === 'ofrecer') {
-      window._necCheckpointCallback = true;
-      var extraMsg = document.getElementById('necConfirmExtra');
-      if (!extraMsg) {
-        extraMsg = document.createElement('div');
-        extraMsg.id = 'necConfirmExtra';
-        extraMsg.style.cssText = 'margin-top:8px;font-size:12px;color:#EF9F27;background:#FEF5EC;border-radius:10px;padding:10px;line-height:1.5;';
-        var conf = document.getElementById('necConfirm');
-        if (conf) conf.appendChild(extraMsg);
-      }
-      extraMsg.textContent = '📍 Punto de encuentro asignado automáticamente al finalizar triaje.';
-    }
-
-    var conf = document.getElementById('necConfirm');
-    if (conf) conf.classList.add('visible');
-    btn.textContent = '✓ Enviada'; btn.style.background = ''; btn.disabled = false;
-    window._necEnviada = true;
-  }, 700);
-};
-
-// ── Asignar responsable en triaje ──
-window.asignarResp = function(inputId, displayId) {
-  var inp = document.getElementById(inputId);
-  var disp = document.getElementById(displayId);
-  if (!inp || !disp) return;
-  var name = inp.value.trim();
-  if (!name) { inp.focus(); return; }
-  disp.textContent = '✓ ' + name;
-  disp.style.color = 'var(--teal)';
-  disp.style.fontWeight = '600';
-  inp.value = '';
-  inp.closest('div').querySelector('button').textContent = 'Cambiar';
-};
-
-// ── Color picker para kit personalizado ──
-var _customKitColor = '#7B5EA7';
-var _customKitColorName = 'morado';
-var COLOR_NAMES = {
-  '#7B5EA7':'morado','#E24B4A':'rojo','#EF9F27':'naranja',
-  '#1D9E75':'verde','#3A7BD5':'azul','#2C3E50':'grafito',
-  '#E91E8C':'rosa','#00796B':'teal oscuro'
-};
-window.selectKitColor = function(el) {
-  document.querySelectorAll('#kitColorPicker .kit-color-swatch').forEach(function(s){ s.classList.remove('active'); });
-  el.classList.add('active');
-  _customKitColor = el.dataset.color;
-  _customKitColorName = COLOR_NAMES[_customKitColor] || _customKitColor;
-  // Update strip and hint
-  var strip = document.getElementById('kitColorStrip');
-  if (strip) strip.style.background = _customKitColor;
-  var dot = document.getElementById('kitColorHintDot');
-  var txt = document.getElementById('kitColorHintText');
-  if (dot) dot.style.background = _customKitColor;
-  if (txt) txt.innerHTML = 'Crea el kit e identifícalo con el color <strong>' + _customKitColorName + '</strong>';
-  // Update custom kit data color
-  KIT_TYPES.custom.color = _customKitColor;
-  KIT_TYPES.custom.strip = _customKitColor;
-  KIT_TYPES.custom.itemBg = _customKitColor + '18';
-  KIT_TYPES.custom.borderColor = _customKitColor;
-  if (currentKitType === 'custom') buildItemsDOM();
-};
-
-// ── TAB 2 ──
-window.toggleValExpand = function(id) {
-  var el = document.getElementById(id);
-  if (el) el.classList.toggle('open');
-};
-window.validarNec = function(e, cardId, actId, doneId, ok) {
-  e.stopPropagation();
-  var card   = document.getElementById(cardId);
-  var doneEl = document.getElementById(doneId);
-  // Hide action buttons
-  var actEls = card.querySelectorAll('.val-btn');
-  actEls.forEach(function(b){ b.style.display = 'none'; });
-  if (doneEl) {
-    doneEl.style.display = 'block';
-    if (ok) {
-      doneEl.style.cssText += 'background:#EAFAF1;color:#1D6A3A;';
-      doneEl.textContent = '✓ Validada — publicada en el muro de coordinación';
-      if (card) card.dataset.estado = 'validada';
-      window._necValidada = true;
-    } else {
-      doneEl.style.cssText += 'background:#FDEDEC;color:#922B21;';
-      doneEl.textContent = '✕ Rechazada — solicitante notificado';
-      if (card) card.dataset.estado = 'rechazada';
-    }
-    var badge = card.querySelector('.d-badge');
-    if (badge) {
-      badge.className = 'd-badge ' + (ok ? 'd-badge-ok' : 'nec-badge-rej');
-      badge.textContent = ok ? '✓ Validada' : '✕ Rechazada';
-    }
-    var expandId = doneId.replace('valDone','valExpand');
-    var expEl = document.getElementById(expandId);
-    if (expEl && !expEl.classList.contains('open')) expEl.classList.add('open');
-  }
-};
-window.filtrarVal = function(estado, btn) {
-  document.querySelectorAll('.val-filter-btn').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
-  document.querySelectorAll('.val-list .val-card').forEach(function(c){
-    c.style.display = (estado === 'todas' || c.dataset.estado === estado) ? '' : 'none';
-  });
-};
-
-// ── TAB 3 ──
-window.filtrarMuro = function(tipo, btn) {
-  document.querySelectorAll('.muro-filter-btn').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
-  document.querySelectorAll('#muroFeed .muro-item').forEach(function(item){
-    item.classList.toggle('hidden', tipo !== 'todas' && item.dataset.tipo !== tipo);
-  });
-};
-window.claimMuro = function(btn) {
-  btn.textContent = '✓ Asignado';
-  btn.style.cssText += 'background:var(--teal);color:#fff;border:none;cursor:default;';
-  btn.disabled = true;
-  btn.className = 'muro-claimed';
-};
-
-// ── TAB 5 ──
-window.toggleTraza = function(id) {
-  document.querySelectorAll('.traza-steps').forEach(function(s){
-    if (s.id !== id) s.classList.remove('open');
-  });
-  var el = document.getElementById(id);
-  if (el) el.classList.toggle('open');
-};
-window.confirmarEntrega = function(cardId, btnId, tlItemId) {
-  var btn    = document.getElementById(btnId);
-  var tlItem = document.getElementById(tlItemId);
-  var card   = document.getElementById(cardId);
-  if (btn) { btn.textContent = 'Confirmando...'; btn.disabled = true; }
-  setTimeout(function(){
-    if (tlItem) {
-      tlItem.style.opacity = '1';
-      var dot   = tlItem.querySelector('.traza-tl-dot');
-      var label = tlItem.querySelector('.traza-tl-label');
-      var meta  = tlItem.querySelector('.traza-tl-meta');
-      if (dot)   { dot.style.background = '#1D9E75'; dot.style.color = '#1D9E75'; }
-      if (label) { label.textContent = '✓ Entrega confirmada'; label.style.color = '#1D9E75'; }
-      if (meta)  { meta.textContent = 'Ahora · Receptor confirmado'; }
-    }
-    var statusEl = card ? card.querySelector('.traza-status-badge') : null;
-    if (statusEl) { statusEl.style.background = '#EAFAF1'; statusEl.style.color = '#1D6A3A'; statusEl.textContent = '✓ Entregado'; }
-    if (btn) { btn.textContent = '✓ Entrega registrada'; btn.style.background = '#085041'; }
-  }, 600);
-};
-
-// Legacy tab switching kept for any residual onclick calls
-window.switchTab = function(name) {
-  var map = { emergencia:'necesidad', chat:'muro', kit:'kits' };
-  window.switchDemo(map[name] || name);
-};
-
-document.addEventListener('DOMContentLoaded', function(){
-  if (typeof renderKitItems === 'function') renderKitItems('food');
-  // Initialize emergency category state (it's active by default)
-  var emergChip = document.querySelector('#necCatChips .chip-emergency');
-  if (emergChip && emergChip.classList.contains('active')) {
-    window.selectCat(emergChip, 'necCatChips');
-  }
-   // Init campo visibilidad
-  if (typeof _necUpdateFields === 'function') _necUpdateFields();
-});
-</script>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         (function() {
         // ── MARKER DATA ──
