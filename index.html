@@ -1417,45 +1417,72 @@
 /* ══════════════════════════════
    TAB 5 — Trazabilidad
 ══════════════════════════════ */
-.traza-list { display:flex; flex-direction:column; gap:10px; }
-.traza-card { background:#fff; border-radius:14px; border:1px solid var(--border); overflow:hidden; }
-.traza-header {
-  display:flex; align-items:center; gap:10px; padding:12px 14px;
-  cursor:pointer;
-}
-.traza-box {
-  width:36px; height:36px; border-radius:10px; flex-shrink:0;
-  display:flex; align-items:center; justify-content:center; font-size:18px;
-}
-.traza-info { flex:1; min-width:0; }
-.traza-name { font-family:'Syne',sans-serif; font-size:13px; font-weight:600; color:var(--dark); }
-.traza-sub  { font-size:11px; color:var(--muted); margin-top:1px; }
-.traza-status-badge {
-  font-size:11px; font-weight:600; padding:3px 10px; border-radius:100px;
-  white-space:nowrap; flex-shrink:0;
-}
-.traza-steps { display:none; padding:0 14px 14px; }
-.traza-steps.open { display:block; animation:fadeUp 0.2s ease both; }
-.traza-timeline { display:flex; flex-direction:column; margin-top:8px; }
-.traza-tl-item { display:flex; gap:10px; align-items:flex-start; padding-bottom:14px; }
-.traza-tl-item:last-child { padding-bottom:0; }
-.traza-tl-col { display:flex; flex-direction:column; align-items:center; width:18px; flex-shrink:0; }
-.traza-tl-dot {
-  width:13px; height:13px; border-radius:50%; margin-top:2px;
-  border:2px solid #fff; box-shadow:0 0 0 2px currentColor; flex-shrink:0;
-}
-.traza-tl-line { width:2px; flex:1; min-height:16px; background:var(--border); margin-top:3px; }
-.traza-tl-text { flex:1; font-size:12px; }
-.traza-tl-label { font-weight:600; color:var(--dark); }
-.traza-tl-meta  { color:var(--muted); margin-top:1px; font-size:11px; }
-.traza-confirm-btn {
-  display:block; width:100%; margin-top:12px; padding:10px; border-radius:12px;
-  border:none; background:var(--teal); color:#fff; font-size:13px; font-weight:500;
-  cursor:pointer; font-family:'DM Sans',sans-serif; transition:background 0.18s;
-}
-.traza-confirm-btn:hover { background:var(--green-600); }
-.traza-confirm-btn:disabled { background:var(--muted); cursor:default; }
+#trazabilidad { background:#0E1A16; padding:80px 20px; }
+#trazabilidad .inner { max-width:860px; margin:0 auto; }
+#trazabilidad .section-title { color:#fff; }
+#trazabilidad .section-sub   { color:rgba(255,255,255,0.55); }
+#trazabilidad .label         { color:var(--teal); }
 
+.traza-shell {
+  background:#fff; border-radius:16px;
+  border:1px solid var(--border);
+  overflow:hidden; margin-top:8px;
+}
+.traza-header {
+  display:flex; flex-direction:column; gap:10px;
+  padding:14px 16px; background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.traza-header-label {
+  font-family:'Syne',sans-serif; font-size:15px; font-weight:700; color:var(--text);
+}
+.traza-header-meta {
+  font-size:12px; color:var(--muted); margin-top:-6px;
+}
+.traza-filters {
+  display:flex; gap:6px; flex-wrap:wrap;
+}
+.traza-filter-btn {
+  font-size:11px; font-weight:600; padding:5px 11px;
+  border-radius:20px; border:1.5px solid var(--border);
+  background:#fff; color:var(--muted); cursor:pointer;
+  font-family:'DM Sans',sans-serif; transition:all 0.18s;
+}
+.traza-filter-btn:hover { border-color:var(--teal); color:var(--teal); }
+.traza-filter-btn.active { background:var(--teal); border-color:var(--teal); color:#fff; }
+.traza-count-badge {
+  background:var(--teal-light); color:var(--teal);
+  font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px;
+}
+.traza-row {
+  display:flex; align-items:center; gap:12px; padding:12px 16px;
+  border-bottom:1px solid var(--border);
+  transition:background 0.15s;
+}
+.traza-row:hover { background:var(--bg); }
+.traza-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.traza-info { flex:1; min-width:0; }
+.traza-name { font-size:13px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.traza-vol  { font-size:11px; color:var(--muted); margin-top:1px; }
+.traza-phases { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.traza-phase {
+  width:28px; height:28px; border-radius:50%; display:flex; align-items:center;
+  justify-content:center; font-size:13px; border:2px solid var(--border);
+  background:#fff; cursor:default; transition:all 0.2s;
+}
+.traza-phase.done    { background:var(--teal); border-color:var(--teal); }
+.traza-phase.current { border-color:var(--teal); background:var(--teal-light); animation:traza-pulse 1.8s infinite; }
+.traza-phase.next-btn { cursor:pointer; }
+.traza-phase.next-btn:hover { border-color:var(--teal); background:var(--teal-light); }
+.traza-arrow { color:var(--muted); font-size:10px; }
+.traza-id { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--muted); flex-shrink:0; }
+.traza-entregado { font-size:10px; font-weight:600; color:var(--teal); background:var(--teal-light); padding:3px 8px; border-radius:20px; flex-shrink:0; }
+.traza-cancelado  { font-size:10px; font-weight:600; color:var(--muted); background:var(--bg); border:1px solid var(--border); padding:3px 8px; border-radius:20px; flex-shrink:0; }
+
+@keyframes traza-pulse {
+  0%,100% { box-shadow:0 0 0 0 rgba(29,158,117,0.4); }
+  50%      { box-shadow:0 0 0 5px rgba(29,158,117,0); }
+}
 /* ══════════════════════════════
    MOBILE overrides  ≤ 600px
 ══════════════════════════════ */
@@ -2141,6 +2168,13 @@
 						  <!-- Paso 2: instrucciones + QR + punto recogida -->
 						  <div id="volStep2" style="display:none;flex-direction:column;gap:12px;">
 
+							<!-- Nombre del voluntario -->
+							<div style="background:#F0FAF6;border:1px solid #B2DFCE;border-radius:12px;padding:12px 14px;">
+							  <div style="font-size:12px;font-weight:600;color:#0E6E4A;margin-bottom:6px;">👤 Tu nombre (para identificar el kit)</div>
+							  <input id="volNombre" placeholder="Ej: Ana García"
+								style="width:100%;box-sizing:border-box;padding:8px 10px;border:1.5px solid #B2DFCE;border-radius:8px;font-size:13px;font-family:DM Sans,sans-serif;outline:none;">
+							</div>
+		
 							<!-- Instrucciones de montaje -->
 							<div id="volInstructions" style="background:#F0FAF6;border:1px solid #B2DFCE;border-radius:12px;padding:14px 16px;">
 							  <!-- renderizado por JS: showVolInstructions(kitKey) -->
@@ -2161,9 +2195,10 @@
 							  📲 Generar QR del kit
 							</button>
 
-							<!-- QR generado (oculto hasta clic) -->
+							<  <!-- QR resultado -->
 							<div id="volQrBox" style="display:none;text-align:center;padding:16px;background:#fff;border-radius:12px;border:1px solid #e0e0e0;">
 							  <div id="volQrImg" style="margin:0 auto 8px;"></div>
+							  <div id="volQrCode" style="font-size:13px;font-weight:700;letter-spacing:2px;color:#333;margin-bottom:4px;"></div>
 							  <div style="font-size:11px;color:var(--muted);">Imprime o muestra este QR en el punto de recogida</div>
 							</div>
 
@@ -2181,150 +2216,40 @@
 					</div>
 
                     <!-- ══ TAB 5: TRAZABILIDAD ══ -->
-                    <div class="demo-panel" id="tab-traza">
+                   <!-- TRAZABILIDAD -->
+					<div class="demo-panel" id="tab-traza">
                         <div class="d-panel-title">✅ Trazabilidad y entrega verificada</div>
                         <div class="d-panel-sub">Cada kit — desde la preparación hasta la confirmación de entrega.</div>
-                        <div class="traza-list">
-                            <!-- Kit 1 -->
-                            <div class="traza-card" id="trazaCard1">
-                                <div class="traza-header" onclick="toggleTraza('trazaSteps1')">
-                                    <div class="traza-box" style="background:#FDF0EF;color:#C0392B;">🍱</div>
-                                    <div class="traza-info">
-                                        <div class="traza-name">Kit Alimenticio · C/ Sueca, 22</div>
-                                        <div class="traza-sub">6 personas · Asignado hace 5 min</div>
-                                    </div>
-                                    <span class="traza-status-badge" style="background:#FEF5EC;color:#9A5C00;">En tránsito</span>
-                                </div>
-                                <div class="traza-steps" id="trazaSteps1">
-                                    <div class="traza-timeline">
-                                        <div class="traza-tl-item">
-                                            <div class="traza-tl-col">
-                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                                                <div class="traza-tl-line"></div>
-                                            </div>
-                                            <div class="traza-tl-text">
-                                                <div class="traza-tl-label">✓ Necesidad validada</div>
-                                                <div class="traza-tl-meta">Hace 18 min · Coordinadora: Elena M.</div>
-                                            </div>
-                                        </div>
-                                        <div class="traza-tl-item">
-                                            <div class="traza-tl-col">
-                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                                                <div class="traza-tl-line"></div>
-                                            </div>
-                                            <div class="traza-tl-text">
-                                                <div class="traza-tl-label">✓ Kit preparado</div>
-                                                <div class="traza-tl-meta">Hace 12 min · Punto Colón · 18 artículos</div>
-                                            </div>
-                                        </div>
-                                        <div class="traza-tl-item">
-                                            <div class="traza-tl-col">
-                                                <div class="traza-tl-dot" style="background:#EF9F27;color:#EF9F27;"></div>
-                                                <div class="traza-tl-line"></div>
-                                            </div>
-                                            <div class="traza-tl-text">
-                                                <div class="traza-tl-label" style="color:#EF9F27;">→ En camino</div>
-                                                <div class="traza-tl-meta">Voluntario: Marcos T. · ETA 6 min</div>
-                                            </div>
-                                        </div>
-                                        <div class="traza-tl-item" id="trazaTlEntrega1" style="opacity:0.4;">
-                                            <div class="traza-tl-col">
-                                                <div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div>
-                                            </div>
-                                            <div class="traza-tl-text">
-                                                <div class="traza-tl-label" style="color:var(--muted);">Pendiente entrega</div>
-                                                <div class="traza-tl-meta">Esperando confirmación</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="traza-confirm-btn" id="trazaBtn1" onclick="confirmarEntrega('trazaCard1','trazaBtn1','trazaTlEntrega1')">
-                                        📲 Confirmar entrega recibida
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- Kit 2 entregado -->
-                            <div class="traza-card">
-                                <div class="traza-header" onclick="toggleTraza('trazaSteps2')">
-                                    <div class="traza-box" style="background:#EAFAF1;color:#27AE60;">🧥</div>
-                                    <div class="traza-info">
-                                        <div class="traza-name">Kit Ropa · Av. Mistral, 3</div>
-                                        <div class="traza-sub">3 personas · Entregado hace 22 min</div>
-                                    </div>
-                                    <span class="traza-status-badge" style="background:#EAFAF1;color:#1D6A3A;">✓ Entregado</span>
-                                </div>
-                                <div class="traza-steps" id="trazaSteps2">
-                                    <div class="traza-timeline">
-                                        <div class="traza-tl-item">
-                                            <div class="traza-tl-col">
-                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                                                <div class="traza-tl-line"></div>
-                                            </div>
-                                            <div class="traza-tl-text">
-                                                <div class="traza-tl-label">✓ Validada</div>
-                                                <div class="traza-tl-meta">Hace 40 min</div>
-                                            </div>
-                                        </div>
-                                        <div class="traza-tl-item">
-                                            <div class="traza-tl-col">
-                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                                                <div class="traza-tl-line"></div>
-                                            </div>
-                                            <div class="traza-tl-text">
-                                                <div class="traza-tl-label">✓ Kit preparado y enviado</div>
-                                                <div class="traza-tl-meta">Hace 35 min · 11 artículos</div>
-                                            </div>
-                                        </div>
-                                        <div class="traza-tl-item">
-                                            <div class="traza-tl-col">
-                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                                            </div>
-                                            <div class="traza-tl-text">
-                                                <div class="traza-tl-label" style="color:#1D9E75;">✓ Entrega confirmada</div>
-                                                <div class="traza-tl-meta">Hace 22 min · Carmen R. · Firma registrada</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Kit 3 -->
-                            <div class="traza-card" id="trazaCard3">
-                                <div class="traza-header" onclick="toggleTraza('trazaSteps3')">
-                                    <div class="traza-box" style="background:#FEF5EC;color:#E67E22;">💊</div>
-                                    <div class="traza-info">
-                                        <div class="traza-name">Kit Sanitario · C/ Dénia, 8</div>
-                                        <div class="traza-sub">12 personas · Preparando</div>
-                                    </div>
-                                    <span class="traza-status-badge" id="trazaStatus3" style="background:#EEF2FF;color:#5C6BC0;">Preparando</span>
-                                </div>
-                                <div class="traza-steps" id="trazaSteps3">
-                                    <div class="traza-timeline">
-                                        <div class="traza-tl-item">
-                                            <div class="traza-tl-col">
-                                                <div class="traza-tl-dot" style="background:#1D9E75;color:#1D9E75;"></div>
-                                                <div class="traza-tl-line"></div>
-                                            </div>
-                                            <div class="traza-tl-text">
-                                                <div class="traza-tl-label">✓ Validada — alta prioridad</div>
-                                                <div class="traza-tl-meta">Hace 8 min · Miguel R.</div>
-                                            </div>
-                                        </div>
-                                        <div class="traza-tl-item" id="trazaTlEntrega3" style="opacity:0.4;">
-                                            <div class="traza-tl-col">
-                                                <div class="traza-tl-dot" style="background:#ccc;color:#ccc;"></div>
-                                            </div>
-                                            <div class="traza-tl-text">
-                                                <div class="traza-tl-label" style="color:var(--muted);">En preparación</div>
-                                                <div class="traza-tl-meta">Asignando voluntario</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="traza-confirm-btn" id="trazaBtn3" onclick="confirmarEntrega('trazaCard3','trazaBtn3','trazaTlEntrega3')">
-                                        📲 Marcar como entregado
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+						<div class="traza-shell reveal">
+
+						  <!-- Cabecera con contador -->
+						
+						<div class="traza-header">
+						  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+							<div class="dot-pulse" style="width:8px;height:8px;"></div>
+							<span class="traza-header-label">Entregas activas</span>
+							<span id="trazaCount" class="traza-count-badge">0</span>
+						  </div>
+						  <div class="traza-header-meta">Actualizado en tiempo real</div>
+						  <!-- Filtros de estado -->
+						  <div class="traza-filters" id="trazaFilters">
+							<button class="traza-filter-btn active" data-filter="all"    onclick="filtrarTraza(this)">Todos</button>
+							<button class="traza-filter-btn"        data-filter="0"      onclick="filtrarTraza(this)">📦 Preparado</button>
+							<button class="traza-filter-btn"        data-filter="1"      onclick="filtrarTraza(this)">🚚 En camino</button>
+							<button class="traza-filter-btn"        data-filter="2"      onclick="filtrarTraza(this)">✅ Recibido</button>
+							<button class="traza-filter-btn"        data-filter="cancel" onclick="filtrarTraza(this)">✕ Cancelado</button>
+						  </div>
+						</div>
+						
+						 <!-- Lista de instancias -->
+					  <div id="trazaList" style="display:flex;flex-direction:column;gap:0;">
+						<div id="trazaEmpty" style="padding:32px;text-align:center;color:var(--muted);font-size:13px;">
+						  Cuando un voluntario confirme un kit aparecerá aquí
+						</div>
+					  </div>
+
+					  </div>
+					</div>
 
                 </div>
                 <!-- /demo-content -->
@@ -2890,265 +2815,350 @@
         }
         
         // ── Crear kit ──
-        function crearKit() {
-          var btn = document.getElementById('kitBtn');
-          var total = document.getElementById('kitTotal').textContent;
-          var data = KIT_TYPES[currentKitType];
-          if (!data) return;
-          if (currentItems.length === 0) {
-            var addInput = document.getElementById('kitAddName');
-            if(addInput) addInput.focus();
-            return;
-          }
-        
-          // Get custom name if applicable
-          var customNameEl = document.getElementById('kitCustomName');
-          var displayLabel = (currentKitType === 'custom' && customNameEl && customNameEl.value.trim())
-            ? ('✏️ ' + customNameEl.value.trim())
-            : data.label;
+       // ── Registro de kits activos e instancias ──
+var activeKits   = {};   // tipos de kit creados por coordinador
+var kitInstances = {};   // instancias preparadas por voluntarios
+var kitCounters  = {};   // contador de instancias por tipo
 
-          // For custom kits, use the selected color
-          var activeColor = (currentKitType === 'custom' && typeof _customKitColor !== 'undefined') ? _customKitColor : data.color;
-          var activeColorName = (currentKitType === 'custom' && typeof _customKitColorName !== 'undefined') ? _customKitColorName : null;
-        
-          btn.textContent = '✓ Kit creado';
-          btn.style.background = activeColor;
-          btn.disabled = true;
+var PICKUP_POINTS = [
+  'Punto Colón — Calle Colón, 23 · Abierto 8:00–20:00',
+  'Polideportivo Russafa — Av. Pérez Galdós · Abierto 9:00–18:00',
+  'IES Benlliure — C/ Benlliure, 1 · Abierto 8:00–20:00',
+];
 
-          // Build created card
-          var listEl = document.getElementById('kitCreatedList');
-          if (listEl) {
-            var card = document.createElement('div');
-            card.className = 'kit-created-card';
+var TRAZA_PHASES = [
+  { icon:'📦', label:'Preparado' },
+  { icon:'🚚', label:'En camino' },
+  { icon:'✅', label:'Recibido'  },
+];
 
-            var elHtml = currentItems.slice(0,6).map(function(it){
-              return '<div class="kit-created-el"><span>' + it.icon + '</span><span>' + it.name + ' ×' + it.qty + '</span></div>';
-            }).join('');
-            if(currentItems.length > 6) {
-              elHtml += '<div class="kit-created-el" style="color:var(--teal);">+' + (currentItems.length-6) + ' más</div>';
-            }
+// ── Crear kit (coordinador) ──
+function crearKit() {
+  var btn  = document.getElementById('kitBtn');
+  var total = document.getElementById('kitTotal').textContent;
+  var data = KIT_TYPES[currentKitType];
+  if (!data) return;
+  if (currentItems.length === 0) {
+    var addInput = document.getElementById('kitAddName');
+    if (addInput) addInput.focus();
+    return;
+  }
 
-            var colorHintHtml = activeColorName
-              ? '<div style="font-size:11px;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + activeColor + ';flex-shrink:0;"></span>Identifícalo con el color <strong style="color:' + activeColor + ';">' + activeColorName + '</strong></div>'
-              : '';
+  var customNameEl = document.getElementById('kitCustomName');
+  var displayLabel = (currentKitType === 'custom' && customNameEl && customNameEl.value.trim())
+    ? ('✏️ ' + customNameEl.value.trim()) : data.label;
 
-            var kitId = 'kit_' + Date.now();
-			card.dataset.kitId = kitId;
-			card.dataset.kitType = currentKitType;
-			card.dataset.active = 'true';
+  btn.textContent = '✓ Kit creado';
+  btn.style.background = data.color;
+  btn.disabled = true;
 
-			card.innerHTML =
-			  '<div class="kit-created-header">' +
-				'<div class="kit-created-box" style="background:' + data.itemBg + ';color:' + data.color + ';">📦</div>' +
-				'<div style="flex:1;min-width:0;">' +
-				  '<div class="kit-created-name" style="color:' + data.color + ';">' + displayLabel + '</div>' +
-				  '<div style="font-size:11px;color:var(--muted);" class="kit-meta-line">' + total + ' elementos · Listo para distribuir</div>' +
-				'</div>' +
-				'<div class="kit-status-badge" style="font-size:10px;font-weight:600;color:' + data.color + ';background:' + data.itemBg + ';padding:3px 8px;border-radius:8px;">✓ Activo</div>' +
-			  '</div>' +
-			  '<div class="kit-created-elements">' + elHtml + '</div>' +
-			  '<div class="kit-action-bar">' +
-				  '<button class="kit-action-btn edit" onclick="editarKit(this)">✏️ Modificar</button>' +
-				  '<button class="kit-action-btn deact" onclick="toggleKitActivo(this)">⏸ Desactivar</button>' +
-				  '<button class="kit-action-btn del" onclick="borrarKit(this)">🗑 Borrar</button>' +
-				'</div>';
+  var listEl = document.getElementById('kitCreatedList');
+  if (listEl) {
+    var card = document.createElement('div');
+    card.className = 'kit-created-card';
 
-			listEl.insertBefore(card, listEl.firstChild);
+    var kitId = 'kit_' + Date.now();
+    card.dataset.kitId   = kitId;
+    card.dataset.kitType = currentKitType;
+    card.dataset.active  = 'true';
 
-			// Guardar en activeKits para la vista voluntario
-			activeKits[kitId] = {
-			  id: kitId, label: displayLabel, type: currentKitType,
-			  color: data.color, itemBg: data.itemBg, borderColor: data.borderColor,
-			  items: JSON.parse(JSON.stringify(currentItems)),
-			  active: true
-			};
-			renderVolKitList();
-          }
-        
-          setTimeout(function() {
-            btn.textContent = 'Crear otro';
-            btn.style.background = '';
-            btn.disabled = false;
-            btn.onclick = function() {
-              renderKitItems2(currentKitType);
-              btn.textContent = 'Crear kit';
-              btn.onclick = crearKit;
-            };
-          }, 1200);
-        }
-        
-		
-		// ── Kits activos (registro en memoria) ──
-		var activeKits = {};
+    var elHtml = currentItems.slice(0,6).map(function(it){
+      return '<div class="kit-created-el"><span>' + it.icon + '</span><span>' + it.name + ' ×' + it.qty + '</span></div>';
+    }).join('');
+    if (currentItems.length > 6)
+      elHtml += '<div class="kit-created-el" style="color:var(--teal);">+' + (currentItems.length-6) + ' más</div>';
 
-		// Puntos de recogida demo
-		var PICKUP_POINTS = [
-		  'Punto Colón — Calle Colón, 23 · Abierto 8:00–20:00',
-		  'Polideportivo Russafa — Av. Pérez Galdós · Abierto 9:00–18:00',
-		  'IES Benlliure — C/ Benlliure, 1 · Abierto 8:00–20:00',
-		];
+    card.innerHTML =
+      '<div class="kit-created-header">' +
+        '<div class="kit-created-box" style="background:' + data.itemBg + ';color:' + data.color + ';">📦</div>' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div class="kit-created-name" style="color:' + data.color + ';">' + displayLabel + '</div>' +
+          '<div class="kit-meta-line" style="font-size:11px;color:var(--muted);">' + total + ' elementos · Listo para distribuir</div>' +
+        '</div>' +
+        '<div class="kit-status-badge" style="font-size:10px;font-weight:600;color:' + data.color + ';background:' + data.itemBg + ';padding:3px 8px;border-radius:8px;">✓ Activo</div>' +
+      '</div>' +
+      '<div class="kit-created-elements">' + elHtml + '</div>' +
+      '<div class="kit-action-bar">' +
+        '<button class="kit-action-btn edit"  onclick="editarKit(this)">✏️ Modificar</button>' +
+        '<button class="kit-action-btn deact" onclick="toggleKitActivo(this)">⏸ Desactivar</button>' +
+        '<button class="kit-action-btn del"   onclick="borrarKit(this)">🗑 Borrar</button>' +
+      '</div>';
 
-		// ── Cambio de modo (Coordinador / Voluntario) ──
-		function switchKitMode(mode) {
-		  var isCoord = mode === 'coord';
-		  document.getElementById('kitViewCoord').style.display = isCoord ? 'block' : 'none';
-		  document.getElementById('kitViewVol').style.display   = isCoord ? 'none'  : 'block';
-		  document.getElementById('kitModeCoord').style.background = isCoord ? 'var(--teal)' : 'transparent';
-		  document.getElementById('kitModeCoord').style.color      = isCoord ? '#fff' : 'var(--muted)';
-		  document.getElementById('kitModeVol').style.background   = isCoord ? 'transparent' : 'var(--teal)';
-		  document.getElementById('kitModeVol').style.color        = isCoord ? 'var(--muted)' : '#fff';
-		  if (!isCoord) renderVolKitList();
-		}
+    listEl.insertBefore(card, listEl.firstChild);
 
-		// ── Editar kit (vuelve al builder con los datos del kit) ──
-		function editarKit(btn) {
-		  var card = btn.closest('.kit-created-card');
-		  var type = card.dataset.kitType;
-		  // Seleccionar la card del tipo correspondiente
-		  document.querySelectorAll('.kit-type-card').forEach(function(c) {
-			c.classList.toggle('selected', c.dataset.type === type);
-		  });
-		  selectKitType(document.querySelector('.kit-type-card[data-type="' + type + '"]'), type);
-		  // Scroll al builder
-		  document.getElementById('kitBuilderPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-		}
+    activeKits[kitId] = {
+      id: kitId, label: displayLabel, type: currentKitType,
+      color: data.color, itemBg: data.itemBg, borderColor: data.borderColor,
+      items: JSON.parse(JSON.stringify(currentItems)), active: true
+    };
+    kitCounters[kitId] = 0;
+    renderVolKitList();
+  }
 
-		// -- Borrar kit --
-		function borrarKit(btn) {
-		  var card = btn.closest('.kit-created-card');
-		  var id = card.dataset.kitId;
-		  if (!confirm('¿Eliminar este kit? Esta acción no se puede deshacer.')) return;
-		  delete activeKits[id];
-		  card.style.transition = 'opacity 0.25s, transform 0.25s';
-		  card.style.opacity = '0';
-		  card.style.transform = 'scale(0.96)';
-		  setTimeout(function() { card.remove(); renderVolKitList(); }, 260);
-		}
+  setTimeout(function() {
+    btn.textContent = 'Crear otro';
+    btn.style.background = '';
+    btn.disabled = false;
+    btn.onclick = function() {
+      renderKitItems2(currentKitType);
+      btn.textContent = 'Crear kit';
+      btn.onclick = crearKit;
+    };
+  }, 1200);
+}
 
-		// ── Activar / Desactivar kit ──
-		function toggleKitActivo(btn) {
-		  var card = btn.closest('.kit-created-card');
-		  var id = card.dataset.kitId;
-		  var isActive = card.dataset.active === 'true';
-		  var newActive = !isActive;
-		  card.dataset.active = newActive;
+// ── Acciones coordinador ──
+function editarKit(btn) {
+  var card = btn.closest('.kit-created-card');
+  var type = card.dataset.kitType;
+  document.querySelectorAll('.kit-type-card').forEach(function(c){
+    c.classList.toggle('selected', c.dataset.type === type);
+  });
+  selectKitType(document.querySelector('.kit-type-card[data-type="' + type + '"]'), type);
+  document.getElementById('kitBuilderPanel').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
 
-		  var badge = card.querySelector('.kit-status-badge');
-		  var meta  = card.querySelector('.kit-meta-line');
-		  if (newActive) {
-			badge.textContent = '✓ Activo';
-			badge.style.opacity = '1';
-			card.style.opacity = '1';
-			btn.textContent = '⏸ Desactivar';
-			btn.classList.replace('react', 'deact');
-			if (meta) meta.textContent = meta.textContent.replace('Inactivo', 'Listo para distribuir');
-		  } else {
-			badge.textContent = '⏸ Inactivo';
-			badge.style.opacity = '0.5';
-			card.style.opacity = '0.65';
-			btn.textContent = '▶ Reactivar';
-			btn.classList.replace('deact', 'react');
-			if (meta) meta.textContent = meta.textContent.replace('Listo para distribuir', 'Inactivo');
-		  }
-		  if (activeKits[id]) activeKits[id].active = newActive;
-		  renderVolKitList();
-		}
+function toggleKitActivo(btn) {
+  var card     = btn.closest('.kit-created-card');
+  var id       = card.dataset.kitId;
+  var isActive = card.dataset.active === 'true';
+  var newActive = !isActive;
+  card.dataset.active = newActive;
 
-		// ── Vista voluntario: lista de kits activos ──
-		function renderVolKitList() {
-		  var list = document.getElementById('volKitList');
-		  if (!list) return;
-		  var keys = Object.keys(activeKits);
-		  if (keys.length === 0) {
-			list.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:12px 0;">Todavía no hay kits creados. Ve a la vista Coordinador y crea uno.</div>';
-			return;
-		  }
-		  list.innerHTML = keys.map(function(id) {
-			var k = activeKits[id];
-			var inactive = !k.active;
-			return '<div class="vol-kit-row' + (inactive ? ' inactive' : '') + '" ' +
-			  (inactive ? '' : 'onclick="selectVolKit(\'' + id + '\')"') + '>' +
-			  '<div class="vol-kit-dot" style="background:' + k.color + ';"></div>' +
-			  '<span class="vol-kit-label">' + k.label + '</span>' +
-			  '<span class="vol-kit-badge' + (inactive ? ' off' : '') + '">' +
-				(inactive ? 'Inactivo' : 'Disponible') +
-			  '</span>' +
-			'</div>';
-		  }).join('');
-		}
+  var badge = card.querySelector('.kit-status-badge');
+  var meta  = card.querySelector('.kit-meta-line');
+  if (newActive) {
+    badge.textContent = '✓ Activo'; badge.style.opacity = '1';
+    card.style.opacity = '1';
+    btn.textContent = '⏸ Desactivar'; btn.classList.replace('react','deact');
+    if (meta) meta.textContent = meta.textContent.replace('Inactivo','Listo para distribuir');
+  } else {
+    badge.textContent = '⏸ Inactivo'; badge.style.opacity = '0.5';
+    card.style.opacity = '0.65';
+    btn.textContent = '▶ Reactivar'; btn.classList.replace('deact','react');
+    if (meta) meta.textContent = meta.textContent.replace('Listo para distribuir','Inactivo');
+  }
+  if (activeKits[id]) activeKits[id].active = newActive;
 
-		// ── Vista voluntario: seleccionar kit → instrucciones ──
-		function selectVolKit(id) {
-		  var kit = activeKits[id];
-		  if (!kit || !kit.active) return;
+  // Marcar instancias activas de este kit como canceladas
+  if (!newActive) {
+    Object.keys(kitInstances).forEach(function(iid) {
+      var inst = kitInstances[iid];
+      if (inst.kitId === id && inst.phase < 2) {
+        inst.cancelled = true;
+        renderTrazaRow(iid);
+      }
+    });
+  }
+  renderVolKitList();
+}
 
-		  document.getElementById('volStep1').style.display = 'none';
-		  var step2 = document.getElementById('volStep2');
-		  step2.style.display = 'flex';
+function borrarKit(btn) {
+  var card = btn.closest('.kit-created-card');
+  var id   = card.dataset.kitId;
+  if (!confirm('¿Eliminar este kit? Esta acción no se puede deshacer.')) return;
+  // Cancelar instancias en curso
+  Object.keys(kitInstances).forEach(function(iid) {
+    if (kitInstances[iid].kitId === id) {
+      kitInstances[iid].cancelled = true;
+      renderTrazaRow(iid);
+    }
+  });
+  delete activeKits[id];
+  card.style.transition = 'opacity 0.25s, transform 0.25s';
+  card.style.opacity = '0'; card.style.transform = 'scale(0.96)';
+  setTimeout(function(){ card.remove(); renderVolKitList(); }, 260);
+}
 
-		  // Instrucciones de montaje
-		  var instrEl = document.getElementById('volInstructions');
-		  instrEl.innerHTML =
-			'<div class="vol-instr-title">📋 Instrucciones de montaje — ' + kit.label + '</div>' +
-			'<div class="vol-instr-step"><div class="vol-instr-num">1</div>' +
-			  '<span>Consigue una caja de cartón resistente o una bolsa grande.</span></div>' +
-			'<div class="vol-instr-step"><div class="vol-instr-num">2</div>' +
-			  '<span>Introduce los elementos en este orden:<br>' +
-				kit.items.map(function(it){ return '<strong>' + it.icon + ' ' + it.name + '</strong> × ' + it.qty; }).join(', ') +
-			  '</span></div>' +
-			'<div class="vol-instr-step"><div class="vol-instr-num">3</div>' +
-			  '<span>Identifica la caja con el color asignado: ' +
-				'<span class="vol-color-swatch" style="background:' + kit.color + ';border:1px solid rgba(0,0,0,0.1);"></span>' +
-				'<strong>' + kit.label + '</strong>. Puedes usar cinta de embalar o cartulina de ese color.</span></div>' +
-			'<div class="vol-instr-step"><div class="vol-instr-num">4</div>' +
-			  '<span>Si puedes, imprime el QR y pégalo en la caja. Si no, guarda la pantalla.</span></div>' +
-			'<div class="vol-instr-step"><div class="vol-instr-num">5</div>' +
-			  '<span>Lleva la caja al punto de recogida indicado abajo.</span></div>';
+// ── Modo switcher ──
+function switchKitMode(mode) {
+  var isCoord = mode === 'coord';
+  document.getElementById('kitViewCoord').style.display = isCoord ? 'block' : 'none';
+  document.getElementById('kitViewVol').style.display   = isCoord ? 'none'  : 'block';
+  document.getElementById('kitModeCoord').style.background = isCoord ? 'var(--teal)' : 'transparent';
+  document.getElementById('kitModeCoord').style.color      = isCoord ? '#fff' : 'var(--muted)';
+  document.getElementById('kitModeVol').style.background   = isCoord ? 'transparent' : 'var(--teal)';
+  document.getElementById('kitModeVol').style.color        = isCoord ? 'var(--muted)' : '#fff';
+  if (!isCoord) renderVolKitList();
+}
 
-		  // Punto de recogida (demo: aleatorio de la lista)
-		  var pickup = PICKUP_POINTS[Math.floor(Math.random() * PICKUP_POINTS.length)];
-		  document.getElementById('volPickupPoint').textContent = pickup;
+// ── Vista voluntario ──
+function renderVolKitList() {
+  var list = document.getElementById('volKitList');
+  if (!list) return;
+  var keys = Object.keys(activeKits);
+  if (keys.length === 0) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:12px 0;">Todavía no hay kits creados. Ve a la vista Coordinador y crea uno.</div>';
+    return;
+  }
+  list.innerHTML = keys.map(function(id) {
+    var k = activeKits[id];
+    return '<div class="vol-kit-row' + (k.active ? '' : ' inactive') + '"' +
+      (k.active ? ' onclick="selectVolKit(\'' + id + '\')"' : '') + '>' +
+      '<div class="vol-kit-dot" style="background:' + k.color + ';"></div>' +
+      '<span class="vol-kit-label">' + k.label + '</span>' +
+      '<span class="vol-kit-badge' + (k.active ? '' : ' off') + '">' + (k.active ? 'Disponible' : 'Inactivo') + '</span>' +
+    '</div>';
+  }).join('');
+}
 
-		  // Reset QR
-		  document.getElementById('volQrBox').style.display = 'none';
-		  document.getElementById('volQrBtn').dataset.kitId = id;
-		}
+function selectVolKit(id) {
+  var kit = activeKits[id];
+  if (!kit || !kit.active) return;
+  document.getElementById('volStep1').style.display = 'none';
+  document.getElementById('volStep2').style.display = 'flex';
+  document.getElementById('volQrBox').style.display = 'none';
+  document.getElementById('volNombre').value = '';
+  document.getElementById('volQrBtn').dataset.kitId = id;
 
-		// ── Generar QR (usando api.qrserver.com, no requiere librería) ──
-		function generarQR() {
-		  var btn = document.getElementById('volQrBtn');
-		  var id = btn.dataset.kitId;
-		  var kit = activeKits[id];
-		  if (!kit) return;
+  // Instrucciones
+  var instrEl = document.getElementById('volInstructions');
+  instrEl.innerHTML =
+    '<div class="vol-instr-title">📋 Instrucciones de montaje — ' + kit.label + '</div>' +
+    '<div class="vol-instr-step"><div class="vol-instr-num">1</div><span>Consigue una caja de cartón resistente o una bolsa grande.</span></div>' +
+    '<div class="vol-instr-step"><div class="vol-instr-num">2</div><span>Introduce los elementos: ' +
+      kit.items.map(function(it){ return '<strong>' + it.icon + ' ' + it.name + '</strong> ×' + it.qty; }).join(', ') +
+    '</span></div>' +
+    '<div class="vol-instr-step"><div class="vol-instr-num">3</div><span>Identifica la caja con el color asignado: ' +
+      '<span class="vol-color-swatch" style="background:' + kit.color + ';border:1px solid rgba(0,0,0,0.1);"></span>' +
+      '<strong>' + kit.label + '</strong>. Usa cinta de embalar o cartulina de ese color.</span></div>' +
+    '<div class="vol-instr-step"><div class="vol-instr-num">4</div><span>Introduce tu nombre y pulsa <strong>Confirmar y generar QR</strong>. Pégalo en la caja.</span></div>' +
+    '<div class="vol-instr-step"><div class="vol-instr-num">5</div><span>Lleva la caja al punto de recogida indicado abajo.</span></div>';
 
-		  var payload = encodeURIComponent('KIT:' + kit.label + '|ID:' + id + '|ITEMS:' + kit.items.length);
-		  var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + payload;
+  document.getElementById('volPickupPoint').textContent =
+    PICKUP_POINTS[Math.floor(Math.random() * PICKUP_POINTS.length)];
+}
 
-		  var box = document.getElementById('volQrBox');
-		  var img = document.getElementById('volQrImg');
-		  img.innerHTML = '<img src="' + qrUrl + '" width="160" height="160" alt="QR del kit" style="border-radius:8px;">';
-		  box.style.display = 'block';
-		  btn.textContent = '✓ QR generado';
-		  btn.style.background = '#085041';
-		  setTimeout(function() {
-			btn.textContent = '📲 Generar QR del kit';
-			btn.style.background = 'var(--teal)';
-		  }, 3000);
-		}
+function generarQR() {
+  var kitId    = document.getElementById('volQrBtn').dataset.kitId;
+  var kit      = activeKits[kitId];
+  var nombre   = (document.getElementById('volNombre').value.trim()) || 'Voluntario';
+  if (!kit) return;
 
-		// ── Voluntario: volver al paso 1 ──
-		function volGoStep1() {
-		  document.getElementById('volStep1').style.display = 'block';
-		  document.getElementById('volStep2').style.display = 'none';
-		  document.getElementById('volQrBox').style.display = 'none';
-		}
-        // Init
-       document.addEventListener('DOMContentLoaded', function() {
-		  renderKitItems2('food');
-		  renderVolKitList();
-		  var addInput = document.getElementById('kitAddName');
-		  if(addInput) addInput.addEventListener('keydown', function(e){ if(e.key==='Enter') addKitItem(); });
-		});
+  // Generar instancia única
+  kitCounters[kitId] = (kitCounters[kitId] || 0) + 1;
+  var prefix = kit.type.toUpperCase().substring(0,4);
+  var instId = prefix + '-' + String(kitCounters[kitId]).padStart(3,'0');
+
+  var inst = {
+    id: instId, kitId: kitId, label: kit.label,
+    color: kit.color, voluntario: nombre,
+    phase: 0, cancelled: false,
+    pickup: document.getElementById('volPickupPoint').textContent,
+    ts: new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})
+  };
+  kitInstances[instId] = inst;
+
+  // Mostrar QR
+  var payload  = encodeURIComponent('KIT2HELP|ID:' + instId + '|TIPO:' + kit.label + '|VOL:' + nombre);
+  var qrUrl    = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + payload;
+  document.getElementById('volQrImg').innerHTML =
+    '<img src="' + qrUrl + '" width="160" height="160" alt="QR" style="border-radius:8px;">';
+  document.getElementById('volQrCode').textContent = instId;
+  document.getElementById('volQrBox').style.display = 'block';
+
+  var btn = document.getElementById('volQrBtn');
+  btn.textContent = '✓ QR generado — ' + instId;
+  btn.style.background = '#085041';
+  setTimeout(function(){
+    btn.textContent = '📲 Confirmar y generar QR';
+    btn.style.background = 'var(--teal)';
+  }, 3000);
+
+  // Registrar en trazabilidad
+  addTrazaRow(inst);
+}
+
+function volGoStep1() {
+  document.getElementById('volStep1').style.display = 'block';
+  document.getElementById('volStep2').style.display = 'none';
+  document.getElementById('volQrBox').style.display = 'none';
+}
+
+// ── Trazabilidad ──
+function addTrazaRow(inst) {
+  var empty = document.getElementById('trazaEmpty');
+  if (empty) empty.style.display = 'none';
+
+  var row = document.createElement('div');
+  row.className = 'traza-row';
+  row.id = 'traza_' + inst.id;
+  row.style.display = 'flex';   // garantiza display consistente para el filtro
+  document.getElementById('trazaList').appendChild(row);
+
+  renderTrazaRow(inst.id);
+  updateTrazaCount();
+
+  // Reaplicar filtro activo para que la nueva fila respete el estado actual
+  var activeFilter = document.querySelector('.traza-filter-btn.active');
+  if (activeFilter && activeFilter.dataset.filter !== 'all') {
+    filtrarTraza(activeFilter);
+  }
+}
+
+function renderTrazaRow(instId) {
+  var inst = kitInstances[instId];
+  var row  = document.getElementById('traza_' + instId);
+  if (!row || !inst) return;
+
+  if (inst.cancelled) {
+    row.innerHTML =
+      '<div class="traza-dot" style="background:#999;"></div>' +
+      '<div class="traza-info">' +
+        '<div class="traza-name" style="color:rgba(255,255,255,0.4);">' + inst.label + '</div>' +
+        '<div class="traza-vol">' + inst.id + ' · ' + inst.voluntario + '</div>' +
+      '</div>' +
+      '<span class="traza-cancelado">Cancelado</span>';
+    return;
+  }
+
+  var phasesHtml = TRAZA_PHASES.map(function(p, i) {
+    var cls = i < inst.phase ? 'done' : (i === inst.phase ? 'current' : '');
+    var isNext = i === inst.phase;
+    var title = p.label + (isNext ? ' — clic para avanzar' : '');
+    return (i > 0 ? '<div class="traza-arrow">›</div>' : '') +
+      '<div class="traza-phase ' + cls + (isNext ? ' next-btn' : '') + '" ' +
+        'title="' + title + '"' +
+        (isNext ? ' onclick="avanzarFase(\'' + instId + '\')"' : '') + '>' +
+        p.icon +
+      '</div>';
+  }).join('');
+
+  var rightHtml = inst.phase >= TRAZA_PHASES.length
+    ? '<span class="traza-entregado">✓ Entregado ' + inst.ts + '</span>'
+    : '<div class="traza-phases">' + phasesHtml + '</div>';
+
+  row.innerHTML =
+    '<div class="traza-dot" style="background:' + inst.color + ';"></div>' +
+    '<div class="traza-info">' +
+      '<div class="traza-name">' + inst.label + '</div>' +
+      '<div class="traza-vol">' + inst.voluntario + ' · ' + inst.pickup.split('·')[0].trim() + '</div>' +
+    '</div>' +
+    rightHtml +
+    '<div class="traza-id">' + inst.id + '</div>';
+}
+
+function avanzarFase(instId) {
+  var inst = kitInstances[instId];
+  if (!inst || inst.cancelled) return;
+  inst.phase = Math.min(inst.phase + 1, TRAZA_PHASES.length);
+  if (inst.phase >= TRAZA_PHASES.length)
+    inst.ts = new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+  renderTrazaRow(instId);
+}
+
+function updateTrazaCount() {
+  var el = document.getElementById('trazaCount');
+  if (el) el.textContent = Object.keys(kitInstances).length;
+}
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded', function() {
+  renderKitItems2('food');
+  renderVolKitList();
+  var addInput = document.getElementById('kitAddName');
+  if (addInput) addInput.addEventListener('keydown', function(e){ if(e.key==='Enter') addKitItem(); });
+});
         
         // Map filter/modal handled by Leaflet script below
         
@@ -3706,6 +3716,32 @@
         };
         
         // ── TAB 5 ──
+		
+		function filtrarTraza(btn) {
+		  document.querySelectorAll('.traza-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+		  btn.classList.add('active');
+		  var f = btn.dataset.filter;
+
+		  // Actualizar contador del badge con los visibles
+		  var visibles = 0;
+
+		  document.querySelectorAll('.traza-row').forEach(function(row) {
+			var id   = row.id.replace('traza_', '');
+			var inst = kitInstances[id];
+			if (!inst) { row.style.display = 'none'; return; }
+
+			var show = f === 'all'
+			  || (f === 'cancel' && inst.cancelled)
+			  || (!inst.cancelled && f === String(inst.phase));
+
+			row.style.display = show ? 'flex' : 'none';
+			if (show) visibles++;
+		  });
+
+		  // Mostrar/ocultar mensaje vacío
+		  var empty = document.getElementById('trazaEmpty');
+		  if (empty) empty.style.display = visibles === 0 ? 'block' : 'none';
+		}
         window.toggleTraza = function(id) {
           document.querySelectorAll('.traza-steps').forEach(function(s){
             if (s.id !== id) s.classList.remove('open');
