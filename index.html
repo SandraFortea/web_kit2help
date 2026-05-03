@@ -383,6 +383,17 @@
           }
           .chip.active { background:var(--teal); color:#fff; border-color:var(--teal); }
           .chip:hover:not(.active) { border-color:var(--teal); color:var(--teal); background:var(--green-50); }
+          /* Category-specific active colors */
+          .chip-emergency.active  { background:#E24B4A; border-color:#E24B4A; color:#fff; }
+          .chip-emergency:hover:not(.active) { border-color:#E24B4A; color:#E24B4A; background:#FCEBEB; }
+          .chip-volunteer.active  { background:#7B5EA7; border-color:#7B5EA7; color:#fff; }
+          .chip-volunteer:hover:not(.active) { border-color:#7B5EA7; color:#7B5EA7; background:#F5F0FB; }
+          .chip-checkpoint.active { background:#EF9F27; border-color:#EF9F27; color:#fff; }
+          .chip-checkpoint:hover:not(.active) { border-color:#EF9F27; color:#EF9F27; background:#FEF5EC; }
+          .chip-storage.active    { background:#1D9E75; border-color:#1D9E75; color:#fff; }
+          .chip-storage:hover:not(.active) { border-color:#1D9E75; color:#1D9E75; background:var(--green-50); }
+          .chip-shelter.active    { background:#3A7BD5; border-color:#3A7BD5; color:#fff; }
+          .chip-shelter:hover:not(.active) { border-color:#3A7BD5; color:#3A7BD5; background:#EEF4FC; }
           .priority-row { display:flex; gap:8px; }
           .prio-btn {
             flex:1; padding:10px; border-radius:12px; border:1px solid rgba(29,158,117,0.12);
@@ -516,6 +527,13 @@
           .kit-custom { color:#7B5EA7; }
           .kit-custom.selected { background:#F5F0FB; }
           .kit-custom .kit-type-badge { background:#7B5EA7; }
+          /* Color swatches for custom kit */
+          .kit-color-swatch {
+            width:24px; height:24px; border-radius:50%; cursor:pointer;
+            border:2px solid transparent; transition:all 0.15s; flex-shrink:0;
+          }
+          .kit-color-swatch:hover { transform:scale(1.15); }
+          .kit-color-swatch.active { border-color:#fff; box-shadow:0 0 0 2px currentColor, 0 2px 6px rgba(0,0,0,0.18); }
         
           /* Kit created list (replaces tray) */
           .kit-created-list { display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
@@ -581,26 +599,12 @@
           /* Mobile demo panel */
           @media(max-width:600px) {
             .demo-content { min-height:unset; }
-            .kit-type-grid { grid-template-columns:1fr 1fr; gap:8px; }
-            .kit-type-card { padding:10px 8px; gap:4px; }
-            .kit-type-icon { font-size:20px; }
-            .kit-type-name { font-size:12px; }
-            .kit-type-desc { display:none; }
-            .kit-builder-header { padding:12px 14px; flex-wrap:wrap; gap:4px; }
-            .kit-add-row { flex-wrap:wrap; }
-            .kit-add-input { width:100%; }
+            .kit-builder { height:auto; }
+            .kit-items { max-height:260px; overflow-y:auto; }
             .emergency-layout { grid-template-columns:1fr !important; }
             .emergency-map-col { min-height:180px !important; }
-            .demo-panel { padding:12px !important; }
-			.demo-panel.active {    display: flex;    flex-direction: column;    height: auto;  }
-			.kit-builder {height: auto;}
-			.kit-items { max-height: 260px; overflow-y: auto;  }
             .coord-panel { min-height:unset; }
             .coord-body { padding:0; }
-          }
-          @media(max-width:400px) {
-            .kit-type-grid { grid-template-columns:1fr 1fr; gap:6px; }
-            .demo-tab { padding:10px 8px; font-size:11px; }
           }
           /* ── LIVE MAP ── */
           #liveMap { background:#0E1A16; max-width:100%; padding:100px 24px; }
@@ -1330,24 +1334,73 @@
    MOBILE overrides  ≤ 600px
 ══════════════════════════════ */
 @media(max-width:600px) {
-  /* 1-column necesidad layout */
+  /* 1-column necesidad layout — map hidden on small screens */
   .nec-layout { grid-template-columns:1fr; }
-  .nec-map-box { min-height:180px; }
+  .nec-map-col { display:none; }          /* hide map col, form takes full width */
 
-  /* Triaje: actions always below info, no overflow */
+  /* Category chips: wrap tightly */
+  .type-chips { gap:6px; }
+  .chip { font-size:11px; padding:6px 9px; }
+
+  /* Priority buttons: stack if needed */
+  .priority-row { gap:6px; }
+  .prio-btn { font-size:11px; padding:8px 4px; }
+
+  /* Triaje: expand grid 1-col, action buttons full width */
   .val-expand-grid { grid-template-columns:1fr; }
   .val-btn { font-size:11px; padding:7px 8px; }
+  /* Assign-responsible row: stack vertically */
+  .val-expand .d-input { min-width:0; }
+  .val-expand [style*="display:flex;gap:6px"] { flex-direction:column !important; }
+  .val-expand [style*="display:flex;gap:6px"] button { white-space:normal !important; width:100%; }
 
   /* Muro filters: scrollable row */
   .muro-filters { flex-wrap:nowrap; overflow-x:auto; padding-bottom:6px; }
   .muro-feed { max-height:320px; }
+  /* Muro footer: stack tag+button */
+  .muro-footer { flex-direction:column; align-items:flex-start; gap:6px; }
+  .muro-claim-btn { align-self:flex-end; }
+
+  /* Kit type grid: 3 cols on narrow so custom fits same size */
+  .kit-type-grid { grid-template-columns:repeat(3,1fr) !important; gap:6px; }
+  .kit-type-card { padding:10px 6px; gap:3px; }
+  .kit-type-icon { font-size:18px; }
+  .kit-type-name { font-size:11px; }
+  .kit-type-desc { display:none; }
+  /* Color swatches wrap */
+  #kitColorPicker { gap:6px; }
+  .kit-color-swatch { width:20px; height:20px; }
+
+  /* Kit builder add-row: wrap emoji+input+btn */
+  .kit-add-row { flex-wrap:wrap; gap:6px; }
+  .kit-add-input { width:100%; order:2; }
+  .kit-add-emoji { order:1; }
+  .kit-add-btn { order:3; }
+  .kit-builder-header { padding:12px 14px; flex-wrap:wrap; gap:4px; }
+
+  /* Coord panel */
+  .coord-step-pills { display:none; }
+  .coord-report-row { flex-direction:column; }
+  .coord-body { padding:12px; }
+
+  /* d-btn-next always visible */
+  .d-btn-next { margin-top:14px; }
+  .d-btn-next button { width:100%; text-align:center; padding:10px; }
 
   /* Demo panel padding */
-  .demo-panel { padding:12px; }
+  .demo-panel { padding:12px !important; }
 
-  /* Step label truncate */
-  .demo-step { font-size:10px; min-width:52px; }
+  /* Step strip: show numbers only */
+  .demo-step { font-size:10px; min-width:44px; padding:8px 2px; }
   .demo-step .ds-num { width:18px; height:18px; font-size:9px; }
+  .demo-step span { display:none; }   /* hide text labels, keep numbers */
+}
+
+@media(max-width:380px) {
+  .demo-step { min-width:38px; }
+  .chip { font-size:10px; padding:5px 7px; }
+  .val-btn { font-size:10px; padding:6px 5px; }
+  .muro-claim-btn { font-size:10px; padding:4px 9px; }
 }
 
   </style>
@@ -1528,10 +1581,14 @@
                   <div class="d-form-group">
                     <label>Categoría</label>
                     <div class="type-chips" id="necCatChips">
-                      <div class="chip active" onclick="selectChipIn(this,'necCatChips')">🍱 Alimentación</div>
-                      <div class="chip" onclick="selectChipIn(this,'necCatChips')">💊 Salud</div>
-                      <div class="chip" onclick="selectChipIn(this,'necCatChips')">🧥 Ropa</div>
-                      <div class="chip" onclick="selectChipIn(this,'necCatChips')">🏠 Refugio</div>
+                      <div class="chip chip-emergency active" onclick="selectCat(this,'necCatChips')">🚨 Emergencia</div>
+                      <div class="chip chip-volunteer" onclick="selectCat(this,'necCatChips')">🤝 Voluntarios</div>
+                      <div class="chip chip-checkpoint" onclick="selectCat(this,'necCatChips')">📍 Punto de encuentro</div>
+                      <div class="chip chip-storage" onclick="selectCat(this,'necCatChips')">📦 Recogida de kits</div>
+                      <div class="chip chip-shelter" onclick="selectCat(this,'necCatChips')">🏠 Refugio / Hospedaje</div>
+                    </div>
+                    <div id="emergencyNotice" style="display:flex;align-items:center;gap:7px;margin-top:8px;padding:8px 12px;background:#FCEBEB;border:1px solid rgba(226,75,74,0.3);border-radius:10px;font-size:12px;color:#922B21;font-weight:500;">
+                      <span>🚨</span> Emergencia: se asignará prioridad <strong>Alta</strong> automáticamente
                     </div>
                   </div>
                   <div class="d-form-group">
@@ -1610,20 +1667,20 @@
               <div class="d-panel-title">🔎 Panel de validación y triaje</div>
               <div class="d-panel-sub">Revisa, prioriza y valida cada solicitud antes de publicarla en el muro.</div>
               <div class="val-filters">
-                <button class="val-filter-btn active" onclick="filtrarVal('todas',this)">Todas (4)</button>
+                <button class="val-filter-btn active" onclick="filtrarVal('todas',this)">Todas (5)</button>
                 <button class="val-filter-btn" onclick="filtrarVal('pendiente',this)">Pendientes</button>
                 <button class="val-filter-btn" onclick="filtrarVal('validada',this)">Validadas</button>
               </div>
               <div class="val-list">
 
-                <!-- Card 1 -->
-                <div class="val-card" id="valCard1" data-estado="pendiente">
+                <!-- Card 1 — Emergencia (prioridad alta forzada) -->
+                <div class="val-card" id="valCard1" data-estado="pendiente" style="border-left:3px solid #E24B4A;">
                   <div class="val-header">
                     <div class="val-header-top">
-                      <div class="val-icon" style="background:#FDF0EF;">🍱</div>
+                      <div class="val-icon" style="background:#FDEDEC;">🚨</div>
                       <div class="val-info">
-                        <div class="val-title">Necesidad alimentaria · C/ Sueca, 22</div>
-                        <div class="val-meta">📍 Ruzafa · 6 personas <span class="d-badge d-badge-pend">Pendiente</span></div>
+                        <div class="val-title">Emergencia · C/ Sueca, 22</div>
+                        <div class="val-meta">📍 Ruzafa · 6 personas <span class="d-badge d-badge-urg">🔴 Alta — Emergencia</span></div>
                       </div>
                     </div>
                     <div class="val-actions">
@@ -1635,22 +1692,23 @@
                   <div class="val-expand" id="valExpand1">
                     <div class="val-expand-grid">
                       <div class="val-field">Descripción<span>Familia con 2 menores y anciano. Sin víveres 2 días.</span></div>
-                      <div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
+                      <div class="val-field">Prioridad<span style="color:#E24B4A;font-weight:700;">🔴 Alta (automática)</span></div>
                       <div class="val-field">Solicitante<span>Ciudadano</span></div>
                       <div class="val-field">Recibida<span>Hace 2 min</span></div>
                     </div>
+                    <div style="margin:8px 0 4px;padding:8px 10px;background:#FDEDEC;border-radius:8px;font-size:11px;color:#922B21;">⚠️ Emergencia declarada — prioridad Alta asignada automáticamente al sistema</div>
                     <div class="val-done-msg" id="valDone1"></div>
                   </div>
                 </div>
 
-                <!-- Card 2 -->
-                <div class="val-card" id="valCard2" data-estado="pendiente">
+                <!-- Card 2 — Voluntarios (prioridad libre) -->
+                <div class="val-card" id="valCard2" data-estado="pendiente" style="border-left:3px solid #7B5EA7;">
                   <div class="val-header">
                     <div class="val-header-top">
-                      <div class="val-icon" style="background:#FDEDEC;">🚨</div>
+                      <div class="val-icon" style="background:#F5F0FB;">🤝</div>
                       <div class="val-info">
-                        <div class="val-title">Evacuación urgente · C/ Dénia, 8</div>
-                        <div class="val-meta">📍 Ruzafa · 12 personas <span class="d-badge d-badge-urg">Alta prioridad</span></div>
+                        <div class="val-title">Voluntarios · Campus Blasco Ibáñez</div>
+                        <div class="val-meta">📍 Benimaclet · 20 disponibles <span class="d-badge d-badge-info">Voluntarios</span></div>
                       </div>
                     </div>
                     <div class="val-actions">
@@ -1661,39 +1719,64 @@
                   </div>
                   <div class="val-expand" id="valExpand2">
                     <div class="val-expand-grid">
-                      <div class="val-field">Descripción<span>Planta baja inundada. Familia mayor sin movilidad.</span></div>
-                      <div class="val-field">Prioridad<span style="color:#E24B4A;">Alta</span></div>
-                      <div class="val-field">Solicitante<span>Bomberos voluntarios</span></div>
-                      <div class="val-field">Recibida<span>Hace 8 min</span></div>
+                      <div class="val-field">Descripción<span>Grupo de 20 voluntarios con vehículo. Buscan zona de asignación.</span></div>
+                      <div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
+                      <div class="val-field">Responsable de asignación<span id="respAsig2">— Sin asignar</span></div>
+                      <div class="val-field">Recibida<span>Hace 5 min</span></div>
+                    </div>
+                    <div style="margin:8px 0 4px;">
+                      <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar coordinador responsable</label>
+                      <div style="display:flex;gap:6px;">
+                        <input class="d-input" id="respInput2" placeholder="Nombre del coordinador..." style="font-size:12px;padding:7px 10px;">
+                        <button onclick="asignarResp('respInput2','respAsig2')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
+                      </div>
                     </div>
                     <div class="val-done-msg" id="valDone2"></div>
                   </div>
                 </div>
 
-                <!-- Card 3 — ya validada -->
-                <div class="val-card" id="valCard3" data-estado="validada">
+                <!-- Card 3 — Punto de encuentro -->
+                <div class="val-card" id="valCard3" data-estado="pendiente" style="border-left:3px solid #EF9F27;">
                   <div class="val-header">
                     <div class="val-header-top">
-                      <div class="val-icon" style="background:#EAFAF1;">💊</div>
+                      <div class="val-icon" style="background:#FEF5EC;">📍</div>
                       <div class="val-info">
-                        <div class="val-title">Medicación · Av. Mistral, 3</div>
-                        <div class="val-meta">📍 Eixample · 3 personas <span class="d-badge d-badge-ok">✓ Validada</span></div>
+                        <div class="val-title">Punto de encuentro · Plaza del Ayuntamiento</div>
+                        <div class="val-meta">📍 Centro · Apertura solicitada <span class="d-badge d-badge-pend">Pendiente</span></div>
                       </div>
                     </div>
-                    <div class="val-actions" style="border-top:none;padding-top:0;">
-                      <span style="font-size:12px;color:var(--teal);font-weight:500;">✓ Publicada en muro</span>
+                    <div class="val-actions">
+                      <button class="val-btn val-btn-ok"  onclick="validarNec(event,'valCard3','valAct3','valDone3',true)">✓ Validar</button>
+                      <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard3','valAct3','valDone3',false)">✕ Rechazar</button>
+                      <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand3');event.stopPropagation()">Detalles</button>
                     </div>
+                  </div>
+                  <div class="val-expand" id="valExpand3">
+                    <div class="val-expand-grid">
+                      <div class="val-field">Descripción<span>Espacio habilitado para reunir y redistribuir voluntarios. Capacidad 150 personas.</span></div>
+                      <div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
+                      <div class="val-field">Responsable de apertura<span id="respAsig3">— Sin asignar</span></div>
+                      <div class="val-field">Recibida<span>Hace 10 min</span></div>
+                    </div>
+                    <div style="margin:8px 0 4px;">
+                      <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar responsable del punto</label>
+                      <div style="display:flex;gap:6px;">
+                        <input class="d-input" id="respInput3" placeholder="Nombre del responsable..." style="font-size:12px;padding:7px 10px;">
+                        <button onclick="asignarResp('respInput3','respAsig3')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
+                      </div>
+                    </div>
+                    <div class="val-done-msg" id="valDone3"></div>
                   </div>
                 </div>
 
-                <!-- Card 4 -->
-                <div class="val-card" id="valCard4" data-estado="pendiente">
+                <!-- Card 4 — Recogida de kits -->
+                <div class="val-card" id="valCard4" data-estado="pendiente" style="border-left:3px solid #1D9E75;">
                   <div class="val-header">
                     <div class="val-header-top">
-                      <div class="val-icon" style="background:#F0F2F4;">🧥</div>
+                      <div class="val-icon" style="background:#E1F5EE;">📦</div>
                       <div class="val-info">
-                        <div class="val-title">Ropa de abrigo · C/ Cuba, 17</div>
-                        <div class="val-meta">📍 Russafa · 9 personas <span class="d-badge d-badge-pend">Pendiente</span></div>
+                        <div class="val-title">Recogida de kits · Polideportivo Russafa</div>
+                        <div class="val-meta">📍 Russafa · Almacén habilitado <span class="d-badge d-badge-pend">Pendiente</span></div>
                       </div>
                     </div>
                     <div class="val-actions">
@@ -1704,12 +1787,35 @@
                   </div>
                   <div class="val-expand" id="valExpand4">
                     <div class="val-expand-grid">
-                      <div class="val-field">Descripción<span>Personas mayores sin ropa de abrigo. Noche fría prevista.</span></div>
+                      <div class="val-field">Descripción<span>Espacio para recibir y almacenar kits de ayuda. Acceso por entrada lateral.</span></div>
                       <div class="val-field">Prioridad<span style="color:#1D9E75;">Baja</span></div>
-                      <div class="val-field">Solicitante<span>Cruz Roja</span></div>
+                      <div class="val-field">Responsable del almacén<span id="respAsig4">— Sin asignar</span></div>
                       <div class="val-field">Recibida<span>Hace 15 min</span></div>
                     </div>
+                    <div style="margin:8px 0 4px;">
+                      <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar responsable del almacén</label>
+                      <div style="display:flex;gap:6px;">
+                        <input class="d-input" id="respInput4" placeholder="Nombre del responsable..." style="font-size:12px;padding:7px 10px;">
+                        <button onclick="asignarResp('respInput4','respAsig4')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
+                      </div>
+                    </div>
                     <div class="val-done-msg" id="valDone4"></div>
+                  </div>
+                </div>
+
+                <!-- Card 5 — Refugio/Hospedaje (ya validada) -->
+                <div class="val-card" id="valCard5" data-estado="validada" style="border-left:3px solid #3A7BD5;">
+                  <div class="val-header">
+                    <div class="val-header-top">
+                      <div class="val-icon" style="background:#EEF4FC;">🏠</div>
+                      <div class="val-info">
+                        <div class="val-title">Refugio / Hospedaje · C/ Colón, 40</div>
+                        <div class="val-meta">📍 Eixample · Capacidad 30 personas <span class="d-badge d-badge-ok">✓ Validada</span></div>
+                      </div>
+                    </div>
+                    <div class="val-actions" style="border-top:none;padding-top:0;">
+                      <span style="font-size:12px;color:var(--teal);font-weight:500;">✓ Publicado en muro · Resp.: Ana G.</span>
+                    </div>
                   </div>
                 </div>
 
@@ -1743,64 +1849,76 @@
                 <div class="muro-item" data-tipo="urgente">
                   <div class="muro-dot" style="background:#E24B4A;"></div>
                   <div class="muro-content">
-                    <div class="muro-title">🚨 Evacuación urgente · C/ Dénia, 8</div>
-                    <div class="muro-body">12 personas con movilidad reducida. Planta baja inundada. Acceso por C/ Cuba.</div>
+                    <div class="muro-title">🚨 Emergencia · C/ Sueca, 22</div>
+                    <div class="muro-body">6 personas, familia con menores y anciano. Prioridad Alta automática. Acceso sin restricción.</div>
                     <div class="muro-footer">
-                      <span class="muro-time">Hace 8 min · Validado</span>
-                      <span class="muro-tag" style="background:#FDEDEC;color:#922B21;">Urgente</span>
+                      <span class="muro-time">Hace 2 min · Validado</span>
+                      <span class="muro-tag" style="background:#FDEDEC;color:#922B21;">🚨 Emergencia</span>
                       <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="muro-item" data-tipo="recurso">
-                  <div class="muro-dot" style="background:#1D9E75;"></div>
-                  <div class="muro-content">
-                    <div class="muro-title">📦 Kit alimentario · Punto Colón</div>
-                    <div class="muro-body">25 kits básicos disponibles: agua ×6, conservas ×4, barras energéticas ×8.</div>
-                    <div class="muro-footer">
-                      <span class="muro-time">Hace 12 min</span>
-                      <span class="muro-tag" style="background:#EAFAF1;color:#1D6A3A;">Recurso</span>
-                      <button class="muro-claim-btn" onclick="claimMuro(this)">Reservar</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="muro-item" data-tipo="info">
-                  <div class="muro-dot" style="background:#EF9F27;"></div>
-                  <div class="muro-content">
-                    <div class="muro-title">ℹ️ Acceso cortado · Av. del Cid norte</div>
-                    <div class="muro-body">Agua acumulada. Usar Ronda Interior hacia el sur.</div>
-                    <div class="muro-footer">
-                      <span class="muro-time">Hace 20 min</span>
-                      <span class="muro-tag" style="background:#FEF5EC;color:#9A5C00;">Aviso</span>
                     </div>
                   </div>
                 </div>
                 <div class="muro-item" data-tipo="voluntario">
                   <div class="muro-dot" style="background:#7B5EA7;"></div>
                   <div class="muro-content">
-                    <div class="muro-title">🤝 Checkpoint · Plaza Ayuntamiento</div>
-                    <div class="muro-body">15 voluntarios disponibles con vehículo 4×4. Necesitan coordinador de zona.</div>
+                    <div class="muro-title">🤝 Voluntarios disponibles · Campus Blasco Ibáñez</div>
+                    <div class="muro-body">20 voluntarios con vehículo 4×4. Buscan coordinador de zona. Resp.: Miguel R.</div>
                     <div class="muro-footer">
-                      <span class="muro-time">Hace 5 min</span>
+                      <span class="muro-time">Hace 5 min · Validado</span>
                       <span class="muro-tag" style="background:#F5F0FB;color:#6C3483;">Voluntarios</span>
                       <button class="muro-claim-btn" onclick="claimMuro(this)">Coordinar</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="muro-item" data-tipo="info">
+                  <div class="muro-dot" style="background:#EF9F27;"></div>
+                  <div class="muro-content">
+                    <div class="muro-title">📍 Punto de encuentro · Plaza del Ayuntamiento</div>
+                    <div class="muro-body">Abierto para coordinar voluntarios. Capacidad 150 personas. Resp.: Elena M.</div>
+                    <div class="muro-footer">
+                      <span class="muro-time">Hace 10 min · Validado</span>
+                      <span class="muro-tag" style="background:#FEF5EC;color:#9A5C00;">Punto de encuentro</span>
+                      <button class="muro-claim-btn" onclick="claimMuro(this)">Registrarse</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="muro-item" data-tipo="recurso">
+                  <div class="muro-dot" style="background:#1D9E75;"></div>
+                  <div class="muro-content">
+                    <div class="muro-title">📦 Recogida de kits · Polideportivo Russafa</div>
+                    <div class="muro-body">Almacén habilitado. Acepta kits alimenticios, sanitarios y de ropa. Abierto 8:00–20:00.</div>
+                    <div class="muro-footer">
+                      <span class="muro-time">Hace 15 min · Validado</span>
+                      <span class="muro-tag" style="background:#EAFAF1;color:#1D6A3A;">Recogida kits</span>
+                      <button class="muro-claim-btn" onclick="claimMuro(this)">Llevar kits</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="muro-item" data-tipo="info">
+                  <div class="muro-dot" style="background:#3A7BD5;"></div>
+                  <div class="muro-content">
+                    <div class="muro-title">🏠 Refugio disponible · C/ Colón, 40</div>
+                    <div class="muro-body">30 plazas de hospedaje. Familias y personas mayores con prioridad. Resp.: Ana G.</div>
+                    <div class="muro-footer">
+                      <span class="muro-time">Hace 20 min · Validado</span>
+                      <span class="muro-tag" style="background:#EEF4FC;color:#2A5CA8;">Refugio</span>
+                      <button class="muro-claim-btn" onclick="claimMuro(this)">Derivar persona</button>
                     </div>
                   </div>
                 </div>
                 <div class="muro-item" data-tipo="urgente" id="muroNecDinamica" style="display:none;">
                   <div class="muro-dot" style="background:#E24B4A;"></div>
                   <div class="muro-content">
-                    <div class="muro-title">🍱 Necesidad alimentaria · C/ Sueca, 22</div>
-                    <div class="muro-body">Familia 2 menores + anciano. Sin víveres 2 días. 6 personas. Prioridad media.</div>
+                    <div class="muro-title">🚨 Emergencia · C/ Sueca, 22</div>
+                    <div class="muro-body">Familia 2 menores + anciano. Sin víveres 2 días. 6 personas. Prioridad Alta.</div>
                     <div class="muro-footer">
                       <span class="muro-time">Recién validada</span>
-                      <span class="muro-tag" style="background:#FDEDEC;color:#922B21;">Nueva</span>
+                      <span class="muro-tag" style="background:#FDEDEC;color:#922B21;">🚨 Nueva</span>
                       <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="d-btn-next"><button onclick="switchDemo('kits')">Configurar kits →</button></div>
             </div>
 
             <!-- ══ TAB 4: KITS ══ -->
@@ -1827,7 +1945,7 @@
                       <div class="kit-type-badge">✓</div><div class="kit-type-icon">🔧</div>
                       <div class="kit-type-name">Herramientas</div><div class="kit-type-desc">Equipamiento</div>
                     </div>
-                    <div class="kit-type-card kit-custom" onclick="selectKitType(this,'custom')" data-type="custom" style="grid-column:span 2;">
+                    <div class="kit-type-card kit-custom" onclick="selectKitType(this,'custom')" data-type="custom">
                       <div class="kit-type-badge">✓</div><div class="kit-type-icon">✏️</div>
                       <div class="kit-type-name">Personalizado</div><div class="kit-type-desc">Crea tu propio kit</div>
                     </div>
@@ -1840,7 +1958,24 @@
                     <span style="font-size:11px;color:var(--muted);" id="kitBuilderSub">Edita cantidades o añade elementos</span>
                   </div>
                   <div class="kit-custom-name-wrap" id="kitCustomNameWrap" style="display:none;">
-                    <input class="kit-custom-name-input" id="kitCustomName" placeholder="Nombre del kit...">
+                    <input class="kit-custom-name-input" id="kitCustomName" placeholder="Nombre del kit personalizado...">
+                    <div style="margin-top:10px;">
+                      <div style="font-size:11px;font-weight:500;color:var(--muted);margin-bottom:7px;">Color identificativo del kit</div>
+                      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;" id="kitColorPicker">
+                        <div class="kit-color-swatch active" data-color="#7B5EA7" style="background:#7B5EA7;" onclick="selectKitColor(this)" title="Morado"></div>
+                        <div class="kit-color-swatch" data-color="#E24B4A" style="background:#E24B4A;" onclick="selectKitColor(this)" title="Rojo"></div>
+                        <div class="kit-color-swatch" data-color="#EF9F27" style="background:#EF9F27;" onclick="selectKitColor(this)" title="Naranja"></div>
+                        <div class="kit-color-swatch" data-color="#1D9E75" style="background:#1D9E75;" onclick="selectKitColor(this)" title="Verde"></div>
+                        <div class="kit-color-swatch" data-color="#3A7BD5" style="background:#3A7BD5;" onclick="selectKitColor(this)" title="Azul"></div>
+                        <div class="kit-color-swatch" data-color="#2C3E50" style="background:#2C3E50;" onclick="selectKitColor(this)" title="Grafito"></div>
+                        <div class="kit-color-swatch" data-color="#E91E8C" style="background:#E91E8C;" onclick="selectKitColor(this)" title="Rosa"></div>
+                        <div class="kit-color-swatch" data-color="#00796B" style="background:#00796B;" onclick="selectKitColor(this)" title="Teal oscuro"></div>
+                      </div>
+                      <div id="kitColorHint" style="margin-top:7px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;">
+                        <span id="kitColorHintDot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#7B5EA7;flex-shrink:0;"></span>
+                        <span id="kitColorHintText">Crea el kit e identifícalo con el color <strong>morado</strong></span>
+                      </div>
+                    </div>
                   </div>
                   <div class="kit-items" id="kitItemsList"></div>
                   <div class="kit-add-row">
@@ -1973,13 +2108,13 @@
                 <!-- Filter bar -->
                 <div id="mapFilterBar" style="display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;background:#243B2E;border-bottom:2px solid rgba(255,255,255,0.07);">
                     <div class="filter-btn active" data-layer="necesidades" onclick="toggleLayer(this)">
-                        <div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
+                        <div class="filter-dot" style="background:#E24B4A"></div>Emergencias</div>
                     <div class="filter-btn active" data-layer="kits" onclick="toggleLayer(this)">
-                        <div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
+                        <div class="filter-dot" style="background:#5DCAA5"></div>Recogida kits</div>
                     <div class="filter-btn active" data-layer="voluntarios" onclick="toggleLayer(this)">
-                        <div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
+                        <div class="filter-dot" style="background:#7B5EA7"></div>Voluntarios</div>
                     <div class="filter-btn active" data-layer="puntos" onclick="toggleLayer(this)">
-                        <div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
+                        <div class="filter-dot" style="background:#EF9F27"></div>Encuentro / Refugio</div>
                     <div style="margin-left:auto;">
                         <button onclick="abrirMapaCompleto()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);border-radius:10px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:background 0.18s;"
                         onmouseover="this.style.background='rgba(255,255,255,0.18)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">⛶ Ver mapa completo</button>
@@ -1994,33 +2129,33 @@
                     <div class="needs-panel" style="z-index:10;">
                         <div class="needs-title">Necesidades actuales</div>
                         <div class="need-row">
-                            <div class="need-label"><span class="need-name">Agua potable</span><span class="need-pct" style="color:#E24B4A">Alta</span></div>
+                            <div class="need-label"><span class="need-name">🚨 Emergencias</span><span class="need-pct" style="color:#E24B4A">Alta</span></div>
                             <div class="need-bar">
-                                <div class="need-fill pulse-red" style="width:92%;background:#E24B4A"></div>
+                                <div class="need-fill pulse-red" style="width:88%;background:#E24B4A"></div>
                             </div>
                         </div>
                         <div class="need-row">
-                            <div class="need-label"><span class="need-name">Alimentos</span><span class="need-pct" style="color:#EF9F27">45%</span></div>
+                            <div class="need-label"><span class="need-name">🤝 Voluntarios</span><span class="need-pct" style="color:#7B5EA7">62%</span></div>
                             <div class="need-bar">
-                                <div class="need-fill pulse-orange" style="width:45%;background:#EF9F27"></div>
+                                <div class="need-fill pulse-orange" style="width:62%;background:#7B5EA7"></div>
                             </div>
                         </div>
                         <div class="need-row">
-                            <div class="need-label"><span class="need-name">Mantas</span><span class="need-pct" style="color:#5DCAA5">80%</span></div>
+                            <div class="need-label"><span class="need-name">📍 Pto. encuentro</span><span class="need-pct" style="color:#EF9F27">Media</span></div>
                             <div class="need-bar">
-                                <div class="need-fill pulse-green" style="width:80%;background:#5DCAA5"></div>
+                                <div class="need-fill pulse-orange2" style="width:50%;background:#EF9F27"></div>
                             </div>
                         </div>
                         <div class="need-row">
-                            <div class="need-label"><span class="need-name">Medicamentos</span><span class="need-pct" style="color:#E24B4A">Baja</span></div>
+                            <div class="need-label"><span class="need-name">📦 Recogida kits</span><span class="need-pct" style="color:#1D9E75">75%</span></div>
                             <div class="need-bar">
-                                <div class="need-fill pulse-red2" style="width:20%;background:#E24B4A"></div>
+                                <div class="need-fill pulse-green" style="width:75%;background:#1D9E75"></div>
                             </div>
                         </div>
                         <div class="need-row">
-                            <div class="need-label"><span class="need-name">Refugio</span><span class="need-pct" style="color:#EF9F27">Media</span></div>
+                            <div class="need-label"><span class="need-name">🏠 Refugio</span><span class="need-pct" style="color:#3A7BD5">Media</span></div>
                             <div class="need-bar">
-                                <div class="need-fill pulse-orange2" style="width:58%;background:#EF9F27"></div>
+                                <div class="need-fill pulse-red2" style="width:40%;background:#3A7BD5"></div>
                             </div>
                         </div>
                     </div>
@@ -2051,13 +2186,13 @@
                 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                     <!-- filters duplicated for modal -->
                     <div class="filter-btn active" data-layer="necesidades" data-modal="1" onclick="toggleLayer(this)">
-                        <div class="filter-dot" style="background:#E24B4A"></div>Necesidades</div>
+                        <div class="filter-dot" style="background:#E24B4A"></div>Emergencias</div>
                     <div class="filter-btn active" data-layer="kits" data-modal="1" onclick="toggleLayer(this)">
-                        <div class="filter-dot" style="background:#5DCAA5"></div>Kits</div>
+                        <div class="filter-dot" style="background:#5DCAA5"></div>Recogida kits</div>
                     <div class="filter-btn active" data-layer="voluntarios" data-modal="1" onclick="toggleLayer(this)">
-                        <div class="filter-dot" style="background:#EF9F27"></div>Voluntarios</div>
+                        <div class="filter-dot" style="background:#7B5EA7"></div>Voluntarios</div>
                     <div class="filter-btn active" data-layer="puntos" data-modal="1" onclick="toggleLayer(this)">
-                        <div class="filter-dot" style="background:#B5D4F4"></div>Puntos</div>
+                        <div class="filter-dot" style="background:#EF9F27"></div>Encuentro / Refugio</div>
                     <button onclick="cerrarMapaCompleto()" style="background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.7);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;font-family:DM Sans,sans-serif;">✕</button>
                 </div>
             </div>
@@ -2066,9 +2201,10 @@
             <!-- legend -->
             <div style="padding:14px 20px;background:rgba(14,26,22,0.95);border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:20px;flex-wrap:wrap;align-items:center;">
                 <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#E24B4A;"></span>Emergencia</div>
-                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#1D9E75;"></span>Kit (K)</div>
-                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#EF9F27;"></span>Voluntario (V)</div>
-                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#B5D4F4;"></span>Punto recogida</div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#1D9E75;"></span>Recogida kits (K)</div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#7B5EA7;"></span>Voluntarios (V)</div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#EF9F27;"></span>Pto. encuentro (P)</div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.6);"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#3A7BD5;"></span>Refugio (R)</div>
                 <div style="margin-left:auto;font-size:11px;color:rgba(255,255,255,0.35);">© OpenStreetMap contributors</div>
             </div>
         </div>
@@ -2498,6 +2634,14 @@
           // Show custom name input only for 'custom'
           if(nameWrap) nameWrap.style.display = (type === 'custom') ? 'block' : 'none';
           if(nameInput && type === 'custom') nameInput.placeholder = 'Nombre del kit personalizado...';
+          // Apply custom color if switching to custom
+          if (type === 'custom' && typeof _customKitColor !== 'undefined') {
+            KIT_TYPES.custom.color = _customKitColor;
+            KIT_TYPES.custom.strip = _customKitColor;
+            KIT_TYPES.custom.itemBg = _customKitColor + '18';
+            KIT_TYPES.custom.borderColor = _customKitColor;
+            if(strip) strip.style.background = _customKitColor;
+          }
           renderKitItems2(type);
           var btn = document.getElementById('kitBtn');
           if(btn){ btn.textContent = 'Crear kit'; btn.style.background = ''; btn.disabled = false; }
@@ -2526,32 +2670,41 @@
           var displayLabel = (currentKitType === 'custom' && customNameEl && customNameEl.value.trim())
             ? ('✏️ ' + customNameEl.value.trim())
             : data.label;
+
+          // For custom kits, use the selected color
+          var activeColor = (currentKitType === 'custom' && typeof _customKitColor !== 'undefined') ? _customKitColor : data.color;
+          var activeColorName = (currentKitType === 'custom' && typeof _customKitColorName !== 'undefined') ? _customKitColorName : null;
         
           btn.textContent = '✓ Kit creado';
-          btn.style.background = data.color;
+          btn.style.background = activeColor;
           btn.disabled = true;
-        
+
           // Build created card
           var listEl = document.getElementById('kitCreatedList');
           if (listEl) {
             var card = document.createElement('div');
             card.className = 'kit-created-card';
-        
+
             var elHtml = currentItems.slice(0,6).map(function(it){
               return '<div class="kit-created-el"><span>' + it.icon + '</span><span>' + it.name + ' ×' + it.qty + '</span></div>';
             }).join('');
             if(currentItems.length > 6) {
               elHtml += '<div class="kit-created-el" style="color:var(--teal);">+' + (currentItems.length-6) + ' más</div>';
             }
-        
+
+            var colorHintHtml = activeColorName
+              ? '<div style="font-size:11px;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + activeColor + ';flex-shrink:0;"></span>Identifícalo con el color <strong style="color:' + activeColor + ';">' + activeColorName + '</strong></div>'
+              : '';
+
             card.innerHTML =
               '<div class="kit-created-header">' +
-                '<div class="kit-created-box" style="background:' + data.itemBg + ';color:' + data.color + ';">📦</div>' +
+                '<div class="kit-created-box" style="background:' + activeColor + '22;color:' + activeColor + ';">📦</div>' +
                 '<div style="flex:1;min-width:0;">' +
-                  '<div class="kit-created-name" style="color:' + data.color + ';">' + displayLabel + '</div>' +
+                  '<div class="kit-created-name" style="color:' + activeColor + ';">' + displayLabel + '</div>' +
                   '<div style="font-size:11px;color:var(--muted);">' + total + ' elementos · Listo para distribuir</div>' +
+                  colorHintHtml +
                 '</div>' +
-                '<div style="font-size:10px;font-weight:600;color:' + data.color + ';background:' + data.itemBg + ';padding:3px 8px;border-radius:8px;">✓ Activo</div>' +
+                '<div style="font-size:10px;font-weight:600;color:' + activeColor + ';background:' + activeColor + '18;padding:3px 8px;border-radius:8px;">✓ Activo</div>' +
               '</div>' +
               '<div class="kit-created-elements">' + elHtml + '</div>';
         
@@ -2774,6 +2927,30 @@ window.selectPrioIn = function(el, rowId, level) {
   el.classList.add('active-' + level);
 };
 
+// ── Categoría con lógica especial de Emergencia ──
+window.selectCat = function(el, groupId) {
+  var g = document.getElementById(groupId);
+  if (g) g.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  var isEmergency = el.classList.contains('chip-emergency');
+  var notice = document.getElementById('emergencyNotice');
+  var prioRow = document.getElementById('necPrioRow');
+  if (isEmergency) {
+    // Force Alta priority
+    if (notice) notice.style.display = 'flex';
+    if (prioRow) {
+      prioRow.querySelectorAll('.prio-btn').forEach(function(b){ b.className = 'prio-btn'; b.style.opacity='0.4'; b.style.pointerEvents='none'; });
+      var highBtn = prioRow.querySelector('.prio-btn:last-child');
+      if (highBtn) { highBtn.className = 'prio-btn active-high'; highBtn.style.opacity='1'; }
+    }
+  } else {
+    if (notice) notice.style.display = 'none';
+    if (prioRow) {
+      prioRow.querySelectorAll('.prio-btn').forEach(function(b){ b.style.opacity=''; b.style.pointerEvents=''; });
+    }
+  }
+};
+
 // ── TAB 1 ──
 window.enviarNecesidad = function() {
   var btn = document.getElementById('necBtn');
@@ -2784,17 +2961,30 @@ window.enviarNecesidad = function() {
     var ubic = document.getElementById('necUbic');
     var pers = document.getElementById('necPersonas');
     var catEl = document.querySelector('#necCatChips .chip.active');
+    var isEmergency = catEl && catEl.classList.contains('chip-emergency');
     var prioEl = document.querySelector('#necPrioRow .prio-btn[class*="active"]');
+    var prioText = isEmergency ? 'Alta 🚨' : (prioEl ? prioEl.textContent : '—');
+    // Category labels mapping
+    var catLabels = {
+      'chip-emergency':  '🚨 Emergencia',
+      'chip-volunteer':  '🤝 Voluntarios',
+      'chip-checkpoint': '📍 Punto de encuentro',
+      'chip-storage':    '📦 Recogida de kits',
+      'chip-shelter':    '🏠 Refugio / Hospedaje'
+    };
+    var catClass = catEl ? Array.from(catEl.classList).find(function(c){ return catLabels[c]; }) : null;
+    var catText = catClass ? catLabels[catClass] : (catEl ? catEl.textContent : '—');
     var summary = document.getElementById('necSummary');
     if (summary) {
       var rows = [
         ['Ubicación', ubic ? ubic.value : '—'],
-        ['Categoría', catEl ? catEl.textContent : '—'],
-        ['Prioridad',  prioEl ? prioEl.textContent : '—'],
+        ['Categoría', catText],
+        ['Prioridad',  prioText],
         ['Personas',  pers ? pers.value : '—'],
       ];
       summary.innerHTML = rows.map(function(r){
-        return '<div class="nec-summary-row"><span style="color:var(--muted);">' + r[0] + '</span><span style="font-weight:500;">' + r[1] + '</span></div>';
+        var valStyle = isEmergency && r[0]==='Prioridad' ? 'font-weight:600;color:#E24B4A;' : 'font-weight:500;';
+        return '<div class="nec-summary-row"><span style="color:var(--muted);">' + r[0] + '</span><span style="' + valStyle + '">' + r[1] + '</span></div>';
       }).join('');
     }
     var conf = document.getElementById('necConfirm');
@@ -2802,6 +2992,48 @@ window.enviarNecesidad = function() {
     btn.textContent = '✓ Enviada'; btn.style.background = ''; btn.disabled = false;
     window._necEnviada = true;
   }, 700);
+};
+
+// ── Asignar responsable en triaje ──
+window.asignarResp = function(inputId, displayId) {
+  var inp = document.getElementById(inputId);
+  var disp = document.getElementById(displayId);
+  if (!inp || !disp) return;
+  var name = inp.value.trim();
+  if (!name) { inp.focus(); return; }
+  disp.textContent = '✓ ' + name;
+  disp.style.color = 'var(--teal)';
+  disp.style.fontWeight = '600';
+  inp.value = '';
+  inp.closest('div').querySelector('button').textContent = 'Cambiar';
+};
+
+// ── Color picker para kit personalizado ──
+var _customKitColor = '#7B5EA7';
+var _customKitColorName = 'morado';
+var COLOR_NAMES = {
+  '#7B5EA7':'morado','#E24B4A':'rojo','#EF9F27':'naranja',
+  '#1D9E75':'verde','#3A7BD5':'azul','#2C3E50':'grafito',
+  '#E91E8C':'rosa','#00796B':'teal oscuro'
+};
+window.selectKitColor = function(el) {
+  document.querySelectorAll('#kitColorPicker .kit-color-swatch').forEach(function(s){ s.classList.remove('active'); });
+  el.classList.add('active');
+  _customKitColor = el.dataset.color;
+  _customKitColorName = COLOR_NAMES[_customKitColor] || _customKitColor;
+  // Update strip and hint
+  var strip = document.getElementById('kitColorStrip');
+  if (strip) strip.style.background = _customKitColor;
+  var dot = document.getElementById('kitColorHintDot');
+  var txt = document.getElementById('kitColorHintText');
+  if (dot) dot.style.background = _customKitColor;
+  if (txt) txt.innerHTML = 'Crea el kit e identifícalo con el color <strong>' + _customKitColorName + '</strong>';
+  // Update custom kit data color
+  KIT_TYPES.custom.color = _customKitColor;
+  KIT_TYPES.custom.strip = _customKitColor;
+  KIT_TYPES.custom.itemBg = _customKitColor + '18';
+  KIT_TYPES.custom.borderColor = _customKitColor;
+  if (currentKitType === 'custom') buildItemsDOM();
 };
 
 // ── TAB 2 ──
@@ -2898,6 +3130,11 @@ window.switchTab = function(name) {
 
 document.addEventListener('DOMContentLoaded', function(){
   if (typeof renderKitItems === 'function') renderKitItems('food');
+  // Initialize emergency category state (it's active by default)
+  var emergChip = document.querySelector('#necCatChips .chip-emergency');
+  if (emergChip && emergChip.classList.contains('active')) {
+    window.selectCat(emergChip, 'necCatChips');
+  }
 });
 </script>
 
@@ -2906,19 +3143,19 @@ document.addEventListener('DOMContentLoaded', function(){
         (function() {
         // ── MARKER DATA ──
         var MARKERS = [
-          { lat:39.4699, lng:-0.3763, type:'necesidades', icon:'!', color:'#E24B4A', popup:'<b>🚨 Emergencia</b><br>Placa de lAjuntament<br><span style="color:#E24B4A">Prioridad: Alta</span>' },
-          { lat:39.4617, lng:-0.3854, type:'necesidades', icon:'!', color:'#E24B4A', popup:'<b>🚨 Inundacion</b><br>Barrio de Ruzafa<br><span style="color:#E24B4A">Prioridad: Alta</span>' },
-          { lat:39.4780, lng:-0.3680, type:'necesidades', icon:'!', color:'#EF9F27', popup:'<b>⚠️ Necesidad</b><br>Benimaclet<br><span style="color:#EF9F27">Prioridad: Media</span>' },
-          { lat:39.4560, lng:-0.3900, type:'necesidades', icon:'!', color:'#E24B4A', popup:'<b>🚨 Inundacion</b><br>Barrio de Orriols<br><span style="color:#E24B4A">Prioridad: Alta</span>' },
-          { lat:39.4720, lng:-0.3820, type:'kits', icon:'K', color:'#1D9E75', popup:'<b>📦 Kit de emergencia</b><br>Calle Colon, 23<br>25 kits disponibles' },
-          { lat:39.4650, lng:-0.3700, type:'kits', icon:'K', color:'#1D9E75', popup:'<b>📦 Kit familiar</b><br>C/ Xativa, 10<br>10 kits disponibles' },
-          { lat:39.4800, lng:-0.3750, type:'kits', icon:'K', color:'#1D9E75', popup:'<b>📦 Kit basico</b><br>Avda. del Cid, 5<br>15 kits disponibles' },
-          { lat:39.4690, lng:-0.3780, type:'voluntarios', icon:'V', color:'#EF9F27', popup:'<b>🤝 Checkpoint</b><br>Placa del Ayuntamiento<br>12 voluntarios activos' },
-          { lat:39.4740, lng:-0.3640, type:'voluntarios', icon:'V', color:'#EF9F27', popup:'<b>🤝 Checkpoint</b><br>Campus Blasco Ibanez<br>8 voluntarios activos' },
-          { lat:39.4580, lng:-0.3820, type:'voluntarios', icon:'V', color:'#EF9F27', popup:'<b>🤝 Checkpoint</b><br>Mercado Central<br>5 voluntarios activos' },
-          { lat:39.4705, lng:-0.3800, type:'puntos', icon:'P', color:'#7BAFD4', popup:'<b>📍 Punto de recogida</b><br>Calle Colon<br>Abierto: 8:00-20:00' },
-          { lat:39.4630, lng:-0.3730, type:'puntos', icon:'P', color:'#7BAFD4', popup:'<b>📍 Punto de recogida</b><br>Polideportivo Russafa<br>Abierto: 9:00-18:00' },
-          { lat:39.4760, lng:-0.3860, type:'puntos', icon:'P', color:'#7BAFD4', popup:'<b>📍 Punto de recogida</b><br>IES Benlliure<br>Abierto: 8:00-20:00' }
+          { lat:39.4699, lng:-0.3763, type:'necesidades', icon:'🚨', color:'#E24B4A', popup:'<b>🚨 Emergencia</b><br>Placa de lAjuntament<br><span style="color:#E24B4A">Prioridad: Alta</span>' },
+          { lat:39.4617, lng:-0.3854, type:'necesidades', icon:'🚨', color:'#E24B4A', popup:'<b>🚨 Emergencia</b><br>Barrio de Ruzafa<br><span style="color:#E24B4A">Prioridad: Alta</span>' },
+          { lat:39.4780, lng:-0.3680, type:'necesidades', icon:'🚨', color:'#E24B4A', popup:'<b>🚨 Emergencia</b><br>Benimaclet<br><span style="color:#E24B4A">Prioridad: Alta</span>' },
+          { lat:39.4560, lng:-0.3900, type:'necesidades', icon:'🚨', color:'#E24B4A', popup:'<b>🚨 Emergencia</b><br>Barrio de Orriols<br><span style="color:#E24B4A">Prioridad: Alta</span>' },
+          { lat:39.4720, lng:-0.3820, type:'kits', icon:'K', color:'#1D9E75', popup:'<b>📦 Recogida de kits</b><br>Polideportivo Russafa<br>Abierto: 8:00-20:00' },
+          { lat:39.4650, lng:-0.3700, type:'kits', icon:'K', color:'#1D9E75', popup:'<b>📦 Recogida de kits</b><br>C/ Xativa, 10<br>Abierto: 9:00-18:00' },
+          { lat:39.4800, lng:-0.3750, type:'kits', icon:'K', color:'#1D9E75', popup:'<b>📦 Recogida de kits</b><br>Avda. del Cid, 5<br>Abierto: 8:00-20:00' },
+          { lat:39.4690, lng:-0.3780, type:'voluntarios', icon:'V', color:'#7B5EA7', popup:'<b>🤝 Voluntarios</b><br>Plaza del Ayuntamiento<br>20 voluntarios activos · Resp.: Miguel R.' },
+          { lat:39.4740, lng:-0.3640, type:'voluntarios', icon:'V', color:'#7B5EA7', popup:'<b>🤝 Voluntarios</b><br>Campus Blasco Ibáñez<br>12 voluntarios activos' },
+          { lat:39.4580, lng:-0.3820, type:'voluntarios', icon:'V', color:'#7B5EA7', popup:'<b>🤝 Voluntarios</b><br>Mercado Central<br>8 voluntarios activos' },
+          { lat:39.4705, lng:-0.3800, type:'puntos', icon:'P', color:'#EF9F27', popup:'<b>📍 Punto de encuentro</b><br>Plaza del Ayuntamiento<br>Resp.: Elena M. · Capacidad 150' },
+          { lat:39.4630, lng:-0.3730, type:'puntos', icon:'R', color:'#3A7BD5', popup:'<b>🏠 Refugio / Hospedaje</b><br>C/ Colón, 40<br>30 plazas · Resp.: Ana G.' },
+          { lat:39.4760, lng:-0.3860, type:'puntos', icon:'P', color:'#EF9F27', popup:'<b>📍 Punto de encuentro</b><br>IES Benlliure<br>Capacidad 80 personas' }
         ];
         
         function makeIcon(color, icon, size) {
