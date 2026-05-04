@@ -1556,6 +1556,93 @@
   .val-btn { font-size:10px; padding:6px 5px; }
   .muro-claim-btn { font-size:10px; padding:4px 9px; }
 }
+
+/* ══════════════════════════════
+   TAB 6 — Donaciones logísticas
+══════════════════════════════ */
+.don-card {
+  background:#fff; border-radius:16px;
+  border:1px solid var(--border); padding:18px;
+  display:flex; flex-direction:column; gap:12px;
+}
+.don-card-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; color:var(--text); }
+.don-card-sub   { font-size:12px; color:var(--muted); margin-top:-6px; }
+
+.don-form-group { display:flex; flex-direction:column; gap:5px; }
+.don-label { font-size:12px; font-weight:600; color:var(--muted); }
+.don-input {
+  border:1.5px solid var(--border); border-radius:10px;
+  padding:9px 12px; font-family:'DM Sans',sans-serif;
+  font-size:13px; color:var(--text); background:#fff;
+  outline:none; transition:border-color 0.18s; width:100%; box-sizing:border-box;
+}
+.don-input:focus { border-color:var(--teal); }
+
+.don-filters { display:flex; gap:6px; flex-wrap:wrap; }
+.don-filter-btn {
+  font-size:11px; font-weight:600; padding:5px 11px;
+  border-radius:20px; border:1.5px solid var(--border);
+  background:#fff; color:var(--muted); cursor:pointer;
+  font-family:'DM Sans',sans-serif; transition:all 0.18s;
+}
+.don-filter-btn:hover  { border-color:var(--teal); color:var(--teal); }
+.don-filter-btn.active { background:var(--teal); border-color:var(--teal); color:#fff; }
+
+.don-row {
+  background:var(--bg); border-radius:12px; border:1.5px solid var(--border);
+  padding:12px 14px; display:flex; flex-direction:column; gap:8px; transition:border-color 0.18s;
+}
+.don-row:hover { border-color:var(--teal); }
+.don-row-header { display:flex; align-items:center; gap:8px; }
+.don-row-icon {
+  width:32px; height:32px; border-radius:8px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+}
+.don-row-info  { flex:1; min-width:0; }
+.don-row-empresa { font-size:13px; font-weight:700; color:var(--text); }
+.don-row-desc    { font-size:11px; color:var(--muted); margin-top:1px; }
+.don-row-code    { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--muted); }
+
+.don-estado {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:10px; font-weight:700; padding:3px 9px; border-radius:20px; flex-shrink:0;
+}
+.don-estado.pendiente { background:#FFF8EC; color:#92660A; border:1px solid #FDDFA0; }
+.don-estado.asignada  { background:#EDF8F4; color:#0E6E4A; border:1px solid #B2DFCE; }
+.don-estado.transito  { background:#EEF4FF; color:#2C5FBF; border:1px solid #C3D4F8; }
+.don-estado.recibida  { background:var(--teal-light); color:var(--teal); border:1px solid #B2DFCE; }
+
+.don-row-phases { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.don-phase-step {
+  font-size:11px; font-weight:600; padding:4px 10px;
+  border-radius:20px; border:1.5px solid var(--border);
+  color:var(--muted); background:#fff; white-space:nowrap;
+}
+.don-phase-step.done    { background:var(--teal); border-color:var(--teal); color:#fff; }
+.don-phase-step.current { border-color:var(--teal); color:var(--teal); background:var(--teal-light); }
+.don-phase-arrow { color:var(--muted); font-size:10px; }
+
+.don-assign-row { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.don-assign-select {
+  flex:1; min-width:140px; border:1.5px solid var(--border);
+  border-radius:8px; padding:6px 10px; font-size:12px;
+  font-family:'DM Sans',sans-serif; color:var(--text);
+  background:#fff; outline:none; transition:border-color 0.18s;
+}
+.don-assign-select:focus { border-color:var(--teal); }
+.don-assign-btn {
+  padding:6px 14px; border:none; border-radius:8px;
+  background:var(--teal); color:#fff; font-size:12px;
+  font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif;
+  white-space:nowrap; transition:background 0.18s;
+}
+.don-assign-btn:hover { background:var(--green-600); }
+.don-avanzar-btn {
+  padding:5px 12px; border:1.5px solid var(--teal); border-radius:8px;
+  background:transparent; color:var(--teal); font-size:11px;
+  font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.18s;
+}
+.don-avanzar-btn:hover { background:var(--teal); color:#fff; }
     </style>
 </head>
 
@@ -1701,7 +1788,7 @@
         <div class="inner">
             <div class="label reveal">03 — Demo interactiva</div>
             <h2 class="section-title reveal reveal-delay-1">Pruébalo tú mismo</h2>
-            <p class="section-sub reveal reveal-delay-2">Cinco funcionalidades conectadas: desde la necesidad detectada hasta la entrega verificada.</p>
+            <p class="section-sub reveal reveal-delay-2">Una demo virtual que simula funcionalidades conectadas, mostrando el recorrido completo: desde la detección de una necesidad hasta la entrega verificada.</p>
 
             <div class="demo-shell reveal">
                 <div class="demo-topbar">
@@ -1723,6 +1810,8 @@
                         <div class="ds-num">4</div><span>Kits</span></div>
                     <div class="demo-step" onclick="switchDemo('traza')">
                         <div class="ds-num">5</div><span>Trazabilidad</span></div>
+                    <div class="demo-step" onclick="switchDemo('donacion')">
+                        <div class="ds-num">6</div><span>Donaciones</span></div>
                 </div>
 
                 <div class="demo-content" style="min-height:420px;">
@@ -2250,6 +2339,137 @@
 
 					  </div>
 					</div>
+
+                    <!-- ══ TAB 6: DONACIONES LOGÍSTICAS ══ -->
+                    <div class="demo-panel" id="tab-donacion">
+                      <div style="display:flex;flex-direction:column;gap:14px;">
+
+                        <!-- Selector de vista -->
+                        <div style="display:flex;gap:4px;background:rgba(0,0,0,0.06);border-radius:12px;padding:4px;">
+                          <button id="donModeReg" onclick="switchDonMode('registro')"
+                            style="flex:1;padding:8px 0;border:none;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;background:var(--teal);color:#fff;transition:all 0.2s;">
+                            📋 Registrar donación
+                          </button>
+                          <button id="donModePanel" onclick="switchDonMode('panel')"
+                            style="flex:1;padding:8px 0;border:none;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;background:transparent;color:var(--muted);transition:all 0.2s;">
+                            🗂️ Coordinador
+                          </button>
+                          <button id="donModeMias" onclick="switchDonMode('mias')"
+                            style="flex:1;padding:8px 0;border:none;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;background:transparent;color:var(--muted);transition:all 0.2s;">
+                            📦 Mis donaciones
+                          </button>
+                        </div>
+
+                        <!-- ══ VISTA REGISTRO ══ -->
+                        <div id="donViewRegistro">
+                          <div class="don-card">
+                            <div class="don-card-title">🚛 Nueva donación logística</div>
+                            <div class="don-card-sub">Registra el envío de materiales de tu empresa</div>
+
+                            <div class="don-form-group">
+                              <label class="don-label">Empresa donante</label>
+                              <input id="donEmpresa" class="don-input" placeholder="Ej: Logística Norte S.L.">
+                            </div>
+                            <div class="don-form-group">
+                              <label class="don-label">Categoría del material</label>
+                              <select id="donCategoria" class="don-input">
+                                <option value="">Selecciona categoría</option>
+                                <option value="alimentacion">🍱 Alimentación</option>
+                                <option value="higiene">🧴 Higiene y sanitario</option>
+                                <option value="ropa">🧥 Ropa y abrigo</option>
+                                <option value="herramientas">🔧 Herramientas</option>
+                                <option value="agua">💧 Agua</option>
+                                <option value="otro">📦 Otro</option>
+                              </select>
+                            </div>
+                            <div class="don-form-group">
+                              <label class="don-label">Descripción del material</label>
+                              <input id="donDesc" class="don-input" placeholder="Ej: Palés de agua embotellada 1.5L">
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                              <div class="don-form-group">
+                                <label class="don-label">Cantidad</label>
+                                <input id="donCantidad" class="don-input" type="number" min="1" placeholder="Ej: 20">
+                              </div>
+                              <div class="don-form-group">
+                                <label class="don-label">Unidad</label>
+                                <select id="donUnidad" class="don-input">
+                                  <option value="palés">Palés</option>
+                                  <option value="cajas">Cajas</option>
+                                  <option value="kg">Kg</option>
+                                  <option value="litros">Litros</option>
+                                  <option value="unidades">Unidades</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="don-form-group">
+                              <label class="don-label">Tipo de transporte</label>
+                              <select id="donTransporte" class="don-input">
+                                <option value="camion">🚛 Camión propio</option>
+                                <option value="furgoneta">🚐 Furgoneta propia</option>
+                                <option value="recogida">📍 Necesita recogida en almacén</option>
+                              </select>
+                            </div>
+                            <div class="don-form-group">
+                              <label class="don-label">Disponibilidad (fecha y franja)</label>
+                              <input id="donFecha" class="don-input" placeholder="Ej: Mañana, 9:00–14:00">
+                            </div>
+                            <div class="don-form-group">
+                              <label class="don-label">Ubicación de origen</label>
+                              <input id="donOrigen" class="don-input" placeholder="Ej: Polígono Industrial Norte, Valencia">
+                            </div>
+
+                            <button onclick="registrarDonacion()"
+                              style="width:100%;padding:12px;border:none;border-radius:12px;background:var(--teal);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.18s;">
+                              Registrar donación
+                            </button>
+
+                            <!-- Confirmación -->
+                            <div id="donConfirm" style="display:none;background:#F0FAF6;border:1px solid #B2DFCE;border-radius:12px;padding:14px 16px;">
+                              <div style="font-weight:700;font-size:13px;color:#0E6E4A;margin-bottom:6px;">✅ Donación registrada</div>
+                              <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">Código asignado:</div>
+                              <div id="donCodigo" style="font-family:monospace;font-size:20px;font-weight:700;color:var(--teal);letter-spacing:3px;margin-bottom:10px;"></div>
+                              <div id="donQrImg" style="margin-bottom:8px;"></div>
+                              <div style="font-size:11px;color:var(--muted);">El coordinador recibirá la solicitud y asignará un punto de recogida.</div>
+                            </div>
+                          </div>
+                        </div><!-- /donViewRegistro -->
+
+                        <!-- ══ VISTA PANEL COORDINADOR ══ -->
+                        <div id="donViewPanel" style="display:none;">
+                          <div class="don-card">
+                            <div class="don-card-title">🗂️ Panel de donaciones</div>
+                            <div class="don-card-sub">Valida, asigna punto de recogida y hace seguimiento</div>
+                            <div class="don-filters">
+                              <button class="don-filter-btn active" data-filter="all"       onclick="filtrarDon(this)">Todas</button>
+                              <button class="don-filter-btn"        data-filter="pendiente"  onclick="filtrarDon(this)">⏳ Pendiente</button>
+                              <button class="don-filter-btn"        data-filter="asignada"   onclick="filtrarDon(this)">📍 Asignada</button>
+                              <button class="don-filter-btn"        data-filter="transito"   onclick="filtrarDon(this)">🚛 En tránsito</button>
+                              <button class="don-filter-btn"        data-filter="recibida"   onclick="filtrarDon(this)">✅ Recibida</button>
+                            </div>
+                            <div id="donPanelList" style="display:flex;flex-direction:column;gap:8px;">
+                              <div id="donPanelEmpty" style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">
+                                No hay donaciones registradas aún
+                              </div>
+                            </div>
+                          </div>
+                        </div><!-- /donViewPanel -->
+
+                        <!-- ══ VISTA MIS DONACIONES ══ -->
+                        <div id="donViewMias" style="display:none;">
+                          <div class="don-card">
+                            <div class="don-card-title">📦 Mis donaciones</div>
+                            <div class="don-card-sub">Estado de los envíos registrados por tu empresa</div>
+                            <div id="donMiasList" style="display:flex;flex-direction:column;gap:8px;">
+                              <div id="donMiasEmpty" style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">
+                                Todavía no has registrado ninguna donación
+                              </div>
+                            </div>
+                          </div>
+                        </div><!-- /donViewMias -->
+
+                      </div>
+                    </div><!-- /tab-donacion -->
 
                 </div>
                 <!-- /demo-content -->
@@ -3162,6 +3382,234 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Map filter/modal handled by Leaflet script below
         
+        // ══ MÓDULO DONACIONES ══
+        var donaciones  = {};
+        var donCounter  = 0;
+
+        var DON_CATEGORIAS = {
+          alimentacion: { icon:'🍱', color:'#C0392B', bg:'#FDF0EF' },
+          higiene:      { icon:'🧴', color:'#E67E22', bg:'#FEF5EC' },
+          ropa:         { icon:'🧥', color:'#27AE60', bg:'#EAFAF1' },
+          herramientas: { icon:'🔧', color:'#2C3E50', bg:'#F0F2F4' },
+          agua:         { icon:'💧', color:'#2980B9', bg:'#EBF5FB' },
+          otro:         { icon:'📦', color:'#7B5EA7', bg:'#F5F0FB' },
+        };
+
+        var DON_FASES   = ['⏳ Pendiente','📍 Asignada','🚛 En tránsito','✅ Recibida'];
+        var DON_ESTADOS = ['pendiente','asignada','transito','recibida'];
+
+        var DON_PUNTOS = [
+          'Punto Colón — Calle Colón, 23',
+          'Polideportivo Russafa — Av. Pérez Galdós',
+          'IES Benlliure — C/ Benlliure, 1',
+          'Almacén Municipal — Av. del Cid, 78',
+          'Mercado Central — Plaza Ciudad de Brujas',
+        ];
+
+        // ── Cambio de vista donaciones ──
+        function switchDonMode(mode) {
+          var views = { registro:'donViewRegistro', panel:'donViewPanel', mias:'donViewMias' };
+          var btns  = { registro:'donModeReg', panel:'donModePanel', mias:'donModeMias' };
+          Object.keys(views).forEach(function(k) {
+            document.getElementById(views[k]).style.display = k === mode ? 'block' : 'none';
+            var btn = document.getElementById(btns[k]);
+            if (!btn) return;
+            btn.style.background = k === mode ? 'var(--teal)' : 'transparent';
+            btn.style.color      = k === mode ? '#fff' : 'var(--muted)';
+          });
+          if (mode === 'panel') renderDonPanel();
+          if (mode === 'mias')  renderDonMias();
+        }
+
+        // ── Registrar donación ──
+        function registrarDonacion() {
+          var empresa   = document.getElementById('donEmpresa').value.trim();
+          var categoria = document.getElementById('donCategoria').value;
+          var desc      = document.getElementById('donDesc').value.trim();
+          var cantidad  = document.getElementById('donCantidad').value.trim();
+          var unidad    = document.getElementById('donUnidad').value;
+          var transporte= document.getElementById('donTransporte').value;
+          var fecha     = document.getElementById('donFecha').value.trim();
+          var origen    = document.getElementById('donOrigen').value.trim();
+
+          if (!empresa || !categoria || !desc || !cantidad) {
+            alert('Por favor rellena empresa, categoría, descripción y cantidad.');
+            return;
+          }
+
+          donCounter++;
+          var cat    = DON_CATEGORIAS[categoria] || DON_CATEGORIAS.otro;
+          var prefix = categoria.toUpperCase().substring(0,3);
+          var codigo = 'DON-' + prefix + '-' + String(donCounter).padStart(3,'0');
+          var ts     = new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+
+          donaciones[codigo] = {
+            codigo: codigo, empresa: empresa, categoria: categoria,
+            desc: desc, cantidad: cantidad, unidad: unidad,
+            transporte: transporte, fecha: fecha, origen: origen,
+            cat: cat, fase: 0, puntoAsignado: null, ts: ts, cantidadReal: null
+          };
+
+          // QR
+          var payload = encodeURIComponent('KIT2HELP|DON:' + codigo + '|EMP:' + empresa);
+          var qrUrl   = 'https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=' + payload;
+          document.getElementById('donCodigo').textContent = codigo;
+          document.getElementById('donQrImg').innerHTML =
+            '<img src="' + qrUrl + '" width="120" height="120" style="border-radius:8px;" alt="QR donación">';
+          document.getElementById('donConfirm').style.display = 'block';
+
+          // Limpiar formulario
+          ['donEmpresa','donDesc','donCantidad','donFecha','donOrigen'].forEach(function(id){
+            document.getElementById(id).value = '';
+          });
+          document.getElementById('donCategoria').value = '';
+        }
+
+        // ── Render panel coordinador ──
+        function renderDonPanel() {
+		  var list  = document.getElementById('donPanelList');
+		  var empty = document.getElementById('donPanelEmpty');
+		  if (!list) return;
+		  var keys = Object.keys(donaciones);
+		  if (!keys.length) { list.innerHTML = ''; empty.style.display = 'block'; list.appendChild(empty); return; }
+		  empty.style.display = 'none';
+		  list.innerHTML = keys.map(function(cod){ return renderDonRowHTML(cod, 'coord'); }).join('');
+		}
+
+		function renderDonMias() {
+		  var list  = document.getElementById('donMiasList');
+		  var empty = document.getElementById('donMiasEmpty');
+		  if (!list) return;
+		  var keys = Object.keys(donaciones);
+		  if (!keys.length) { list.innerHTML = ''; empty.style.display = 'block'; list.appendChild(empty); return; }
+		  empty.style.display = 'none';
+		  list.innerHTML = keys.map(function(cod){ return renderDonRowHTML(cod, 'mias'); }).join('');
+		}
+
+        // ── HTML de fila de donación ──
+		// scope: 'coord' | 'mias'
+		function renderDonRowHTML(cod, scope) {
+		  var d      = donaciones[cod];
+		  var cat    = d.cat;
+		  var estado = DON_ESTADOS[d.fase];
+		  var isCoord = scope === 'coord';
+
+		  var fasesHtml = DON_FASES.map(function(f, i) {
+			var cls = i < d.fase ? 'done' : (i === d.fase ? 'current' : '');
+			return (i > 0 ? '<span class="don-phase-arrow">›</span>' : '') +
+			  '<span class="don-phase-step ' + cls + '">' + f + '</span>';
+		  }).join('');
+
+		  var puntoHtml = d.puntoAsignado
+			? '<div style="font-size:11px;color:var(--muted);">📍 ' + d.puntoAsignado + '</div>' : '';
+
+		  var accionHtml = '';
+
+		  if (isCoord) {
+			// Coordinador fase 0: asignar punto
+			if (d.fase === 0) {
+			  var opts = DON_PUNTOS.map(function(p){
+				return '<option value="' + p + '">' + p + '</option>';
+			  }).join('');
+			  accionHtml =
+				'<div class="don-assign-row">' +
+				  '<select class="don-assign-select" id="donsel_' + cod + '">' +
+					'<option value="">Asignar punto de recogida…</option>' + opts +
+				  '</select>' +
+				  '<button class="don-assign-btn" onclick="asignarPunto(\'' + cod + '\')">Asignar</button>' +
+				'</div>';
+			}
+			// Coordinador fase 2 (en tránsito): confirmar recepción con cantidad real
+			if (d.fase === 2) {
+			  accionHtml =
+				'<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">' +
+				  '<input id="donReal_' + cod + '" placeholder="Cantidad real recibida" ' +
+					'style="flex:1;min-width:100px;border:1.5px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;font-family:DM Sans,sans-serif;outline:none;">' +
+				  '<button class="don-assign-btn" onclick="confirmarRecepcion(\'' + cod + '\')">✅ Confirmar recepción</button>' +
+				'</div>';
+			}
+			// Recibida: mostrar cantidad real
+			if (d.fase === 3 && d.cantidadReal) {
+			  accionHtml =
+				'<div style="font-size:11px;color:var(--teal);font-weight:600;">' +
+				  '✅ Cantidad confirmada: ' + d.cantidadReal + ' ' + d.unidad +
+				'</div>';
+			}
+		  } else {
+			// Voluntario fase 1 (asignada): marcar en tránsito
+			if (d.fase === 1) {
+			  accionHtml =
+				'<button class="don-avanzar-btn" onclick="marcarTransito(\'' + cod + '\')" ' +
+				  'style="background:var(--teal);color:#fff;border-color:var(--teal);">' +
+				  '🚛 Marcar como en tránsito' +
+				'</button>';
+			}
+			// Recibida: confirmación visual
+			if (d.fase === 3) {
+			  accionHtml =
+				'<div style="font-size:11px;color:var(--teal);font-weight:600;">' +
+				  '✅ Recibido · ' + (d.cantidadReal ? 'Cantidad confirmada: ' + d.cantidadReal + ' ' + d.unidad : 'Entrega verificada') +
+				'</div>';
+			}
+		  }
+
+		  return '<div class="don-row" id="donrow_' + scope + '_' + cod + '" data-estado="' + estado + '">' +
+			'<div class="don-row-header">' +
+			  '<div class="don-row-icon" style="background:' + cat.bg + ';color:' + cat.color + ';">' + cat.icon + '</div>' +
+			  '<div class="don-row-info">' +
+				'<div class="don-row-empresa">' + d.empresa + '</div>' +
+				'<div class="don-row-desc">' + d.desc + ' · ' + d.cantidad + ' ' + d.unidad + '</div>' +
+			  '</div>' +
+			  '<span class="don-estado ' + estado + '">' + DON_FASES[d.fase] + '</span>' +
+			'</div>' +
+			'<div class="don-row-phases">' + fasesHtml + '</div>' +
+			puntoHtml + accionHtml +
+			'<div class="don-row-code">' + cod + ' · ' + d.ts + (d.fecha ? ' · ' + d.fecha : '') + '</div>' +
+		  '</div>';
+		}
+
+		// ── Helpers: refrescar una sola fila en cada lista ──
+		function _refreshRow(cod) {
+		  var rc = document.getElementById('donrow_coord_' + cod);
+		  if (rc) rc.outerHTML = renderDonRowHTML(cod, 'coord');
+		  var rm = document.getElementById('donrow_mias_' + cod);
+		  if (rm) rm.outerHTML = renderDonRowHTML(cod, 'mias');
+		}
+
+		// ── Asignar punto (coordinador, fase 0 → 1) ──
+		function asignarPunto(cod) {
+		  var sel = document.getElementById('donsel_' + cod);
+		  if (!sel || !sel.value) { alert('Selecciona un punto de recogida.'); return; }
+		  donaciones[cod].puntoAsignado = sel.value;
+		  donaciones[cod].fase = 1;
+		  _refreshRow(cod);
+		}
+
+		// ── Marcar en tránsito (voluntario, fase 1 → 2) ──
+		function marcarTransito(cod) {
+		  if (!donaciones[cod] || donaciones[cod].fase !== 1) return;
+		  donaciones[cod].fase = 2;
+		  _refreshRow(cod);
+		}
+
+		// ── Confirmar recepción (coordinador, fase 2 → 3) ──
+		function confirmarRecepcion(cod) {
+		  var input = document.getElementById('donReal_' + cod);
+		  donaciones[cod].cantidadReal = (input && input.value.trim()) || donaciones[cod].cantidad;
+		  donaciones[cod].fase = 3;
+		  _refreshRow(cod);
+		}
+
+		// ── Filtrar donaciones en panel coordinador ──
+		function filtrarDon(btn) {
+		  document.querySelectorAll('.don-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+		  btn.classList.add('active');
+		  var f = btn.dataset.filter;
+		  document.querySelectorAll('#donPanelList .don-row').forEach(function(row) {
+			row.style.display = (f === 'all' || row.dataset.estado === f) ? 'flex' : 'none';
+		  });
+		}
+
         // ── Live counters ──
         setInterval(() => {
           [['liveKits',1],['livePeople',3]].forEach(([id,d]) => {
@@ -3328,7 +3776,7 @@ document.addEventListener('DOMContentLoaded', function() {
           document.querySelectorAll('.demo-panel').forEach(function(p){ p.classList.remove('active'); });
           var panel = document.getElementById('tab-' + tab);
           if (panel) panel.classList.add('active');
-          var order = ['necesidad','validacion','muro','kits','traza'];
+          var order = ['necesidad','validacion','muro','kits','traza','donacion'];
           var idx = order.indexOf(tab);
           document.querySelectorAll('.demo-step').forEach(function(s, i){
             s.classList.remove('active','done');
@@ -3339,8 +3787,8 @@ document.addEventListener('DOMContentLoaded', function() {
             var d = document.getElementById('muroNecDinamica');
             if (d) d.style.display = 'flex';
           }
-          if (tab === 'kits' && typeof renderKitItems === 'function') {
-            renderKitItems(window.currentKitType || 'food');
+          if (tab === 'donacion' && typeof renderDonPanel === 'function') {
+            renderDonPanel();
           }
         };
         
@@ -3777,7 +4225,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         document.addEventListener('DOMContentLoaded', function(){
-          if (typeof renderKitItems === 'function') renderKitItems('food');
+          if (typeof renderKitItems2 === 'function') renderKitItems2('food');
           // Initialize emergency category state (it's active by default)
           var emergChip = document.querySelector('#necCatChips .chip-emergency');
           if (emergChip && emergChip.classList.contains('active')) {
