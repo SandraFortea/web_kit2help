@@ -663,16 +663,7 @@
           }
           .kit-custom-name-input:focus { border-color:#7B5EA7; }
         
-          /* Mobile demo panel */
-          @media(max-width:600px) {
-            .demo-content { min-height:unset; }
-            .kit-builder { height:auto; }
-            .kit-items { max-height:260px; overflow-y:auto; }
-            .emergency-layout { grid-template-columns:1fr !important; }
-            .emergency-map-col { min-height:180px !important; }
-            .coord-panel { min-height:unset; }
-            .coord-body { padding:0; }
-          }
+         
           /* ── LIVE MAP ── */
           #liveMap { background:#0E1A16; max-width:100%; padding:100px 24px; }
           #liveMap .inner { max-width:1200px; margin:0 auto; }
@@ -1079,10 +1070,7 @@
             transition:width 0.4s ease;
           }
         
-          @media(max-width:600px) {
-            .coord-step-pills { display:none; }
-            .coord-report-row { flex-direction:column; }
-          }
+        
         
         
           /* ── USER REPORT CARD (appears at top of step 3) ── */
@@ -1250,59 +1238,96 @@
 }
 .nec-summary-row:last-child { border-bottom:none; }
 
-#necVolSubRow,
-#necShelSubRow {
-  margin-top: px;
-  padding: 6px 10px;
-  border-radius: 0 8px 8px 0;
-  gap: 6px;
-  flex-wrap: wrap;
-   background: rgba(58,123,213,0.07);
-  border-left: 2px solid #3A7BD5;
+/* ── Balance demanda / oferta en triaje ── */
+.val-balance {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-radius: 10px;
+  background: var(--bg); border: 1px solid var(--border);
+  margin: 8px 0 4px; flex-wrap: wrap;
+}
+.val-balance-block {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 2px; flex: 1; min-width: 70px;
+}
+.val-balance-num {
+  font-family: 'Syne', sans-serif; font-size: 22px;
+  font-weight: 700; line-height: 1;
+}
+.val-balance-label {
+  font-size: 10px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.4px;
+}
+.val-balance-sep {
+  font-size: 18px; color: var(--border); font-weight: 300; flex-shrink: 0;
+}
+.val-balance-status {
+  font-size: 11px; font-weight: 700; padding: 3px 10px;
+  border-radius: 20px; flex-shrink: 0;
+}
+.val-balance-status.deficit { background: #FDEDEC; color: #C0392B; }
+.val-balance-status.superavit { background: #E8F8F1; color: #1D9E75; }
+.val-balance-status.equilibrio { background: #FFF8EC; color: #92660A; }
+.val-balance-status.neutro { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+
+/* ── Badge tipo voluntario en triaje ── */
+.vol-tipo-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  border-radius: 20px; border: 1px solid currentColor;
+  margin-left: 4px;
 }
 
-#necVolSubRow {
-  background: rgba(123,94,167,0.07);
-  border-left: 2px solid #7B5EA7;
+/* ── Subrows de categoría ── */
+.nec-subrow {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+}
+.nec-subrow.visible { display: flex; }
+
+#necVolSubRow   { border-left: 3px solid #7B5EA7; background: rgba(123,94,167,0.05); }
+#necShelSubRow  { border-left: 3px solid #3A7BD5; background: rgba(58,123,213,0.05); }
+#necCheckSubRow { border-left: 3px solid #EF9F27; background: rgba(239,159,39,0.05); }
+
+.nec-subrow-label {
+  font-size: 11px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;
 }
 
-
-#necVolSubRow .chip,
-#necShelSubRow .chip {
-  font-size: 11px;
-  padding: 4px 10px;
+/* Chips dentro de subrow — tamaño normal */
+.nec-subrow .chip {
+  font-size: 13px;
+  padding: 8px 14px;
 }
 
-/* Contenedor del submenú */
-.type-chips[id$="SubRow"] {
-    margin-left: 15px;      /* Indentación para mostrar jerarquía */
-    padding-left: 10px;
-    border-left: 2px solid #e0e0e0; /* Línea sutil que conecta con el padre */
-    margin-bottom: 15px;    /* Espacio extra abajo para separar del siguiente bloque */
-    position: relative;
+/* ── Cards de tipo voluntario ── */
+.vol-type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 4px;
 }
-
-/* Opcional: Un pequeño indicador visual de "hijo" */
-.type-chips[id$="SubRow"]::before {
-    content: "↳";
-    position: absolute;
-    left: -12px;
-    top: -2px;
-    color: #bdbdbd;
-    font-size: 1.2rem;
+.vol-type-card {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: #fff;
+  cursor: pointer; transition: border-color 0.18s, background 0.18s;
 }
-
-/* Ajuste de los chips dentro del submenú para que se vean más como "opciones" */
-.type-chips[id$="SubRow"] .chip {
-    font-size: 0.85rem;     /* Ligeramente más pequeño que el menú principal */
-    opacity: 0.9;
+.vol-type-card:hover { border-color: var(--teal); background: var(--bg); }
+.vol-type-card.selected { border-color: var(--teal); background: var(--teal-light); }
+.vol-type-icon { font-size: 20px; flex-shrink: 0; line-height: 1; margin-top: 1px; }
+.vol-type-info { flex: 1; min-width: 0; }
+.vol-type-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.vol-type-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+.vol-type-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  flex-shrink: 0; margin-top: 3px;
 }
-
-.type-chips[id$="SubRow"] .chip.active {
-    opacity: 1;
-    transform: scale(1.02); /* Pequeño realce al estar activo */
-}
-
 /* ══════════════════════════════
    TAB 2 — Validación / Triaje
 ══════════════════════════════ */
@@ -1349,6 +1374,8 @@
 .val-btn-rej { background:#FDEDEC; color:#922B21; }
 .val-btn-rej:hover { background:#F1948A; }
 .val-btn-more { background:var(--bg); color:var(--muted); border:1px solid var(--border) !important; flex:0; min-width:70px; }
+.val-btn-close { background:var(--bg); color:var(--muted); border:1px solid var(--border) !important; flex:0; min-width:70px; }
+
 .val-expand {
   display:none; padding:12px 14px; border-top:1px solid var(--border); background:var(--bg);
 }
@@ -1500,6 +1527,19 @@
    MOBILE overrides  ≤ 600px
 ══════════════════════════════ */
 @media(max-width:600px) {
+
+	.vol-type-grid { grid-template-columns: 1fr; }
+	.demo-content { min-height:unset; }
+	.kit-builder { height:auto; }
+	.kit-items { max-height:260px; overflow-y:auto; }
+	.emergency-layout { grid-template-columns:1fr !important; }
+	.emergency-map-col { min-height:180px !important; }
+	.coord-panel { min-height:unset; }
+	.coord-body { padding:0; }
+
+	.coord-step-pills { display:none; }
+	.coord-report-row { flex-direction:column; }
+        
   /* 1-column necesidad layout — map hidden on small screens */
   .nec-layout { grid-template-columns:1fr; }
   .nec-map-col { display:none; }          /* hide map col, form takes full width */
@@ -1853,17 +1893,67 @@
                                         <span>🚨</span> Emergencia: se asignará prioridad <strong>Alta</strong> automáticamente
                                     </div>
                                     <!-- Sub-opciones Voluntarios -->
-                                    <div id="necVolSubRow" style="display:none; margin-top:20px; gap:8px; flex-direction:row;" class="type-chips">
-                                        <div class="chip chip-volunteer active" id="necVolReq" onclick="selectVolTipo('requerir')">Requerir voluntarios</div>
-                                        <div class="chip chip-volunteer" id="necVolOfe" onclick="selectVolTipo('ofrecer')">Ofrecer voluntarios</div>
-                                    </div>
+									<div id="necVolSubRow" class="nec-subrow">
+									  <div class="nec-subrow-label">¿Qué tipo de acción?</div>
+									  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+										<div class="chip chip-volunteer active" id="necVolReq" onclick="selectVolTipo('requerir')">Requerir voluntarios</div>
+										<div class="chip chip-volunteer" id="necVolOfe" onclick="selectVolTipo('ofrecer')">Ofrecer voluntarios</div>
+									  </div>
+									  <!-- Grid de tipos de voluntario -->
+									  <div class="nec-subrow-label" style="margin-top:6px;">Tipo de voluntario</div>
+									  <div class="vol-type-grid" id="necVolTipoGrid">
+										<div class="vol-type-card selected" onclick="selectVolTipoCard(this,'oficial')">
+										  <div class="vol-type-dot" style="background:#1A56DB;"></div>
+										  <div class="vol-type-icon">🛡️</div>
+										  <div class="vol-type-info">
+											<div class="vol-type-name">Oficial</div>
+											<div class="vol-type-desc">Protección Civil, Cruz Roja, cuerpos de emergencia</div>
+										  </div>
+										</div>
+										<div class="vol-type-card" onclick="selectVolTipoCard(this,'tecnico')">
+										  <div class="vol-type-dot" style="background:#E67E22;"></div>
+										  <div class="vol-type-icon">🛠️</div>
+										  <div class="vol-type-info">
+											<div class="vol-type-name">Técnico</div>
+											<div class="vol-type-desc">Electricistas, fontaneros, ingenieros, sanitarios</div>
+										  </div>
+										</div>
+										<div class="vol-type-card" onclick="selectVolTipoCard(this,'operativo')">
+										  <div class="vol-type-dot" style="background:#27AE60;"></div>
+										  <div class="vol-type-icon">🦺</div>
+										  <div class="vol-type-info">
+											<div class="vol-type-name">Operativo</div>
+											<div class="vol-type-desc">Reparto, logística, transporte, almacén</div>
+										  </div>
+										</div>
+										<div class="vol-type-card" onclick="selectVolTipoCard(this,'ciudadano')">
+										  <div class="vol-type-dot" style="background:#95A5A6;"></div>
+										  <div class="vol-type-icon">🧹</div>
+										  <div class="vol-type-info">
+											<div class="vol-type-name">Ciudadano</div>
+											<div class="vol-type-desc">Limpieza, acompañamiento, apoyo general</div>
+										  </div>
+										</div>
+									  </div>
+									</div>
 
+									<!-- Sub-opciones Punto de encuentro -->
+									<div id="necCheckSubRow" class="nec-subrow">
+									  <div class="nec-subrow-label">Tipo de punto</div>
+									  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+										<div class="chip chip-checkpoint active" id="necCheckMed" onclick="selectCheckTipo('medico')">🏥 Médico</div>
+										<div class="chip chip-checkpoint" id="necCheckVol" onclick="selectCheckTipo('voluntarios')">🤝 Voluntarios</div>
+									  </div>
+									</div>
 
-                                    <!-- Sub-opciones Refugio -->
-                                    <div id="necShelSubRow" style="display:none; margin-top:20px; gap:8px; flex-direction:row;" class="type-chips">
-                                        <div class="chip chip-shelter active" id="necShelSol" onclick="selectShelTipo('solicitud')">Solicitar plaza</div>
-                                        <div class="chip chip-shelter" id="necShelOfe" onclick="selectShelTipo('oferta')">Ofrecer espacio</div>
-                                    </div>
+									<!-- Sub-opciones Refugio -->
+									<div id="necShelSubRow" class="nec-subrow">
+									  <div class="nec-subrow-label">Tipo de solicitud</div>
+									  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+										<div class="chip chip-shelter active" id="necShelSol" onclick="selectShelTipo('solicitud')">Solicitar plaza</div>
+										<div class="chip chip-shelter" id="necShelOfe" onclick="selectShelTipo('oferta')">Ofrecer espacio</div>
+									  </div>
+									</div>
                                 </div>
                                 <div class="d-form-group" id="necPrioGroup">
                                     <label>Prioridad</label>
@@ -1916,159 +2006,238 @@
                         <div class="d-panel-title">🔎 Panel de validación y triaje</div>
                         <div class="d-panel-sub">Revisa, prioriza y valida cada solicitud antes de publicarla en el muro.</div>
                         <div class="val-filters">
-                            <button class="val-filter-btn active" onclick="filtrarVal('todas',this)">Todas (5)</button>
-                            <button class="val-filter-btn" onclick="filtrarVal('pendiente',this)">Pendientes</button>
-                            <button class="val-filter-btn" onclick="filtrarVal('validada',this)">Validadas</button>
+                            <button class="val-filter-btn active" id="valFiltroTodas" onclick="filtrarVal('todas',this)">Todas (5)</button>
+							<button class="val-filter-btn" onclick="filtrarVal('pendiente',this)">Pendientes</button>
+							<button class="val-filter-btn" onclick="filtrarVal('validada',this)">Validadas</button>
+							<button class="val-filter-btn" onclick="filtrarVal('cerrada',this)">Cerradas</button>
                         </div>
                         <div class="val-list">
 
-                            <!-- Card 1 — Emergencia (prioridad alta forzada) -->
-                            <div class="val-card" id="valCard1" data-estado="pendiente" style="border-left:3px solid #E24B4A;">
-                                <div class="val-header">
-                                    <div class="val-header-top">
-                                        <div class="val-icon" style="background:#FDEDEC;">🚨</div>
-                                        <div class="val-info">
-                                            <div class="val-title">Emergencia · C/ Sueca, 22</div>
-                                            <div class="val-meta">📍 Ruzafa · 6 personas <span class="d-badge d-badge-urg">🔴 Alta — Emergencia</span></div>
-                                        </div>
-                                    </div>
-                                    <div class="val-actions">
-                                        <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard1','valAct1','valDone1',true)">✓ Validar</button>
-                                        <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard1','valAct1','valDone1',false)">✕ Rechazar</button>
-                                        <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand1');event.stopPropagation()">Detalles</button>
-                                    </div>
-                                </div>
-                                <div class="val-expand" id="valExpand1">
-                                    <div class="val-expand-grid">
-                                        <div class="val-field">Descripción<span>Familia con 2 menores y anciano. Sin víveres 2 días.</span></div>
-                                        <div class="val-field">Prioridad<span style="color:#E24B4A;font-weight:700;">🔴 Alta (automática)</span></div>
-                                        <div class="val-field">Solicitante<span>Ciudadano</span></div>
-                                        <div class="val-field">Recibida<span>Hace 2 min</span></div>
-                                    </div>
-                                    <div style="margin:8px 0 4px;padding:8px 10px;background:#FDEDEC;border-radius:8px;font-size:11px;color:#922B21;">⚠️ Emergencia declarada — prioridad Alta asignada automáticamente al sistema</div>
-                                    <div class="val-done-msg" id="valDone1"></div>
-                                </div>
-                            </div>
+						  <!-- Card 1 — Emergencia alta prioridad -->
+						  <div class="val-card" id="valCard1" data-estado="pendiente" style="border-left:3px solid #E24B4A;">
+							<div class="val-header">
+							  <div class="val-header-top">
+								<div class="val-icon" style="background:#FDEDEC;">🚨</div>
+								<div class="val-info">
+								  <div class="val-title">Emergencia · C/ Sueca, 22</div>
+								  <div class="val-meta">📍 Ruzafa · 6 personas <span class="d-badge d-badge-urg">🔴 Alta — Emergencia</span></div>
+								</div>
+							  </div>
+							  <div class="val-actions">
+								<button class="val-btn val-btn-ok"   onclick="validarNec(event,'valCard1','valAct1','valDone1',true)">✓ Validar</button>
+								<button class="val-btn val-btn-rej"  onclick="validarNec(event,'valCard1','valAct1','valDone1',false)">✕ Rechazar</button>
+								<button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand1');event.stopPropagation()">Detalles</button>
+								<button class="val-btn" style="color:var(--muted);border-color:var(--border);" onclick="cerrarNecesidad('valCard1',event)">⏹ Cerrar</button>
+							  </div>
+							</div>
+							<div class="val-expand" id="valExpand1">
+							  <div class="val-expand-grid">
+								<div class="val-field">Descripción<span>Familia con 2 menores y anciano. Sin víveres 2 días.</span></div>
+								<div class="val-field">Prioridad<span style="color:#E24B4A;font-weight:700;">🔴 Alta (automática)</span></div>
+								<div class="val-field">Solicitante<span>Ciudadano</span></div>
+								<div class="val-field">Recibida<span>Hace 2 min</span></div>
+							  </div>
+							  <div style="margin:8px 0 4px;padding:8px 10px;background:#FDEDEC;border-radius:8px;font-size:11px;color:#922B21;">⚠️ Emergencia declarada — prioridad Alta asignada automáticamente</div>
+							  <div class="val-done-msg" id="valDone1"></div>
+							</div>
+						  </div>
 
-                            <!-- Card 2 — Voluntarios (prioridad libre) -->
-                            <div class="val-card" id="valCard2" data-estado="pendiente" style="border-left:3px solid #7B5EA7;">
-                                <div class="val-header">
-                                    <div class="val-header-top">
-                                        <div class="val-icon" style="background:#F5F0FB;">🤝</div>
-                                        <div class="val-info">
-                                            <div class="val-title">Voluntarios · Campus Blasco Ibáñez</div>
-                                            <div class="val-meta">📍 Benimaclet · 20 disponibles <span class="d-badge d-badge-info">Voluntarios</span></div>
-                                        </div>
-                                    </div>
-                                    <div class="val-actions">
-                                        <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard2','valAct2','valDone2',true)">✓ Validar</button>
-                                        <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard2','valAct2','valDone2',false)">✕ Rechazar</button>
-                                        <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand2');event.stopPropagation()">Detalles</button>
-                                    </div>
-                                </div>
-                                <div class="val-expand" id="valExpand2">
-                                    <div class="val-expand-grid">
-                                        <div class="val-field">Descripción<span>Grupo de 20 voluntarios con vehículo. Buscan zona de asignación.</span></div>
-                                        <div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
-                                        <div class="val-field">Responsable de asignación<span id="respAsig2">— Sin asignar</span></div>
-                                        <div class="val-field">Recibida<span>Hace 5 min</span></div>
-                                    </div>
-                                    <div style="margin:8px 0 4px;">
-                                        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar coordinador responsable</label>
-                                        <div style="display:flex;gap:6px;">
-                                            <input class="d-input" id="respInput2" placeholder="Nombre del coordinador..." style="font-size:12px;padding:7px 10px;">
-                                            <button onclick="asignarResp('respInput2','respAsig2')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
-                                        </div>
-                                    </div>
-                                    <div class="val-done-msg" id="valDone2"></div>
-                                </div>
-                            </div>
+						  <!-- Card 2 — Voluntarios: demanda vs oferta -->
+						  <div class="val-card" id="valCard2" data-estado="pendiente" style="border-left:3px solid #7B5EA7;">
+							<div class="val-header">
+							  <div class="val-header-top">
+								<div class="val-icon" style="background:#F5F0FB;">🤝</div>
+								<div class="val-info">
+								  <div class="val-title">
+									Voluntarios · Zona Ruzafa
+									<span class="vol-tipo-badge" style="color:#E67E22;border-color:#E67E22;">🛠️ Técnico</span>
+								  </div>
+								  <div class="val-meta">
+									📍 Ruzafa
+									<span class="d-badge" style="background:#FDEDEC;color:#C0392B;">⚠️ Déficit 5 voluntarios</span>
+								  </div>
+								</div>
+							  </div>
+							  <div class="val-actions">
+								<button class="val-btn val-btn-ok"   onclick="validarNec(event,'valCard2','valAct2','valDone2',true)">✓ Validar</button>
+								<button class="val-btn val-btn-rej"  onclick="validarNec(event,'valCard2','valAct2','valDone2',false)">✕ Rechazar</button>
+								<button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand2');event.stopPropagation()">Detalles</button>
+								<button class="val-btn" style="color:var(--muted);border-color:var(--border);" onclick="cerrarNecesidad('valCard2',event)">⏹ Cerrar</button>
+							  </div>
+							</div>
+							<div class="val-expand" id="valExpand2">
+							  <!-- Balance visual demanda / oferta -->
+							  <div class="val-balance">
+								<div class="val-balance-block">
+								  <div class="val-balance-num" style="color:#C0392B;">10</div>
+								  <div class="val-balance-label">Requeridos</div>
+								</div>
+								<div class="val-balance-sep">vs</div>
+								<div class="val-balance-block">
+								  <div class="val-balance-num" style="color:#1D9E75;">5</div>
+								  <div class="val-balance-label">Ofrecidos</div>
+								</div>
+								<div class="val-balance-sep">→</div>
+								<span class="val-balance-status deficit">−5 déficit</span>
+							  </div>
+							  <div class="val-expand-grid">
+								<div class="val-field">Tipo<span>🛠️ Voluntario Técnico (electricistas, fontaneros)</span></div>
+								<div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
+								<div class="val-field">Responsable<span id="respAsig2">— Sin asignar</span></div>
+								<div class="val-field">Recibida<span>Hace 5 min</span></div>
+							  </div>
+							  <div style="margin:8px 0 4px;">
+								<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar coordinador responsable</label>
+								<div style="display:flex;gap:6px;">
+								  <input class="d-input" id="respInput2" placeholder="Nombre del coordinador..." style="font-size:12px;padding:7px 10px;">
+								  <button onclick="asignarResp('respInput2','respAsig2')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
+								</div>
+							  </div>
+							  <div class="val-done-msg" id="valDone2"></div>
+							</div>
+						  </div>
 
-                            <!-- Card 3 — Punto de encuentro -->
-                            <div class="val-card" id="valCard3" data-estado="pendiente" style="border-left:3px solid #EF9F27;">
-                                <div class="val-header">
-                                    <div class="val-header-top">
-                                        <div class="val-icon" style="background:#FEF5EC;">📍</div>
-                                        <div class="val-info">
-                                            <div class="val-title">Punto de encuentro · Plaza del Ayuntamiento</div>
-                                            <div class="val-meta">📍 Centro · Apertura solicitada <span class="d-badge d-badge-pend">Pendiente</span></div>
-                                        </div>
-                                    </div>
-                                    <div class="val-actions">
-                                        <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard3','valAct3','valDone3',true)">✓ Validar</button>
-                                        <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard3','valAct3','valDone3',false)">✕ Rechazar</button>
-                                        <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand3');event.stopPropagation()">Detalles</button>
-                                    </div>
-                                </div>
-                                <div class="val-expand" id="valExpand3">
-                                    <div class="val-expand-grid">
-                                        <div class="val-field">Descripción<span>Espacio habilitado para reunir y redistribuir voluntarios. Capacidad 150 personas.</span></div>
-                                        <div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
-                                        <div class="val-field">Responsable de apertura<span id="respAsig3">— Sin asignar</span></div>
-                                        <div class="val-field">Recibida<span>Hace 10 min</span></div>
-                                    </div>
-                                    <div style="margin:8px 0 4px;">
-                                        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar responsable del punto</label>
-                                        <div style="display:flex;gap:6px;">
-                                            <input class="d-input" id="respInput3" placeholder="Nombre del responsable..." style="font-size:12px;padding:7px 10px;">
-                                            <button onclick="asignarResp('respInput3','respAsig3')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
-                                        </div>
-                                    </div>
-                                    <div class="val-done-msg" id="valDone3"></div>
-                                </div>
-                            </div>
+						  <!-- Card 3 — Voluntarios: oferta supera demanda -->
+						  <div class="val-card" id="valCard3" data-estado="pendiente" style="border-left:3px solid #7B5EA7;">
+							<div class="val-header">
+							  <div class="val-header-top">
+								<div class="val-icon" style="background:#F5F0FB;">🦺</div>
+								<div class="val-info">
+								  <div class="val-title">
+									Voluntarios · Campus Blasco Ibáñez
+									<span class="vol-tipo-badge" style="color:#27AE60;border-color:#27AE60;">🦺 Operativo</span>
+								  </div>
+								  <div class="val-meta">
+									📍 Benimaclet
+									<span class="d-badge" style="background:#E8F8F1;color:#1D9E75;">✅ Superávit 15 disponibles</span>
+								  </div>
+								</div>
+							  </div>
+							  <div class="val-actions">
+								<button class="val-btn val-btn-ok"   onclick="validarNec(event,'valCard3','valAct3','valDone3',true)">✓ Validar</button>
+								<button class="val-btn val-btn-rej"  onclick="validarNec(event,'valCard3','valAct3','valDone3',false)">✕ Rechazar</button>
+								<button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand3');event.stopPropagation()">Detalles</button>
+								<button class="val-btn" style="color:var(--muted);border-color:var(--border);" onclick="cerrarNecesidad('valCard3',event)">⏹ Cerrar</button>
+							  </div>
+							</div>
+							<div class="val-expand" id="valExpand3">
+							  <div class="val-balance">
+								<div class="val-balance-block">
+								  <div class="val-balance-num" style="color:#C0392B;">5</div>
+								  <div class="val-balance-label">Requeridos</div>
+								</div>
+								<div class="val-balance-sep">vs</div>
+								<div class="val-balance-block">
+								  <div class="val-balance-num" style="color:#1D9E75;">20</div>
+								  <div class="val-balance-label">Ofrecidos</div>
+								</div>
+								<div class="val-balance-sep">→</div>
+								<span class="val-balance-status superavit">+15 disponibles</span>
+							  </div>
+							  <div class="val-expand-grid">
+								<div class="val-field">Tipo<span>🦺 Voluntario Operativo (reparto y logística)</span></div>
+								<div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
+								<div class="val-field">Responsable de asignación<span id="respAsig3">— Sin asignar</span></div>
+								<div class="val-field">Recibida<span>Hace 8 min</span></div>
+							  </div>
+							  <div style="margin:8px 0 4px;">
+								<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar coordinador responsable</label>
+								<div style="display:flex;gap:6px;">
+								  <input class="d-input" id="respInput3" placeholder="Nombre del coordinador..." style="font-size:12px;padding:7px 10px;">
+								  <button onclick="asignarResp('respInput3','respAsig3')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
+								</div>
+							  </div>
+							  <div class="val-done-msg" id="valDone3"></div>
+							</div>
+						  </div>
 
-                            <!-- Card 4 — Recogida de kits -->
-                            <div class="val-card" id="valCard4" data-estado="pendiente" style="border-left:3px solid #1D9E75;">
-                                <div class="val-header">
-                                    <div class="val-header-top">
-                                        <div class="val-icon" style="background:#E1F5EE;">📦</div>
-                                        <div class="val-info">
-                                            <div class="val-title">Recogida de kits · Polideportivo Russafa</div>
-                                            <div class="val-meta">📍 Russafa · Almacén habilitado <span class="d-badge d-badge-pend">Pendiente</span></div>
-                                        </div>
-                                    </div>
-                                    <div class="val-actions">
-                                        <button class="val-btn val-btn-ok" onclick="validarNec(event,'valCard4','valAct4','valDone4',true)">✓ Validar</button>
-                                        <button class="val-btn val-btn-rej" onclick="validarNec(event,'valCard4','valAct4','valDone4',false)">✕ Rechazar</button>
-                                        <button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand4');event.stopPropagation()">Detalles</button>
-                                    </div>
-                                </div>
-                                <div class="val-expand" id="valExpand4">
-                                    <div class="val-expand-grid">
-                                        <div class="val-field">Descripción<span>Espacio para recibir y almacenar kits de ayuda. Acceso por entrada lateral.</span></div>
-                                        <div class="val-field">Prioridad<span style="color:#1D9E75;">Baja</span></div>
-                                        <div class="val-field">Responsable del almacén<span id="respAsig4">— Sin asignar</span></div>
-                                        <div class="val-field">Recibida<span>Hace 15 min</span></div>
-                                    </div>
-                                    <div style="margin:8px 0 4px;">
-                                        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar responsable del almacén</label>
-                                        <div style="display:flex;gap:6px;">
-                                            <input class="d-input" id="respInput4" placeholder="Nombre del responsable..." style="font-size:12px;padding:7px 10px;">
-                                            <button onclick="asignarResp('respInput4','respAsig4')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
-                                        </div>
-                                    </div>
-                                    <div class="val-done-msg" id="valDone4"></div>
-                                </div>
-                            </div>
+						  <!-- Card 4 — Punto de encuentro (sin prioridad, con subtipo) -->
+						  <div class="val-card" id="valCard4" data-estado="pendiente" style="border-left:3px solid #EF9F27;">
+							<div class="val-header">
+							  <div class="val-header-top">
+								<div class="val-icon" style="background:#FEF5EC;">📍</div>
+								<div class="val-info">
+								  <div class="val-title">Punto de encuentro · Plaza del Ayuntamiento</div>
+								  <div class="val-meta">📍 Centro · 🏥 Médico · Apertura solicitada <span class="d-badge d-badge-pend">Pendiente</span></div>
+								</div>
+							  </div>
+							  <div class="val-actions">
+								<button class="val-btn val-btn-ok"   onclick="validarNec(event,'valCard4','valAct4','valDone4',true)">✓ Validar</button>
+								<button class="val-btn val-btn-rej"  onclick="validarNec(event,'valCard4','valAct4','valDone4',false)">✕ Rechazar</button>
+								<button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand4');event.stopPropagation()">Detalles</button>
+								<button class="val-btn" style="color:var(--muted);border-color:var(--border);" onclick="cerrarNecesidad('valCard4',event)">⏹ Cerrar</button>
+							  </div>
+							</div>
+							<div class="val-expand" id="valExpand4">
+							  <div class="val-expand-grid">
+								<div class="val-field">Subtipo<span>🏥 Punto médico de atención primaria</span></div>
+								<div class="val-field">Capacidad<span>150 personas</span></div>
+								<div class="val-field">Responsable de apertura<span id="respAsig4">— Sin asignar</span></div>
+								<div class="val-field">Recibida<span>Hace 10 min</span></div>
+							  </div>
+							  <div style="margin:8px 0 4px;">
+								<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar responsable del punto</label>
+								<div style="display:flex;gap:6px;">
+								  <input class="d-input" id="respInput4" placeholder="Nombre del responsable..." style="font-size:12px;padding:7px 10px;">
+								  <button onclick="asignarResp('respInput4','respAsig4')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
+								</div>
+							  </div>
+							  <div class="val-done-msg" id="valDone4"></div>
+							</div>
+						  </div>
 
-                            <!-- Card 5 — Refugio/Hospedaje (ya validada) -->
-                            <div class="val-card" id="valCard5" data-estado="validada" style="border-left:3px solid #3A7BD5;">
-                                <div class="val-header">
-                                    <div class="val-header-top">
-                                        <div class="val-icon" style="background:#EEF4FC;">🏠</div>
-                                        <div class="val-info">
-                                            <div class="val-title">Refugio / Hospedaje · C/ Colón, 40</div>
-                                            <div class="val-meta">📍 Eixample · Capacidad 30 personas <span class="d-badge d-badge-ok">✓ Validada</span></div>
-                                        </div>
-                                    </div>
-                                    <div class="val-actions" style="border-top:none;padding-top:0;">
-                                        <span style="font-size:12px;color:var(--teal);font-weight:500;">✓ Publicado en muro · Resp.: Ana G.</span>
-                                    </div>
-                                </div>
-                            </div>
+						  <!-- Card 5 — Refugio: balance sin hogar / plazas ofrecidas -->
+						  <div class="val-card" id="valCard5" data-estado="pendiente" style="border-left:3px solid #3A7BD5;">
+							<div class="val-header">
+							  <div class="val-header-top">
+								<div class="val-icon" style="background:#EEF4FC;">🏠</div>
+								<div class="val-info">
+								  <div class="val-title">Refugio / Hospedaje · C/ Colón, 40</div>
+								  <div class="val-meta">
+									📍 Eixample
+									<span class="d-badge" style="background:#E8F8F1;color:#1D9E75;">✅ Superávit 30 plazas libres</span>
+								  </div>
+								</div>
+							  </div>
+							  <div class="val-actions">
+								<button class="val-btn val-btn-ok"   onclick="validarNec(event,'valCard5','valAct5','valDone5',true)">✓ Validar</button>
+								<button class="val-btn val-btn-rej"  onclick="validarNec(event,'valCard5','valAct5','valDone5',false)">✕ Rechazar</button>
+								<button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand5');event.stopPropagation()">Detalles</button>
+								<button class="val-btn" style="color:var(--muted);border-color:var(--border);" onclick="cerrarNecesidad('valCard5',event)">⏹ Cerrar</button>
+							  </div>
+							</div>
+							<div class="val-expand" id="valExpand5">
+							  <div class="val-balance">
+								<div class="val-balance-block">
+								  <div class="val-balance-num" style="color:#C0392B;">10</div>
+								  <div class="val-balance-label">Sin hogar</div>
+								</div>
+								<div class="val-balance-sep">vs</div>
+								<div class="val-balance-block">
+								  <div class="val-balance-num" style="color:#1D9E75;">40</div>
+								  <div class="val-balance-label">Plazas ofrecidas</div>
+								</div>
+								<div class="val-balance-sep">→</div>
+								<span class="val-balance-status superavit">+30 plazas libres</span>
+							  </div>
+							  <div class="val-expand-grid">
+								<div class="val-field">Tipo<span>Oferta de espacio · Acceso inmediato</span></div>
+								<div class="val-field">Prioridad<span style="color:#1D9E75;">Baja</span></div>
+								<div class="val-field">Responsable<span id="respAsig5">— Sin asignar</span></div>
+								<div class="val-field">Recibida<span>Hace 20 min</span></div>
+							  </div>
+							  <div style="margin:8px 0 4px;">
+								<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">Asignar responsable del espacio</label>
+								<div style="display:flex;gap:6px;">
+								  <input class="d-input" id="respInput5" placeholder="Nombre del responsable..." style="font-size:12px;padding:7px 10px;">
+								  <button onclick="asignarResp('respInput5','respAsig5')" style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;">Asignar</button>
+								</div>
+							  </div>
+							  <div class="val-done-msg" id="valDone5"></div>
+							</div>
+						  </div>
 
-                        </div>
+						</div>
                         <div class="d-btn-next">
                             <button onclick="switchDemo('muro')">Ver en muro →</button>
                         </div>
@@ -3882,53 +4051,63 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Actualiza visibilidad de campos según categoría + sub-tipo
         function _necUpdateFields() {
-          var catEl     = document.querySelector('#necCatChips .chip.active');
-          var isEmerg   = catEl && catEl.classList.contains('chip-emergency');
-          var isVol     = catEl && catEl.classList.contains('chip-volunteer');
-          var isShelter = catEl && catEl.classList.contains('chip-shelter');
-          var isOferVol = isVol && _necVolTipo === 'ofrecer';
-          var activeShelChip = document.querySelector('#necShelSubRow .chip.active');
-          var isOferSh  = isShelter && (activeShelChip ? activeShelChip.id === 'necShelOfe' : _necShelTipo === 'oferta');
+		  var catEl      = document.querySelector('#necCatChips .chip.active');
+		  var isEmerg    = catEl && catEl.classList.contains('chip-emergency');
+		  var isVol      = catEl && catEl.classList.contains('chip-volunteer');
+		  var isShelter  = catEl && catEl.classList.contains('chip-shelter');
+		  var isCheck    = catEl && catEl.classList.contains('chip-checkpoint');
+		  var isOferVol  = isVol && _necVolTipo === 'ofrecer';
+
+		  // Prioridad: ocultar si ofrece voluntarios O si es punto de encuentro
+		  var prioGroup = document.getElementById('necPrioGroup');
+		  if (prioGroup) prioGroup.style.display = isCheck ? 'none' : '';
+
+		  // Personas afectadas
+		  var persGroup = document.getElementById('necPersonasGroup');
+		  var persLabel = document.getElementById('necPersonasLabel');
+		  var showPers  = isEmerg || isVol || isShelter;
+		  if (persGroup) persGroup.style.display = showPers ? '' : 'none';
+		  if (persLabel) {
+			if (isVol && _necVolTipo === 'requerir') persLabel.textContent = 'Voluntarios requeridos (aprox.)';
+			else if (isShelter && _necShelTipo === 'solicitud') persLabel.textContent = 'Personas a alojar';
+			else if (isShelter && _necShelTipo === 'oferta')    persLabel.textContent = 'Capacidad de personas';
+			else persLabel.textContent = 'Personas afectadas';
+		  }
+
+		  // Sub-rows
+		  var volSub   = document.getElementById('necVolSubRow');
+			var shelSub  = document.getElementById('necShelSubRow');
+			var checkSub = document.getElementById('necCheckSubRow');
+			if (volSub)   volSub.classList.toggle('visible',   isVol);
+			if (checkSub) checkSub.classList.toggle('visible', isCheck);
+			if (shelSub) {
+			  shelSub.classList.toggle('visible', isShelter);
+			  if (isShelter) {
+				var activeShel = shelSub.querySelector('.chip.active');
+				if (!activeShel) { var first = shelSub.querySelector('.chip'); if (first) first.classList.add('active'); }
+			  }
+			}
+		}
+		
+		var _necCheckTipo = 'sanitario';
+		window.selectCheckTipo = function(tipo) {
+		  _necCheckTipo = tipo;
+		  var med = document.getElementById('necCheckMed');
+		  var vol = document.getElementById('necCheckVol');
+		  if (med) med.classList.toggle('active', tipo === 'sanitario');
+		  if (vol) vol.classList.toggle('active', tipo === 'coordinacion');
+		};
         
-          // Prioridad: ocultar si ofrece voluntarios
-          var prioGroup = document.getElementById('necPrioGroup');
-          if (prioGroup) prioGroup.style.display = isOferVol ? 'none' : '';
-        
-          // Personas afectadas: solo en Emergencia, Requerir-voluntarios, refugio,
-          var persGroup = document.getElementById('necPersonasGroup');
-          var persLabel = document.getElementById('necPersonasLabel');
-          //var showPers  = isEmerg || (isVol && _necVolTipo === 'requerir') || (isShelter);
-		  var showPers  = isEmerg || (isVol) || (isShelter);      
-			
-          if (persGroup) persGroup.style.display = showPers ? '' : 'none';
-          if (persLabel) {
-            if (isVol && _necVolTipo === 'requerir') persLabel.textContent = 'Voluntarios necesarios (aprox.)';
-			else if (isVol && _necVolTipo === 'ofrecer') persLabel.textContent = 'Voluntarios disponibles (aprox)';
-            else if (isShelter && _necShelTipo === 'solicitud') persLabel.textContent = 'Personas a alojar';
-        	else if (isShelter && _necShelTipo === 'oferta') persLabel.textContent = 'Capacidad de personas';
-			
-            else persLabel.textContent = 'Personas afectadas';
-          }
-        
-          
-        
-          // Sub-rows
-          var volSub  = document.getElementById('necVolSubRow');
-          var shelSub = document.getElementById('necShelSubRow');
-          if (volSub)  volSub.style.display  = isVol     ? 'flex' : 'none';
-          
-          if (shelSub) {
-            shelSub.style.display = isShelter ? 'flex' : 'none';
-            if (isShelter && shelSub.style.display === 'flex') {
-              var activeShel = shelSub.querySelector('.chip.active');
-              if (!activeShel) {
-                var firstShel = shelSub.querySelector('.chip');
-                if (firstShel) firstShel.classList.add('active');
-              }
-            }
-          }if (shelSub) shelSub.style.display = isShelter ? 'flex' : 'none';
-        }
-        
+		var _necVolTipoCard = 'oficial';
+
+		window.selectVolTipoCard = function(card, tipo) {
+		  _necVolTipoCard = tipo;
+		  document.querySelectorAll('#necVolTipoGrid .vol-type-card').forEach(function(c){
+			c.classList.remove('selected');
+		  });
+		  card.classList.add('selected');
+		};
+
         window.selectVolTipo = function(tipo) {
           _necVolTipo = tipo;
           var req = document.getElementById('necVolReq');
@@ -3952,6 +4131,7 @@ document.addEventListener('DOMContentLoaded', function() {
           var g = document.getElementById(groupId);
           if (g) g.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
           el.classList.add('active');
+		  console.log("tenemos "+el.classList);
           var isEmergency = el.classList.contains('chip-emergency');
           var notice  = document.getElementById('emergencyNotice');
           var prioRow = document.getElementById('necPrioRow');
@@ -3967,13 +4147,17 @@ document.addEventListener('DOMContentLoaded', function() {
             if (prioRow) prioRow.querySelectorAll('.prio-btn').forEach(function(b){ b.style.opacity=''; b.style.pointerEvents=''; });
           }
           // Reset sub-tipo state on category change
-          _necVolTipo  = 'requerir';
-          _necShelTipo = 'solicitud';
-          var req = document.getElementById('necVolReq'); if (req) req.classList.add('active');
-          var ofe = document.getElementById('necVolOfe'); if (ofe) ofe.classList.remove('active');
-          var sol = document.getElementById('necShelSol'); if (sol) sol.classList.add('active');
-          var ofe2 = document.getElementById('necShelOfe'); if (ofe2) ofe2.classList.remove('active');
-          _necUpdateFields();
+          
+			_necVolTipo   = 'requerir';
+			_necShelTipo  = 'solicitud';
+			_necCheckTipo = 'sanitario';
+			var req  = document.getElementById('necVolReq');   if (req)  req.classList.add('active');
+			var ofe  = document.getElementById('necVolOfe');   if (ofe)  ofe.classList.remove('active');
+			var sol  = document.getElementById('necShelSol');  if (sol)  sol.classList.add('active');
+			var ofe2 = document.getElementById('necShelOfe');  if (ofe2) ofe2.classList.remove('active');
+			var med  = document.getElementById('necCheckMed'); if (med)  med.classList.add('active');
+			var vol  = document.getElementById('necCheckVol'); if (vol)  vol.classList.remove('active');
+			_necUpdateFields();
         };
         
         // ── TAB 1 ──
@@ -4076,6 +4260,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var isVol     = catEl && catEl.classList.contains('chip-volunteer');
             var isShelter = catEl && catEl.classList.contains('chip-shelter');
             var prioEl    = document.querySelector('#necPrioRow .prio-btn[class*="active"]');
+			var isCheck   = catEl && catEl.classList.contains('chip-checkpoint');
             var prioText  = isEmerg ? 'Alta 🚨' : (prioEl ? prioEl.textContent : '—');
         
             var catLabels = {
@@ -4087,8 +4272,13 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             var catClass = catEl ? Array.from(catEl.classList).find(function(c){ return catLabels[c]; }) : null;
             var catText  = catClass ? catLabels[catClass] : (catEl ? catEl.textContent : '—');
-            if (isVol)     catText += ' · ' + (_necVolTipo  === 'requerir' ? 'Requerir' : 'Ofrecer');
-            if (isShelter) catText += ' · ' + (_necShelTipo === 'solicitud' ? 'Solicitud' : 'Oferta');
+            if (isVol) {
+			  var volTipoLabels = { oficial:'🛡️ Oficial', tecnico:'🛠️ Técnico', operativo:'🦺 Operativo', ciudadano:'🧹 Ciudadano' };
+			  catText += ' · ' + (_necVolTipo === 'requerir' ? 'Requerir' : 'Ofrecer');
+			  catText += ' · ' + (volTipoLabels[_necVolTipoCard] || _necVolTipoCard);
+			}
+			if (isShelter) catText += ' · ' + (_necShelTipo  === 'solicitud' ? 'Solicitud'  : 'Oferta');
+			if (isCheck)   catText += ' · ' + (_necCheckTipo === 'sanitario'    ? '🏥 Sanitario'  : '📡 Coordinacion');
         
             var rows = [
               ['Ubicación', (document.getElementById('necUbic') || {}).value || '—'],
@@ -4096,7 +4286,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ];
         
             // Prioridad — oculta si ofrece voluntarios
-            if (!isVol || _necVolTipo !== 'ofrecer') rows.push(['Prioridad', prioText]);
+            if ((!isVol || _necVolTipo !== 'ofrecer') && !isCheck) rows.push(['Prioridad', prioText]);
         
             // Personas / capacidad según reglas de visibilidad
             var persGroup = document.getElementById('necPersonasGroup');
@@ -4186,6 +4376,7 @@ document.addEventListener('DOMContentLoaded', function() {
           var el = document.getElementById(id);
           if (el) el.classList.toggle('open');
         };
+		
         window.validarNec = function(e, cardId, actId, doneId, ok) {
           e.stopPropagation();
           var card   = document.getElementById(cardId);
@@ -4214,13 +4405,51 @@ document.addEventListener('DOMContentLoaded', function() {
             var expEl = document.getElementById(expandId);
             if (expEl && !expEl.classList.contains('open')) expEl.classList.add('open');
           }
+		  filtrarVal('todas', document.getElementById('valFiltroTodas'));
         };
+		
+		window.cerrarNecesidad = function(cardId, e) {
+		  if (e) e.stopPropagation();
+		  var card = document.getElementById(cardId);
+		  if (!card) return;
+		  if (!confirm('¿Marcar esta necesidad como cerrada? Ya no estará activa.')) return;
+		  card.dataset.estado = 'cerrada';
+		  card.style.opacity  = '0.5';
+		  card.style.pointerEvents = 'none';
+		  // Badge visual
+		  var meta = card.querySelector('.val-meta');
+		  if (meta) {
+			var badge = document.createElement('span');
+			badge.className = 'd-badge';
+			badge.style.cssText = 'background:#f0f0f0;color:#999;border:1px solid #ddd;margin-left:4px;';
+			badge.textContent = '⏹ Cerrada';
+			meta.appendChild(badge);
+		  }
+		  // Mensaje en expand
+		  var doneId = cardId.replace('valCard','valDone');
+		  var doneEl = document.getElementById(doneId);
+		  if (doneEl) {
+			doneEl.style.display = 'block';
+			doneEl.style.cssText = 'display:block;margin-top:8px;padding:8px 10px;background:#f5f5f5;border-radius:8px;font-size:12px;color:#999;';
+			doneEl.textContent = '⏹ Necesidad cerrada — ya no está activa.';
+		  }
+		  filtrarVal('todas', document.getElementById('valFiltroTodas'));
+		};
+
+
         window.filtrarVal = function(estado, btn) {
           document.querySelectorAll('.val-filter-btn').forEach(function(b){ b.classList.remove('active'); });
           btn.classList.add('active');
           document.querySelectorAll('.val-list .val-card').forEach(function(c){
             c.style.display = (estado === 'todas' || c.dataset.estado === estado) ? '' : 'none';
           });
+		  // Actualizar contador "Todas"
+		var totalBtn = document.querySelector('.val-filter-btn:first-child');
+		if (totalBtn) {
+		  var total = document.querySelectorAll('.val-card').length;
+		  var cerradas = document.querySelectorAll('.val-card[data-estado="cerrada"]').length;
+		  totalBtn.textContent = 'Todas (' + (total - cerradas) + ')';
+		}
         };
         
         // ── TAB 3 ──
