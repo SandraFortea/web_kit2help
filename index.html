@@ -1450,6 +1450,8 @@
 }
 .traza-filter-btn:hover { border-color:var(--teal); color:var(--teal); }
 .traza-filter-btn.active { background:var(--teal); border-color:var(--teal); color:#fff; }
+
+
 .traza-count-badge {
   background:var(--teal-light); color:var(--teal);
   font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px;
@@ -1460,6 +1462,17 @@
   transition:background 0.15s;
 }
 .traza-row:hover { background:var(--bg); }
+
+.traza-row.is-donacion {
+  border-left: 3px solid #2C5FBF;
+  background: #F5F8FF;
+}
+.traza-don-badge {
+  font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-radius: 20px; background: #EEF4FF;
+  color: #2C5FBF; border: 1px solid #C3D4F8; flex-shrink: 0;
+}
+
 .traza-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
 .traza-info { flex:1; min-width:0; }
 .traza-name { font-size:13px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -2322,12 +2335,13 @@
 						  <div class="traza-header-meta">Actualizado en tiempo real</div>
 						  <!-- Filtros de estado -->
 						  <div class="traza-filters" id="trazaFilters">
-							<button class="traza-filter-btn active" data-filter="all"    onclick="filtrarTraza(this)">Todos</button>
-							<button class="traza-filter-btn"        data-filter="0"      onclick="filtrarTraza(this)">📦 Preparado</button>
-							<button class="traza-filter-btn"        data-filter="1"      onclick="filtrarTraza(this)">🚚 En camino</button>
-							<button class="traza-filter-btn"        data-filter="2"      onclick="filtrarTraza(this)">✅ Recibido</button>
-							<button class="traza-filter-btn"        data-filter="cancel" onclick="filtrarTraza(this)">✕ Cancelado</button>
-						  </div>
+							  <button class="traza-filter-btn active" data-filter="all"      onclick="filtrarTraza(this)">Todos</button>
+							  <button class="traza-filter-btn"        data-filter="0"        onclick="filtrarTraza(this)">📦 Preparado</button>
+							  <button class="traza-filter-btn"        data-filter="1"        onclick="filtrarTraza(this)">🚚 En camino</button>
+							  <button class="traza-filter-btn"        data-filter="2"        onclick="filtrarTraza(this)">✅ Recibido</button>
+							  <button class="traza-filter-btn"        data-filter="cancel"   onclick="filtrarTraza(this)">✕ Cancelado</button>
+							  <button class="traza-filter-btn"        data-filter="donacion" onclick="filtrarTraza(this)">🚛 Donación</button>
+							</div>
 						</div>
 						
 						 <!-- Lista de instancias -->
@@ -3369,7 +3383,59 @@ function avanzarFase(instId) {
 
 function updateTrazaCount() {
   var el = document.getElementById('trazaCount');
-  if (el) el.textContent = Object.keys(kitInstances).length;
+  if (!el) return;
+  var total = Object.keys(kitInstances).length + Object.keys(donaciones).length;
+  el.textContent = total;
+}
+
+// ── Añadir fila de donación en trazabilidad ──
+function addDonTrazaRow(cod) {
+  var trazaList = document.getElementById('trazaList');
+  if (!trazaList) return;
+  var empty = document.getElementById('trazaEmpty');
+  if (empty) empty.style.display = 'none';
+
+  var existing = document.getElementById('traza_don_' + cod);
+  if (!existing) {
+    var row = document.createElement('div');
+    row.className = 'traza-row is-donacion';
+    row.id = 'traza_don_' + cod;
+    row.style.display = 'flex';
+    row.dataset.filter = 'donacion';
+    trazaList.appendChild(row);
+  }
+  syncDonTraza(cod);
+  updateTrazaCount();
+
+  var activeFilter = document.querySelector('.traza-filter-btn.active');
+  if (activeFilter && activeFilter.dataset.filter !== 'all') filtrarTraza(activeFilter);
+}
+
+// ── Sincronizar estado de donación en trazabilidad ──
+function syncDonTraza(cod) {
+  var row = document.getElementById('traza_don_' + cod);
+  if (!row) return;
+  var d = donaciones[cod];
+  if (!d) return;
+
+  var faseTraza = ['📦 Pendiente asignación','📍 Asignada','🚛 En tránsito','✅ Recibida'];
+  var faseActual = faseTraza[d.fase] || faseTraza[0];
+  var isRecibida = d.fase === 3;
+
+  row.innerHTML =
+    '<div class="traza-dot" style="background:#2C5FBF;"></div>' +
+    '<div class="traza-info">' +
+      '<div class="traza-name">' + d.empresa + ' · ' + d.desc + '</div>' +
+      '<div class="traza-vol">' + d.cantidad + ' ' + d.unidad +
+        (d.puntoAsignado ? ' · 📍 ' + d.puntoAsignado.split('—')[0].trim() : '') +
+      '</div>' +
+    '</div>' +
+    (isRecibida
+      ? '<span class="traza-entregado">✓ Recibida ' + d.ts + '</span>'
+      : '<span style="font-size:11px;font-weight:600;color:#2C5FBF;background:#EEF4FF;border:1px solid #C3D4F8;padding:3px 8px;border-radius:20px;flex-shrink:0;">' + faseActual + '</span>'
+    ) +
+    '<span class="traza-don-badge">🚛 Donación</span>' +
+    '<div class="traza-id">' + cod + '</div>';
 }
 
 // ── Init ──
@@ -3450,6 +3516,9 @@ document.addEventListener('DOMContentLoaded', function() {
             cat: cat, fase: 0, puntoAsignado: null, ts: ts, cantidadReal: null
           };
 
+			// Registrar en trazabilidad
+			addDonTrazaRow(codigo);
+			
           // QR
           var payload = encodeURIComponent('KIT2HELP|DON:' + codigo + '|EMP:' + empresa);
           var qrUrl   = 'https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=' + payload;
@@ -3583,6 +3652,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		  donaciones[cod].puntoAsignado = sel.value;
 		  donaciones[cod].fase = 1;
 		  _refreshRow(cod);
+		  syncDonTraza(cod);
 		}
 
 		// ── Marcar en tránsito (voluntario, fase 1 → 2) ──
@@ -3590,6 +3660,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		  if (!donaciones[cod] || donaciones[cod].fase !== 1) return;
 		  donaciones[cod].fase = 2;
 		  _refreshRow(cod);
+		  syncDonTraza(cod);
 		}
 
 		// ── Confirmar recepción (coordinador, fase 2 → 3) ──
@@ -3598,6 +3669,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		  donaciones[cod].cantidadReal = (input && input.value.trim()) || donaciones[cod].cantidad;
 		  donaciones[cod].fase = 3;
 		  _refreshRow(cod);
+		  syncDonTraza(cod);
 		}
 
 		// ── Filtrar donaciones en panel coordinador ──
@@ -3825,13 +3897,16 @@ document.addEventListener('DOMContentLoaded', function() {
           // Personas afectadas: solo en Emergencia, Requerir-voluntarios, refugio,
           var persGroup = document.getElementById('necPersonasGroup');
           var persLabel = document.getElementById('necPersonasLabel');
-          var showPers  = isEmerg || (isVol && _necVolTipo === 'requerir') || (isShelter);
-          
+          //var showPers  = isEmerg || (isVol && _necVolTipo === 'requerir') || (isShelter);
+		  var showPers  = isEmerg || (isVol) || (isShelter);      
+			
           if (persGroup) persGroup.style.display = showPers ? '' : 'none';
           if (persLabel) {
-            if (isVol && _necVolTipo === 'requerir') persLabel.textContent = 'Voluntarios requeridos (aprox.)';
+            if (isVol && _necVolTipo === 'requerir') persLabel.textContent = 'Voluntarios necesarios (aprox.)';
+			else if (isVol && _necVolTipo === 'ofrecer') persLabel.textContent = 'Voluntarios disponibles (aprox)';
             else if (isShelter && _necShelTipo === 'solicitud') persLabel.textContent = 'Personas a alojar';
         	else if (isShelter && _necShelTipo === 'oferta') persLabel.textContent = 'Capacidad de personas';
+			
             else persLabel.textContent = 'Personas afectadas';
           }
         
@@ -4169,24 +4244,29 @@ document.addEventListener('DOMContentLoaded', function() {
 		  document.querySelectorAll('.traza-filter-btn').forEach(function(b){ b.classList.remove('active'); });
 		  btn.classList.add('active');
 		  var f = btn.dataset.filter;
-
-		  // Actualizar contador del badge con los visibles
 		  var visibles = 0;
 
 		  document.querySelectorAll('.traza-row').forEach(function(row) {
-			var id   = row.id.replace('traza_', '');
-			var inst = kitInstances[id];
-			if (!inst) { row.style.display = 'none'; return; }
+			var show = false;
 
-			var show = f === 'all'
-			  || (f === 'cancel' && inst.cancelled)
-			  || (!inst.cancelled && f === String(inst.phase));
+			if (row.classList.contains('is-donacion')) {
+			  // Fila de donación
+			  show = (f === 'all' || f === 'donacion');
+			} else {
+			  // Fila de kit voluntario
+			  var id   = row.id.replace('traza_', '');
+			  var inst = kitInstances[id];
+			  if (!inst) return;
+			  show = f === 'all'
+				|| (f === 'cancel'   && inst.cancelled)
+				|| (f === 'donacion' && false)
+				|| (!inst.cancelled  && f === String(inst.phase));
+			}
 
 			row.style.display = show ? 'flex' : 'none';
 			if (show) visibles++;
 		  });
 
-		  // Mostrar/ocultar mensaje vacío
 		  var empty = document.getElementById('trazaEmpty');
 		  if (empty) empty.style.display = visibles === 0 ? 'block' : 'none';
 		}
