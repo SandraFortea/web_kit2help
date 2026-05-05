@@ -102,12 +102,67 @@
             .features-grid { grid-template-columns:1fr; gap:16px; }
             .feature-card { padding:24px; }
         
-            /* DEMO */
-            #demo { padding:64px 16px; }
-            .demo-shell { border-radius:20px; margin-top:36px; }
-            .demo-topbar { padding:10px 16px; }
-            .demo-tab { padding:12px 14px; font-size:13px; gap:5px; }
-            .demo-panel { padding:16px; }
+           /* DEMO */
+			#demo { padding:64px 8px; }
+			.demo-shell { border-radius:20px; margin-top:36px; overflow:visible; }
+			.demo-topbar { padding:10px 12px; }
+			.demo-tab { padding:12px 10px; font-size:12px; gap:4px; }
+			.demo-content { overflow:visible; }
+			.demo-panel { padding:10px; box-sizing:border-box; width:100%; }
+
+			/* NECESIDAD móvil */
+			.nec-layout {
+			  display:flex !important;
+			  flex-direction:column !important;
+			  gap:10px;
+			  width:100%;
+			}
+			.nec-form {
+			  width:100%;
+			  box-sizing:border-box;
+			  padding:14px;
+			}
+			.nec-map-col {
+			  order:1;
+			  width:100%;
+			  display:flex;
+			  flex-direction:column;
+			  gap:8px;
+			  box-sizing:border-box;
+			}
+			.nec-confirm {
+			  order:2;
+			  width:100%;
+			  box-sizing:border-box;
+			  display:none;
+			}
+			.nec-confirm.visible { display:block !important; }
+			.nec-map-toggle {
+			  display:flex !important;
+			  align-items:center;
+			  justify-content:center;
+			  gap:6px;
+			  width:100%;
+			  padding:11px;
+			  border-radius:12px;
+			  border:1.5px solid rgba(29,158,117,0.3);
+			  background:#fff;
+			  color:var(--teal);
+			  font-family:'DM Sans',sans-serif;
+			  font-size:14px;
+			  font-weight:500;
+			  cursor:pointer;
+			  box-sizing:border-box;
+			}
+			.nec-map-toggle.open { background:var(--green-50); border-color:var(--teal); color:#085041; }
+			.nec-map-box {
+			  display:none;
+			  height:220px;
+			  flex:none;
+			  width:100%;
+			  box-sizing:border-box;
+			}
+			.nec-map-box.open { display:block; }
         
             /* EMERGENCY - stack vertically on mobile */
             .emergency-layout { grid-template-columns:1fr; gap:16px; }
@@ -1287,9 +1342,7 @@
 .nec-confirm.visible { display:block; }
 
 /* Botón toggle mapa — oculto en desktop */
-.nec-map-toggle {
-  display: none;
-}
+.nec-map-toggle {  display: none;}
 
 @media (max-width: 768px) {
   /* Layout: columna única, form arriba, mapa debajo como colapsable */
@@ -1354,6 +1407,66 @@
   padding:6px 0; border-bottom:1px solid var(--border);
 }
 .nec-summary-row:last-child { border-bottom:none; }
+/* ── Toggle mapa necesidad (solo móvil) ── */
+.nec-map-toggle { display: none; }
+
+@media (max-width: 900px) {
+  .nec-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px;
+  }
+  .nec-map-col {
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  .nec-form {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .nec-confirm {
+    order: 2;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .nec-map-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 11px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(29,158,117,0.25);
+    background: #fff;
+    color: var(--teal);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s;
+    box-sizing: border-box;
+  }
+  .nec-map-toggle:hover { background: var(--green-50); border-color: var(--teal); }
+  .nec-map-toggle.open  { background: var(--green-50); border-color: var(--teal); color: #085041; }
+  .nec-map-box {
+    display: none;
+    height: 220px;
+    flex: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .nec-map-box.open { display: block; }
+}
+
+@media (max-width: 420px) {
+  .nec-map-box.open { height: 180px; }
+  .nec-map-toggle   { font-size: 13px; padding: 10px; }
+}
+
 
 /* ── Balance demanda / oferta en triaje ── */
 .val-balance {
