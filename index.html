@@ -113,7 +113,82 @@
             .emergency-layout { grid-template-columns:1fr; gap:16px; }
             .emergency-map-col { min-height:260px; }
             .emergency-form { padding:18px; }
-        
+			
+			/* ── NECESIDAD móvil: diseño vertical con mapa como hero ── */
+			.nec-layout {
+			  display: flex;
+			  flex-direction: column;
+			  gap: 0;
+			}
+			.nec-map-col {
+			  order: -1;
+			  display: flex;
+			  flex-direction: column;
+			  gap: 0;
+			}
+			.nec-map-box {
+			  height: 220px;
+			  flex: none;
+			  border-radius: 14px 14px 0 0;
+			  border-bottom: none;
+			}
+			.nec-form {
+			  border-radius: 0 0 14px 14px;
+			  border-top: none;
+			  padding: 14px;
+			}
+			.nec-confirm {
+			  border-radius: 14px;
+			  margin-top: 10px;
+			}
+			/* Pill flotante sobre el mapa con el resumen de la necesidad enviada */
+			.nec-map-pill {
+			  display: none;
+			  position: absolute;
+			  bottom: 10px;
+			  left: 10px;
+			  right: 10px;
+			  z-index: 20;
+			  background: rgba(8, 80, 65, 0.92);
+			  backdrop-filter: blur(8px);
+			  border-radius: 12px;
+			  padding: 10px 12px;
+			  color: #fff;
+			  font-size: 12px;
+			  font-weight: 500;
+			  line-height: 1.4;
+			  border: 1px solid rgba(93,202,165,0.3);
+			  animation: fadeUp 0.3s ease both;
+			}
+			.nec-map-pill.visible { display: block; }
+			.nec-map-pill-title {
+			  font-size: 11px;
+			  opacity: 0.65;
+			  margin-bottom: 3px;
+			  text-transform: uppercase;
+			  letter-spacing: 0.5px;
+			}
+			.nec-map-pill-row {
+			  display: flex;
+			  justify-content: space-between;
+			  gap: 8px;
+			  flex-wrap: wrap;
+			}
+			.nec-map-pill-badge {
+			  background: rgba(93,202,165,0.25);
+			  border-radius: 8px;
+			  padding: 3px 8px;
+			  font-size: 11px;
+			  color: #5DCAA5;
+			  border: 1px solid rgba(93,202,165,0.3);
+			}
+			.nec-map-pill-status {
+			  font-size: 11px;
+			  opacity: 0.7;
+			  display: flex;
+			  align-items: center;
+			  gap: 4px;
+			}
             /* KIT builder */
             .kit-builder { padding:18px; }
             .kit-item-name { font-size:13px; }
@@ -140,6 +215,11 @@
           }
         
           @media(max-width:420px) {
+			/* NECESIDAD — mapa aún más compacto en pantallas muy pequeñas */
+			
+			.nec-map-box { height: 170px; }
+			.nec-layout  { gap:8px; }
+			.nec-form    { padding:12px; }
             .demo-tab { padding:11px 10px; font-size:12px; }
             .demo-tab span { display:none; } /* hide emoji on tiny screens if needed */
             .hero-title { font-size:32px; }
@@ -1205,6 +1285,70 @@
   border:1px solid rgba(29,158,117,0.12); animation:fadeUp 0.3s ease both;
 }
 .nec-confirm.visible { display:block; }
+
+/* Botón toggle mapa — oculto en desktop */
+.nec-map-toggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Layout: columna única, form arriba, mapa debajo como colapsable */
+  .nec-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  /* El map-col va debajo del form */
+  .nec-map-col {
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  /* El confirm va debajo del form (order 2, por encima del map-col) */
+  .nec-confirm {
+    order: 2;
+  }
+  /* Botón toggle visible en móvil */
+  .nec-map-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(29,158,117,0.25);
+    background: #fff;
+    color: var(--teal);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s;
+  }
+  .nec-map-toggle:hover { background: var(--green-50); border-color: var(--teal); }
+  .nec-map-toggle.open  { background: var(--green-50); border-color: var(--teal); color: #085041; }
+  /* Mapa colapsado por defecto en móvil */
+  .nec-map-box {
+    display: none;
+    height: 220px;
+    flex: none;
+  }
+  .nec-map-box.open {
+    display: block;
+  }
+  /* nec-layout es flex, necesitamos que nec-form ocupe el ancho completo */
+  .nec-form {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 420px) {
+  .nec-map-box.open { height: 180px; }
+}
+
 .nec-summary-row {
   display:flex; justify-content:space-between; font-size:12px;
   padding:6px 0; border-bottom:1px solid var(--border);
@@ -2028,26 +2172,31 @@
                                 <button class="d-btn-primary" id="necBtn" onclick="enviarNecesidad()">Enviar necesidad</button>
                             </div>
                             <!-- Map + confirm -->
-                            <div class="nec-map-col">
-                                <div class="nec-map-box" id="necMapBox">
-                                    <div class="emap-header" style="position:absolute;top:12px;left:12px;right:12px;z-index:20;pointer-events:none;">
-                                        <div class="emap-badge">
-                                            <div class="rdot"></div>Mapa en vivo</div>
-                                    </div>
-                                    <div id="necMap" style="width:100%;height:100%;position:absolute;inset:0;z-index:1;"></div>
-                                </div>
-                                <!-- Confirm card -->
-                                <div class="nec-confirm" id="necConfirm">
-                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
-                                        <span style="font-family:Syne,sans-serif;font-size:13px;font-weight:600;color:var(--dark);">Necesidad registrada</span>
-                                        <span class="d-badge d-badge-pend">● Pendiente validación</span>
-                                    </div>
-                                    <div id="necSummary"></div>
-                                    <div style="margin-top:10px;font-size:12px;color:var(--muted);background:var(--bg);border-radius:10px;padding:10px;line-height:1.5;">
-                                        📬 Entrando en panel de triaje. Un coordinador la revisará pronto.
-                                    </div>
-                                </div>
-                            </div>
+                          
+							<div class="nec-map-col">
+								<!-- Botón toggle mapa — solo visible en móvil -->
+								<button class="nec-map-toggle" id="necMapToggle" onclick="toggleNecMap()">
+									🗺️ Ver mapa
+								</button>
+								<div class="nec-map-box" id="necMapBox">
+									<div class="emap-header" style="position:absolute;top:12px;left:12px;right:12px;z-index:20;pointer-events:none;">
+										<div class="emap-badge">
+											<div class="rdot"></div>Mapa en vivo</div>
+									</div>
+									<div id="necMap" style="width:100%;height:100%;position:absolute;inset:0;z-index:1;"></div>
+								</div>
+							</div>
+							<!-- Confirm card — fuera del map-col para que en móvil quede debajo del form -->
+							<div class="nec-confirm" id="necConfirm">
+								<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+									<span style="font-family:Syne,sans-serif;font-size:13px;font-weight:600;color:var(--dark);">Necesidad registrada</span>
+									<span class="d-badge d-badge-pend">● Pendiente validación</span>
+								</div>
+								<div id="necSummary"></div>
+								<div style="margin-top:10px;font-size:12px;color:var(--muted);background:var(--bg);border-radius:10px;padding:10px;line-height:1.5;">
+									📬 Entrando en panel de triaje. Un coordinador la revisará pronto.
+								</div>
+							</div>
                         </div>
                         <div class="d-btn-next">
                             <button onclick="switchDemo('validacion')">Ver en triaje →</button>
@@ -4136,6 +4285,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
           }, 800);
         }
+		
+		window.toggleNecMap = function() {
+		  var box    = document.getElementById('necMapBox');
+		  var btn    = document.getElementById('necMapToggle');
+		  var isOpen = box.classList.toggle('open');
+		  btn.classList.toggle('open', isOpen);
+		  btn.textContent = isOpen ? '🗺️ Ocultar mapa' : '🗺️ Ver mapa';
+		  // Forzar render de Leaflet al expandir
+		  if (isOpen && _necMap) {
+			setTimeout(function() { _necMap.invalidateSize(); }, 150);
+		  } else if (isOpen) {
+			setTimeout(initNecMap, 150);
+		  }
+		};
     </script>
 
     <!-- MODAL QUIÉNES SOMOS -->
@@ -4391,10 +4554,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         var _origSwitchDemoNec = window.switchDemo;
         window.switchDemo = function(tab) {
-          _origSwitchDemoNec(tab);
-          if (tab === 'necesidad') setTimeout(initNecMap, 150);
-        };
-        
+		  _origSwitchDemoNec(tab);
+		  if (tab === 'necesidad') {
+			setTimeout(function() {
+			  initNecMap();
+			  if (_necMap) _necMap.invalidateSize();
+			}, 200);
+		  }
+		};
         var _origEnviarNec = window.enviarNecesidad;
         window.enviarNecesidad = function() {
           if (_necMarker) {
@@ -4474,6 +4641,19 @@ document.addEventListener('DOMContentLoaded', function() {
 			btn.style.background = '';
 			btn.disabled = false;
 			window._necEnviada = true;
+			// ── Pill móvil sobre el mapa ──
+			var pill = document.getElementById('necMapPill');
+			if (pill) {
+			  var pillCat  = document.getElementById('necMapPillCat');
+			  var pillUbic = document.getElementById('necMapPillUbic');
+			  if (pillCat)  pillCat.textContent  = catText;
+			  if (pillUbic) pillUbic.textContent = '📍 ' + ((document.getElementById('necUbic') || {}).value || '—');
+			  pill.classList.add('visible');
+			}
+			// ── Forzar re-render del mapa tras colapso flex ──
+			if (window._necMap) {
+			  setTimeout(function(){ window._necMap.invalidateSize(); }, 120);
+			}
 
 			// ── NUEVO: inyectar card dinámica en triaje ──
 			_inyectarCardTriaje(catText, prioText, isEmerg, rows);
