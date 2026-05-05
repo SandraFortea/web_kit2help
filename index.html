@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -550,7 +550,7 @@
             background:#fff; border-radius:20px; border:1px solid rgba(29,158,117,0.1);
             overflow:hidden; display:flex; flex-direction:column;
           }
-          .kit-builder-header2 {
+          .kit-builder-header {
             padding:16px 20px; border-bottom:1px solid var(--border);
             display:flex; align-items:center; justify-content:space-between;
           }
@@ -577,18 +577,6 @@
           .kit-total { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
           .kit-total-label { font-size:13px; color:var(--muted); }
           .kit-total-num { font-family:'Syne',sans-serif; font-size:22px; font-weight:700; color:var(--teal); }
-        
-          /* Created kit cards tray */
-          .kit-tray {
-            display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px; min-height:0;
-          }
-          .kit-tray-card {
-            display:flex; align-items:center; gap:6px;
-            border-radius:10px; padding:6px 12px; font-size:12px; font-weight:500;
-            animation:kitSlideIn 0.3s ease both; border:1px solid transparent;
-          }
-          .kit-tray-card .tray-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-          .kit-tray-card .tray-count { font-family:'Syne',sans-serif; font-size:11px; opacity:0.7; }
         
            /* Custom kit card */
           .kit-custom { color:#7B5EA7; }
@@ -793,16 +781,6 @@
           .reveal-delay-2 { transition-delay:0.2s; }
           .reveal-delay-3 { transition-delay:0.3s; }
         
-          @media(max-width:768px) {
-            .needs-panel { display:none; }
-            .map-filters { flex-wrap:wrap; max-width:calc(100% - 32px); }
-            #liveMap { padding:64px 16px; }
-            .map-stats-bar { gap:20px; padding:14px 16px; }
-            .map-live-badge { margin-left:0; width:100%; }
-            section { padding:64px 20px; }
-            .hero-stats { gap:28px; margin-top:48px; }
-          }
-          
           /*formulario contacto*/
         	 .k2-modal {
         	  position: fixed;
@@ -1217,11 +1195,6 @@
 .nec-layout { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .nec-form { background:#fff; border-radius:16px; padding:18px; border:1px solid rgba(29,158,117,0.1); }
 .nec-map-col { display:flex; flex-direction:column; gap:12px; }
-.nec-map-box2 {
-  background:#1A2820; border-radius:16px; overflow:hidden;
-  position:relative; min-height:220px; flex:1;
-}
-
 .nec-map-box {
   background:#1A2820; border-radius:16px; overflow:hidden;
   position:relative; height:280px; flex:1;
@@ -1375,6 +1348,12 @@
 .val-btn-rej:hover { background:#F1948A; }
 .val-btn-more { background:var(--bg); color:var(--muted); border:1px solid var(--border) !important; flex:0; min-width:70px; }
 .val-btn-close { background:var(--bg); color:var(--muted); border:1px solid var(--border) !important; flex:0; min-width:70px; }
+.val-btn-cancel { 
+  background:#FFF8EC; color:#92660A; 
+  border:1px solid #FDDFA0 !important; 
+  display:none; 
+}
+.val-btn-cancel:hover { background:#FDDFA0; }
 
 .val-expand {
   display:none; padding:12px 14px; border-top:1px solid var(--border); background:var(--bg);
@@ -1387,10 +1366,14 @@
   display:none; font-size:12px; font-weight:500; padding:7px 12px;
   border-radius:8px; margin-top:8px;
 }
-/* Validated card — no action row */
-.val-card[data-estado="validada"] .val-actions { display:none; }
-.val-card[data-estado="validada"] .val-header { cursor:default; }
-
+/* Validated card — ocultar validar/rechazar, mostrar solo cancelar */
+.val-card[data-estado="validada"] .val-btn-ok  { display:none; }
+.val-card[data-estado="validada"] .val-btn-rej { display:none; }
+.val-card[data-estado="validada"] .val-btn-cancel { display:inline-flex !important; }
+/* Pendiente — ocultar cancelar */
+.val-card[data-estado="pendiente"] .val-btn-cancel { display:none; }
+.val-card[data-estado="rechazada"] .val-actions { display:none; }
+.val-card[data-estado="cerrada"]   .val-actions { display:none; }
 /* ══════════════════════════════
    TAB 3 — Muro coordinación
 ══════════════════════════════ */
@@ -1540,6 +1523,14 @@
 	.coord-step-pills { display:none; }
 	.coord-report-row { flex-direction:column; }
         
+		
+	#donViewRegistro [style*="grid-template-columns:2fr 1fr 1fr auto"] {
+	  grid-template-columns: 1fr 1fr;
+	}
+	#donViewRegistro [style*="grid-template-columns:2fr 1fr 1fr auto"] .don-form-group:first-child {
+	  grid-column: 1 / -1;
+	}
+
   /* 1-column necesidad layout — map hidden on small screens */
   .nec-layout { grid-template-columns:1fr; }
   .nec-map-col { display:none; }          /* hide map col, form takes full width */
@@ -1690,12 +1681,74 @@
   white-space:nowrap; transition:background 0.18s;
 }
 .don-assign-btn:hover { background:var(--green-600); }
+
+/* Layout wrappers for punto asignado and acción en don-row */
+.don-row-punto { }
+.don-row-accion { }
+
+@media(max-width:600px) {
+  .don-assign-row {
+    flex-direction:column; align-items:stretch;
+  }
+  .don-assign-row .don-assign-select,
+  .don-assign-row .don-assign-btn {
+    width:100%; flex:none;
+  }
+  .don-filters {
+    flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px;
+    scrollbar-width:none;
+  }
+  .don-filters::-webkit-scrollbar { display:none; }
+}
+
+/* ── Estado circular icons for don-row (matching traza-phase style) ── */
+.don-fase-phases {
+  display:flex; align-items:center; gap:4px; flex-shrink:0;
+}
+.don-fase-circle {
+  width:28px; height:28px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; border:2px solid var(--border);
+  background:#fff; transition:all 0.2s;
+}
+.don-fase-circle.done    { background:var(--teal); border-color:var(--teal); }
+.don-fase-circle.current { border-color:var(--teal); background:var(--teal-light); }
+.don-fase-circle.recibida-done { background:#1D6A3A; border-color:#1D6A3A; }
+
 .don-avanzar-btn {
   padding:5px 12px; border:1.5px solid var(--teal); border-radius:8px;
   background:transparent; color:var(--teal); font-size:11px;
   font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.18s;
 }
 .don-avanzar-btn:hover { background:var(--teal); color:#fff; }
+
+/* ── Tabla artículos donación ── */
+.don-items-table {
+  width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px;
+}
+.don-items-table th {
+  text-align: left; font-size: 10px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.4px;
+  padding: 6px 8px; border-bottom: 1.5px solid var(--border);
+}
+.don-items-table td {
+  padding: 7px 8px; border-bottom: 1px solid var(--border);
+  color: var(--text); vertical-align: middle;
+}
+.don-items-table tr:last-child td { border-bottom: none; }
+.don-item-del {
+  background: none; border: none; cursor: pointer;
+  color: #ccc; font-size: 14px; padding: 0 4px;
+  transition: color 0.15s; line-height: 1;
+}
+.don-item-del:hover { color: #E24B4A; }
+.don-items-wrap {
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.don-items-empty {
+  padding: 12px; text-align: center; font-size: 12px; color: var(--muted);
+}
     </style>
 </head>
 
@@ -1941,8 +1994,8 @@
 									<div id="necCheckSubRow" class="nec-subrow">
 									  <div class="nec-subrow-label">Tipo de punto</div>
 									  <div style="display:flex;gap:8px;flex-wrap:wrap;">
-										<div class="chip chip-checkpoint active" id="necCheckMed" onclick="selectCheckTipo('medico')">🏥 Médico</div>
-										<div class="chip chip-checkpoint" id="necCheckVol" onclick="selectCheckTipo('voluntarios')">🤝 Voluntarios</div>
+										<div class="chip chip-checkpoint active" id="necCheckMed" onclick="selectCheckTipo('sanitario')">🏥 Sanitario</div>
+										<div class="chip chip-checkpoint" id="necCheckVol" onclick="selectCheckTipo('coordinacion')">🤝 Coordinación</div>
 									  </div>
 									</div>
 
@@ -2023,12 +2076,12 @@
 								  <div class="val-meta">📍 Ruzafa · 6 personas <span class="d-badge d-badge-urg">🔴 Alta — Emergencia</span></div>
 								</div>
 							  </div>
-							  <div class="val-actions">
-								<button class="val-btn val-btn-ok"   onclick="validarNec(event,'valCard1','valAct1','valDone1',true)">✓ Validar</button>
-								<button class="val-btn val-btn-rej"  onclick="validarNec(event,'valCard1','valAct1','valDone1',false)">✕ Rechazar</button>
-								<button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand1');event.stopPropagation()">Detalles</button>
-								<button class="val-btn" style="color:var(--muted);border-color:var(--border);" onclick="cerrarNecesidad('valCard1',event)">⏹ Cerrar</button>
-							  </div>
+							 <div class="val-actions">
+							  <button class="val-btn val-btn-ok"     onclick="validarNec(event,'valCard1','valAct1','valDone1',true)">✓ Validar</button>
+							  <button class="val-btn val-btn-rej"    onclick="validarNec(event,'valCard1','valAct1','valDone1',false)">✕ Rechazar</button>
+							  <button class="val-btn val-btn-more"   onclick="toggleValExpand('valExpand1');event.stopPropagation()">Detalles</button>
+							  <button class="val-btn val-btn-cancel" onclick="cerrarNecesidad('valCard1',event)">⏹ Cancelar</button>
+							</div>
 							</div>
 							<div class="val-expand" id="valExpand1">
 							  <div class="val-expand-grid">
@@ -2053,17 +2106,18 @@
 									<span class="vol-tipo-badge" style="color:#E67E22;border-color:#E67E22;">🛠️ Técnico</span>
 								  </div>
 								  <div class="val-meta">
-									📍 Ruzafa
-									<span class="d-badge" style="background:#FDEDEC;color:#C0392B;">⚠️ Déficit 5 voluntarios</span>
+									📍 Ruzafa									
 								  </div>
 								</div>
 							  </div>
-							  <div class="val-actions">
-								<button class="val-btn val-btn-ok"   onclick="validarNec(event,'valCard2','valAct2','valDone2',true)">✓ Validar</button>
-								<button class="val-btn val-btn-rej"  onclick="validarNec(event,'valCard2','valAct2','valDone2',false)">✕ Rechazar</button>
-								<button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand2');event.stopPropagation()">Detalles</button>
-								<button class="val-btn" style="color:var(--muted);border-color:var(--border);" onclick="cerrarNecesidad('valCard2',event)">⏹ Cerrar</button>
-							  </div>
+							  
+							 <div class="val-actions">
+							  <button class="val-btn val-btn-ok"     onclick="validarNec(event,'valCard2','valAct2','valDone2',true)">✓ Validar</button>
+							  <button class="val-btn val-btn-rej"    onclick="validarNec(event,'valCard2','valAct2','valDone2',false)">✕ Rechazar</button>
+							  <button class="val-btn val-btn-more"   onclick="toggleValExpand('valExpand2');event.stopPropagation()">Detalles</button>
+							  <button class="val-btn val-btn-cancel" onclick="cerrarNecesidad('valCard2',event)">⏹ Cancelar</button>
+							</div>
+
 							</div>
 							<div class="val-expand" id="valExpand2">
 							  <!-- Balance visual demanda / oferta -->
@@ -2097,7 +2151,7 @@
 							</div>
 						  </div>
 
-						  <!-- Card 3 — Voluntarios: oferta supera demanda -->
+						  <!-- Card 3 — Voluntarios:  -->
 						  <div class="val-card" id="valCard3" data-estado="pendiente" style="border-left:3px solid #7B5EA7;">
 							<div class="val-header">
 							  <div class="val-header-top">
@@ -2109,16 +2163,16 @@
 								  </div>
 								  <div class="val-meta">
 									📍 Benimaclet
-									<span class="d-badge" style="background:#E8F8F1;color:#1D9E75;">✅ Superávit 15 disponibles</span>
+									
 								  </div>
 								</div>
 							  </div>
-							  <div class="val-actions">
-								<button class="val-btn val-btn-ok"   onclick="validarNec(event,'valCard3','valAct3','valDone3',true)">✓ Validar</button>
-								<button class="val-btn val-btn-rej"  onclick="validarNec(event,'valCard3','valAct3','valDone3',false)">✕ Rechazar</button>
-								<button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand3');event.stopPropagation()">Detalles</button>
-								<button class="val-btn" style="color:var(--muted);border-color:var(--border);" onclick="cerrarNecesidad('valCard3',event)">⏹ Cerrar</button>
-							  </div>
+							 <div class="val-actions">
+							  <button class="val-btn val-btn-ok"     onclick="validarNec(event,'valCard3','valAct3','valDone3',true)">✓ Validar</button>
+							  <button class="val-btn val-btn-rej"    onclick="validarNec(event,'valCard3','valAct3','valDone3',false)">✕ Rechazar</button>
+							  <button class="val-btn val-btn-more"   onclick="toggleValExpand('valExpand3');event.stopPropagation()">Detalles</button>
+							  <button class="val-btn val-btn-cancel" onclick="cerrarNecesidad('valCard3',event)">⏹ Cancelar</button>
+							</div>
 							</div>
 							<div class="val-expand" id="valExpand3">
 							  <div class="val-balance">
@@ -2161,12 +2215,12 @@
 								  <div class="val-meta">📍 Centro · 🏥 Médico · Apertura solicitada <span class="d-badge d-badge-pend">Pendiente</span></div>
 								</div>
 							  </div>
-							  <div class="val-actions">
-								<button class="val-btn val-btn-ok"   onclick="validarNec(event,'valCard4','valAct4','valDone4',true)">✓ Validar</button>
-								<button class="val-btn val-btn-rej"  onclick="validarNec(event,'valCard4','valAct4','valDone4',false)">✕ Rechazar</button>
-								<button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand4');event.stopPropagation()">Detalles</button>
-								<button class="val-btn" style="color:var(--muted);border-color:var(--border);" onclick="cerrarNecesidad('valCard4',event)">⏹ Cerrar</button>
-							  </div>
+						     <div class="val-actions">
+							  <button class="val-btn val-btn-ok"     onclick="validarNec(event,'valCard4','valAct4','valDone4',true)">✓ Validar</button>
+							  <button class="val-btn val-btn-rej"    onclick="validarNec(event,'valCard4','valAct4','valDone4',false)">✕ Rechazar</button>
+							  <button class="val-btn val-btn-more"   onclick="toggleValExpand('valExpand4');event.stopPropagation()">Detalles</button>
+							  <button class="val-btn val-btn-cancel" onclick="cerrarNecesidad('valCard4',event)">⏹ Cancelar</button>
+							</div>
 							</div>
 							<div class="val-expand" id="valExpand4">
 							  <div class="val-expand-grid">
@@ -2195,16 +2249,16 @@
 								  <div class="val-title">Refugio / Hospedaje · C/ Colón, 40</div>
 								  <div class="val-meta">
 									📍 Eixample
-									<span class="d-badge" style="background:#E8F8F1;color:#1D9E75;">✅ Superávit 30 plazas libres</span>
+									
 								  </div>
 								</div>
 							  </div>
-							  <div class="val-actions">
-								<button class="val-btn val-btn-ok"   onclick="validarNec(event,'valCard5','valAct5','valDone5',true)">✓ Validar</button>
-								<button class="val-btn val-btn-rej"  onclick="validarNec(event,'valCard5','valAct5','valDone5',false)">✕ Rechazar</button>
-								<button class="val-btn val-btn-more" onclick="toggleValExpand('valExpand5');event.stopPropagation()">Detalles</button>
-								<button class="val-btn" style="color:var(--muted);border-color:var(--border);" onclick="cerrarNecesidad('valCard5',event)">⏹ Cerrar</button>
-							  </div>
+							 <div class="val-actions">
+							  <button class="val-btn val-btn-ok"     onclick="validarNec(event,'valCard5','valAct5','valDone5',true)">✓ Validar</button>
+							  <button class="val-btn val-btn-rej"    onclick="validarNec(event,'valCard5','valAct5','valDone5',false)">✕ Rechazar</button>
+							  <button class="val-btn val-btn-more"   onclick="toggleValExpand('valExpand5');event.stopPropagation()">Detalles</button>
+							  <button class="val-btn val-btn-cancel" onclick="cerrarNecesidad('valCard5',event)">⏹ Cancelar</button>
+							</div>
 							</div>
 							<div class="val-expand" id="valExpand5">
 							  <div class="val-balance">
@@ -2466,7 +2520,7 @@
 							  📲 Generar QR del kit
 							</button>
 
-							<  <!-- QR resultado -->
+							<!-- QR resultado -->
 							<div id="volQrBox" style="display:none;text-align:center;padding:16px;background:#fff;border-radius:12px;border:1px solid #e0e0e0;">
 							  <div id="volQrImg" style="margin:0 auto 8px;"></div>
 							  <div id="volQrCode" style="font-size:13px;font-weight:700;letter-spacing:2px;color:#333;margin-bottom:4px;"></div>
@@ -2545,78 +2599,111 @@
 
                         <!-- ══ VISTA REGISTRO ══ -->
                         <div id="donViewRegistro">
-                          <div class="don-card">
-                            <div class="don-card-title">🚛 Nueva donación logística</div>
-                            <div class="don-card-sub">Registra el envío de materiales de tu empresa</div>
+						  <div class="don-card">
+							<div class="don-card-title">🚛 Nueva donación logística</div>
+							<div class="don-card-sub">Registra el envío de materiales de tu empresa</div>
 
-                            <div class="don-form-group">
-                              <label class="don-label">Empresa donante</label>
-                              <input id="donEmpresa" class="don-input" placeholder="Ej: Logística Norte S.L.">
-                            </div>
-                            <div class="don-form-group">
-                              <label class="don-label">Categoría del material</label>
-                              <select id="donCategoria" class="don-input">
-                                <option value="">Selecciona categoría</option>
-                                <option value="alimentacion">🍱 Alimentación</option>
-                                <option value="higiene">🧴 Higiene y sanitario</option>
-                                <option value="ropa">🧥 Ropa y abrigo</option>
-                                <option value="herramientas">🔧 Herramientas</option>
-                                <option value="agua">💧 Agua</option>
-                                <option value="otro">📦 Otro</option>
-                              </select>
-                            </div>
-                            <div class="don-form-group">
-                              <label class="don-label">Descripción del material</label>
-                              <input id="donDesc" class="don-input" placeholder="Ej: Palés de agua embotellada 1.5L">
-                            </div>
-                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                              <div class="don-form-group">
-                                <label class="don-label">Cantidad</label>
-                                <input id="donCantidad" class="don-input" type="number" min="1" placeholder="Ej: 20">
-                              </div>
-                              <div class="don-form-group">
-                                <label class="don-label">Unidad</label>
-                                <select id="donUnidad" class="don-input">
-                                  <option value="palés">Palés</option>
-                                  <option value="cajas">Cajas</option>
-                                  <option value="kg">Kg</option>
-                                  <option value="litros">Litros</option>
-                                  <option value="unidades">Unidades</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div class="don-form-group">
-                              <label class="don-label">Tipo de transporte</label>
-                              <select id="donTransporte" class="don-input">
-                                <option value="camion">🚛 Camión propio</option>
-                                <option value="furgoneta">🚐 Furgoneta propia</option>
-                                <option value="recogida">📍 Necesita recogida en almacén</option>
-                              </select>
-                            </div>
-                            <div class="don-form-group">
-                              <label class="don-label">Disponibilidad (fecha y franja)</label>
-                              <input id="donFecha" class="don-input" placeholder="Ej: Mañana, 9:00–14:00">
-                            </div>
-                            <div class="don-form-group">
-                              <label class="don-label">Ubicación de origen</label>
-                              <input id="donOrigen" class="don-input" placeholder="Ej: Polígono Industrial Norte, Valencia">
-                            </div>
+							<!-- Datos generales del envío -->
+							<div class="don-form-group">
+							  <label class="don-label">Empresa donante</label>
+							  <input id="donEmpresa" class="don-input" placeholder="Ej: Logística Norte S.L.">
+							</div>
+							<div class="don-form-group">
+							  <label class="don-label">Tipo de transporte</label>
+							  <select id="donTransporte" class="don-input">
+								<option value="camion">🚛 Camión propio</option>
+								<option value="furgoneta">🚐 Furgoneta propia</option>
+								<option value="recogida">📍 Necesita recogida en almacén</option>
+							  </select>
+							</div>
+							<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+							  <div class="don-form-group">
+								<label class="don-label">Disponibilidad</label>
+								<input id="donFecha" class="don-input" placeholder="Ej: Mañana, 9:00–14:00">
+							  </div>
+							  <div class="don-form-group">
+								<label class="don-label">Ubicación de origen</label>
+								<input id="donOrigen" class="don-input" placeholder="Ej: Polígono Norte, Valencia">
+							  </div>
+							</div>
 
-                            <button onclick="registrarDonacion()"
-                              style="width:100%;padding:12px;border:none;border-radius:12px;background:var(--teal);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.18s;">
-                              Registrar donación
-                            </button>
+							<!-- Separador artículos -->
+							<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:4px;">
+							  Artículos a donar
+							</div>
 
-                            <!-- Confirmación -->
-                            <div id="donConfirm" style="display:none;background:#F0FAF6;border:1px solid #B2DFCE;border-radius:12px;padding:14px 16px;">
-                              <div style="font-weight:700;font-size:13px;color:#0E6E4A;margin-bottom:6px;">✅ Donación registrada</div>
-                              <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">Código asignado:</div>
-                              <div id="donCodigo" style="font-family:monospace;font-size:20px;font-weight:700;color:var(--teal);letter-spacing:3px;margin-bottom:10px;"></div>
-                              <div id="donQrImg" style="margin-bottom:8px;"></div>
-                              <div style="font-size:11px;color:var(--muted);">El coordinador recibirá la solicitud y asignará un punto de recogida.</div>
-                            </div>
-                          </div>
-                        </div><!-- /donViewRegistro -->
+							<!-- Fila de entrada de artículo -->
+							<div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;">
+							  <div class="don-form-group" style="margin:0;">
+								<label class="don-label">Descripción</label>
+								<input id="donDesc" class="don-input" placeholder="Ej: Agua embotellada 1.5L">
+							  </div>
+							  <div class="don-form-group" style="margin:0;">
+								<label class="don-label">Cantidad</label>
+								<input id="donCantidad" class="don-input" type="number" min="1" placeholder="20">
+							  </div>
+							  <div class="don-form-group" style="margin:0;">
+								<label class="don-label">Unidad</label>
+								<select id="donUnidad" class="don-input">
+								  <option value="palés">Palés</option>
+								  <option value="cajas">Cajas</option>
+								  <option value="kg">Kg</option>
+								  <option value="litros">Litros</option>
+								  <option value="unidades">Unidades</option>
+								</select>
+							  </div>
+							  <div class="don-form-group" style="margin:0;">
+								<label class="don-label" style="opacity:0;">·</label>
+								<select id="donCategoria" class="don-input">
+								  <option value="">Categoría</option>
+								  <option value="alimentacion">🍱 Alimentación</option>
+								  <option value="higiene">🧴 Higiene</option>
+								  <option value="ropa">🧥 Ropa</option>
+								  <option value="herramientas">🔧 Herramientas</option>
+								  <option value="agua">💧 Agua</option>
+								  <option value="otro">📦 Otro</option>
+								</select>
+							  </div>
+							</div>
+							<button onclick="donAgregarArticulo()"
+							  style="width:100%;padding:9px;border:1.5px dashed var(--teal);border-radius:10px;background:transparent;color:var(--teal);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s;">
+							  + Añadir artículo a la lista
+							</button>
+
+							<!-- Tabla de artículos añadidos -->
+							<div class="don-items-wrap" id="donItemsWrap" style="display:none;">
+							  <table class="don-items-table">
+								<thead>
+								  <tr>
+									<th>Artículo</th>
+									<th>Cant.</th>
+									<th>Unidad</th>
+									<th>Categoría</th>
+									<th></th>
+								  </tr>
+								</thead>
+								<tbody id="donItemsTbody"></tbody>
+							  </table>
+							</div>
+							<div id="donItemsEmpty" class="don-items-empty" style="display:none;">
+							  Añade al menos un artículo para registrar la donación
+							</div>
+
+							<button onclick="registrarDonacion()"
+							  style="width:100%;padding:12px;border:none;border-radius:12px;background:var(--teal);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.18s;">
+							  Registrar donación
+							</button>
+
+							<!-- Confirmación -->
+							<div id="donConfirm" style="display:none;background:#F0FAF6;border:1px solid #B2DFCE;border-radius:12px;padding:14px 16px;">
+							  <div style="font-weight:700;font-size:13px;color:#0E6E4A;margin-bottom:6px;">✅ Donación registrada</div>
+							  <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">Código asignado:</div>
+							  <div id="donCodigo" style="font-family:monospace;font-size:20px;font-weight:700;color:var(--teal);letter-spacing:3px;margin-bottom:10px;"></div>
+							  <div id="donQrImg" style="margin-bottom:8px;"></div>
+							  <div style="font-size:11px;color:var(--muted);">El coordinador recibirá la solicitud y asignará un punto de recogida.</div>
+							</div>
+						  </div>
+						</div><!-- /donViewRegistro -->
 
                         <!-- ══ VISTA PANEL COORDINADOR ══ -->
                         <div id="donViewPanel" style="display:none;">
@@ -2974,18 +3061,6 @@
           document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', panels[i]===name));
           document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
           document.getElementById('tab-'+name).classList.add('active');
-        }
-        
-        // ── Type chips ──
-        function selectChip(el) {
-          el.closest('.type-chips').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-          el.classList.add('active');
-        }
-        
-        // ── Priority ──
-        function selectPrio(el, level) {
-          el.closest('.priority-row').querySelectorAll('.prio-btn').forEach(b => b.className='prio-btn');
-          el.classList.add('active-'+level);
         }
         
         // ── Activate emergency → add NEW hot point on map each time ──
@@ -3573,11 +3648,12 @@ function addDonTrazaRow(cod) {
     row.dataset.filter = 'donacion';
     trazaList.appendChild(row);
   }
-  syncDonTraza(cod);
-  updateTrazaCount();
-
+ 
   var activeFilter = document.querySelector('.traza-filter-btn.active');
   if (activeFilter && activeFilter.dataset.filter !== 'all') filtrarTraza(activeFilter);
+  
+   syncDonTraza(cod);
+   updateTrazaCount();
 }
 
 // ── Sincronizar estado de donación en trazabilidad ──
@@ -3587,9 +3663,15 @@ function syncDonTraza(cod) {
   var d = donaciones[cod];
   if (!d) return;
 
-  var faseTraza = ['📦 Pendiente asignación','📍 Asignada','🚛 En tránsito','✅ Recibida'];
-  var faseActual = faseTraza[d.fase] || faseTraza[0];
+  var donFaseIcons = ['⏳','📍','🚛','✅'];
+  var donFaseLabels = ['Pendiente','Asignada','En tránsito','Recibida'];
   var isRecibida = d.fase === 3;
+
+  var donPhasesHtml = donFaseIcons.map(function(icon, i) {
+    var cls = i < d.fase ? (i === 3 ? 'recibida-done' : 'done') : (i === d.fase ? 'current' : '');
+    return (i > 0 ? '<div class="traza-arrow">›</div>' : '') +
+      '<div class="don-fase-circle ' + cls + '" title="' + donFaseLabels[i] + '">' + icon + '</div>';
+  }).join('');
 
   row.innerHTML =
     '<div class="traza-dot" style="background:#2C5FBF;"></div>' +
@@ -3599,13 +3681,11 @@ function syncDonTraza(cod) {
         (d.puntoAsignado ? ' · 📍 ' + d.puntoAsignado.split('—')[0].trim() : '') +
       '</div>' +
     '</div>' +
-    (isRecibida
-      ? '<span class="traza-entregado">✓ Recibida ' + d.ts + '</span>'
-      : '<span style="font-size:11px;font-weight:600;color:#2C5FBF;background:#EEF4FF;border:1px solid #C3D4F8;padding:3px 8px;border-radius:20px;flex-shrink:0;">' + faseActual + '</span>'
-    ) +
+    '<div class="don-fase-phases">' + donPhasesHtml + '</div>' +
     '<span class="traza-don-badge">🚛 Donación</span>' +
     '<div class="traza-id">' + cod + '</div>';
 }
+
 
 // ── Init ──
 document.addEventListener('DOMContentLoaded', function() {
@@ -3657,51 +3737,103 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // ── Registrar donación ──
-        function registrarDonacion() {
-          var empresa   = document.getElementById('donEmpresa').value.trim();
-          var categoria = document.getElementById('donCategoria').value;
-          var desc      = document.getElementById('donDesc').value.trim();
-          var cantidad  = document.getElementById('donCantidad').value.trim();
-          var unidad    = document.getElementById('donUnidad').value;
-          var transporte= document.getElementById('donTransporte').value;
-          var fecha     = document.getElementById('donFecha').value.trim();
-          var origen    = document.getElementById('donOrigen').value.trim();
+       // ── Lista temporal de artículos antes de registrar ──
+	var donItemsTemp = [];
 
-          if (!empresa || !categoria || !desc || !cantidad) {
-            alert('Por favor rellena empresa, categoría, descripción y cantidad.');
-            return;
-          }
+	function donAgregarArticulo() {
+	  var desc     = document.getElementById('donDesc').value.trim();	 
+	  var cantidad = document.getElementById('donCantidad').value.trim();
+	  var unidad   = document.getElementById('donUnidad').value;
+	  var categoria= document.getElementById('donCategoria').value;
 
-          donCounter++;
-          var cat    = DON_CATEGORIAS[categoria] || DON_CATEGORIAS.otro;
-          var prefix = categoria.toUpperCase().substring(0,3);
-          var codigo = 'DON-' + prefix + '-' + String(donCounter).padStart(3,'0');
-          var ts     = new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
 
-          donaciones[codigo] = {
-            codigo: codigo, empresa: empresa, categoria: categoria,
-            desc: desc, cantidad: cantidad, unidad: unidad,
-            transporte: transporte, fecha: fecha, origen: origen,
-            cat: cat, fase: 0, puntoAsignado: null, ts: ts, cantidadReal: null
-          };
+	  if (!desc || !cantidad || !categoria) {
+		alert('Rellena descripción, cantidad y categoría del artículo.');
+		return;
+	  }
 
-			// Registrar en trazabilidad
-			addDonTrazaRow(codigo);
-			
-          // QR
-          var payload = encodeURIComponent('KIT2HELP|DON:' + codigo + '|EMP:' + empresa);
-          var qrUrl   = 'https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=' + payload;
-          document.getElementById('donCodigo').textContent = codigo;
-          document.getElementById('donQrImg').innerHTML =
-            '<img src="' + qrUrl + '" width="120" height="120" style="border-radius:8px;" alt="QR donación">';
-          document.getElementById('donConfirm').style.display = 'block';
+	  donItemsTemp.push({ desc: desc, cantidad: cantidad, unidad: unidad, categoria: categoria });
 
-          // Limpiar formulario
-          ['donEmpresa','donDesc','donCantidad','donFecha','donOrigen'].forEach(function(id){
-            document.getElementById(id).value = '';
-          });
-          document.getElementById('donCategoria').value = '';
-        }
+	  // Limpiar campos de artículo
+	  document.getElementById('donDesc').value    = '';
+	  document.getElementById('donCantidad').value = '';
+	  document.getElementById('donCategoria').value = '';
+
+	  donRenderTabla();
+	}
+
+	function donRenderTabla() {
+	  var tbody = document.getElementById('donItemsTbody');
+	  var wrap  = document.getElementById('donItemsWrap');
+	  if (!tbody || !wrap) return;
+
+	  wrap.style.display = donItemsTemp.length ? 'block' : 'none';
+
+	  tbody.innerHTML = donItemsTemp.map(function(it, i) {
+		var cat = DON_CATEGORIAS[it.categoria] || DON_CATEGORIAS.otro;
+		return '<tr>' +
+		  '<td>' + cat.icon + ' ' + it.desc + '</td>' +
+		  '<td>' + it.cantidad + '</td>' +
+		  '<td>' + it.unidad + '</td>' +
+		  '<td style="font-size:11px;color:var(--muted);">' + it.categoria + '</td>' +
+		  '<td><button class="don-item-del" onclick="donEliminarArticulo(' + i + ')" title="Eliminar">✕</button></td>' +
+		'</tr>';
+	  }).join('');
+	}
+
+	function donEliminarArticulo(idx) {
+	  donItemsTemp.splice(idx, 1);
+	  donRenderTabla();
+	}
+
+	function registrarDonacion() {
+	  var empresa    = document.getElementById('donEmpresa').value.trim();
+	  var transporte = document.getElementById('donTransporte').value;
+	  var fecha      = document.getElementById('donFecha').value.trim();
+	  var origen     = document.getElementById('donOrigen').value.trim();
+
+	  if (!empresa) { alert('Indica la empresa donante.'); return; }
+	  if (donItemsTemp.length === 0) { alert('Añade al menos un artículo a la lista.'); return; }
+
+	  donCounter++;
+	  // Usar la categoría del primer artículo como categoría principal del registro
+	  var catPrincipal = donItemsTemp[0].categoria;
+	  var cat    = DON_CATEGORIAS[catPrincipal] || DON_CATEGORIAS.otro;
+	  var prefix = catPrincipal.toUpperCase().substring(0,3);
+	  var codigo = 'DON-' + prefix + '-' + String(donCounter).padStart(3,'0');
+	  var ts     = new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+
+	  // Descripción resumida para la vista de lista
+	  var descResumen = donItemsTemp.length === 1
+		? donItemsTemp[0].desc + ' · ' + donItemsTemp[0].cantidad + ' ' + donItemsTemp[0].unidad
+		: donItemsTemp.length + ' tipos de material';
+
+	  var cantidadTotal = donItemsTemp.reduce(function(s,it){ return s + parseFloat(it.cantidad||0); }, 0);
+
+	  donaciones[codigo] = {
+		codigo: codigo, empresa: empresa, categoria: catPrincipal,
+		desc: descResumen, cantidad: cantidadTotal, unidad: 'uds.',
+		items: JSON.parse(JSON.stringify(donItemsTemp)),
+		transporte: transporte, fecha: fecha, origen: origen,
+		cat: cat, fase: 0, puntoAsignado: null, ts: ts, cantidadReal: null
+	  };
+	  
+	  // Registrar en trazabilidad
+	 addDonTrazaRow(codigo);
+
+	  // QR
+	  var payload = encodeURIComponent('KIT2HELP|DON:' + codigo + '|EMP:' + empresa + '|ART:' + donItemsTemp.length);
+	  var qrUrl   = 'https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=' + payload;
+	  document.getElementById('donCodigo').textContent = codigo;
+	  document.getElementById('donQrImg').innerHTML =
+		'<img src="' + qrUrl + '" width="120" height="120" style="border-radius:8px;" alt="QR donación">';
+	  document.getElementById('donConfirm').style.display = 'block';
+
+	  // Reset
+	  donItemsTemp = [];
+	  donRenderTabla();
+	  ['donEmpresa','donFecha','donOrigen'].forEach(function(id){ document.getElementById(id).value = ''; });
+	}
 
         // ── Render panel coordinador ──
         function renderDonPanel() {
@@ -3710,7 +3842,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		  if (!list) return;
 		  var keys = Object.keys(donaciones);
 		  if (!keys.length) { list.innerHTML = ''; empty.style.display = 'block'; list.appendChild(empty); return; }
-		  empty.style.display = 'none';
+		 // empty.style.display = 'none';
 		  list.innerHTML = keys.map(function(cod){ return renderDonRowHTML(cod, 'coord'); }).join('');
 		}
 
@@ -3720,78 +3852,98 @@ document.addEventListener('DOMContentLoaded', function() {
 		  if (!list) return;
 		  var keys = Object.keys(donaciones);
 		  if (!keys.length) { list.innerHTML = ''; empty.style.display = 'block'; list.appendChild(empty); return; }
-		  empty.style.display = 'none';
+		 // empty.style.display = 'none';
 		  list.innerHTML = keys.map(function(cod){ return renderDonRowHTML(cod, 'mias'); }).join('');
 		}
 
         // ── HTML de fila de donación ──
+		
+		function _donItemsHtml(d) {
+		  if (!d.items || d.items.length <= 1) return '';
+		  return '<div style="font-size:11px;color:var(--muted);margin:2px 0 4px;font-weight:600;">📦 Artículos (' + d.items.length + ')</div>' +
+			'<div style="display:flex;flex-direction:column;gap:3px;">' +
+			d.items.map(function(it) {
+			  var cat = DON_CATEGORIAS[it.categoria] || DON_CATEGORIAS.otro;
+			  return '<div style="font-size:11px;color:var(--text);display:flex;gap:6px;">' +
+				'<span>' + cat.icon + '</span>' +
+				'<span style="flex:1;">' + it.desc + '</span>' +
+				'<span style="color:var(--muted);">' + it.cantidad + ' ' + it.unidad + '</span>' +
+			  '</div>';
+			}).join('') +
+			'</div>';
+		}
+
 		// scope: 'coord' | 'mias'
 		function renderDonRowHTML(cod, scope) {
-		  var d      = donaciones[cod];
-		  var cat    = d.cat;
-		  var estado = DON_ESTADOS[d.fase];
-		  var isCoord = scope === 'coord';
+		  var d       = donaciones[cod];
+		  var cat     = d.cat;
+		  var estado  = DON_ESTADOS[d.fase];
+		  var isCoord = (scope === 'coord' || scope === true);
+		  var isMias  = (scope === 'mias'  || scope === false);
 
+		  var DON_FASE_ICONS = ['⏳','📍','🚛','✅'];
 		  var fasesHtml = DON_FASES.map(function(f, i) {
-			var cls = i < d.fase ? 'done' : (i === d.fase ? 'current' : '');
-			return (i > 0 ? '<span class="don-phase-arrow">›</span>' : '') +
-			  '<span class="don-phase-step ' + cls + '">' + f + '</span>';
+			var isRecibida = i === 3 && i <= d.fase;
+			var cls = i < d.fase ? (i === 3 ? 'recibida-done' : 'done') : (i === d.fase ? 'current' : '');
+			return (i > 0 ? '<div class="traza-arrow">›</div>' : '') +
+			  '<div class="don-fase-circle ' + cls + '" title="' + f + '">' + DON_FASE_ICONS[i] + '</div>';
 		  }).join('');
 
 		  var puntoHtml = d.puntoAsignado
-			? '<div style="font-size:11px;color:var(--muted);">📍 ' + d.puntoAsignado + '</div>' : '';
+			? '<div class="don-row-punto"><div style="font-size:11px;color:var(--muted);">📍 ' + d.puntoAsignado + '</div></div>' : '';
 
-		  var accionHtml = '';
+		  var itemsHtml = _donItemsHtml(d);
 
-		  if (isCoord) {
-			// Coordinador fase 0: asignar punto
-			if (d.fase === 0) {
-			  var opts = DON_PUNTOS.map(function(p){
-				return '<option value="' + p + '">' + p + '</option>';
-			  }).join('');
-			  accionHtml =
-				'<div class="don-assign-row">' +
-				  '<select class="don-assign-select" id="donsel_' + cod + '">' +
-					'<option value="">Asignar punto de recogida…</option>' + opts +
-				  '</select>' +
-				  '<button class="don-assign-btn" onclick="asignarPunto(\'' + cod + '\')">Asignar</button>' +
-				'</div>';
-			}
-			// Coordinador fase 2 (en tránsito): confirmar recepción con cantidad real
-			if (d.fase === 2) {
-			  accionHtml =
-				'<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">' +
-				  '<input id="donReal_' + cod + '" placeholder="Cantidad real recibida" ' +
-					'style="flex:1;min-width:100px;border:1.5px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;font-family:DM Sans,sans-serif;outline:none;">' +
-				  '<button class="don-assign-btn" onclick="confirmarRecepcion(\'' + cod + '\')">✅ Confirmar recepción</button>' +
-				'</div>';
-			}
-			// Recibida: mostrar cantidad real
-			if (d.fase === 3 && d.cantidadReal) {
-			  accionHtml =
-				'<div style="font-size:11px;color:var(--teal);font-weight:600;">' +
-				  '✅ Cantidad confirmada: ' + d.cantidadReal + ' ' + d.unidad +
-				'</div>';
-			}
-		  } else {
-			// Voluntario fase 1 (asignada): marcar en tránsito
-			if (d.fase === 1) {
-			  accionHtml =
-				'<button class="don-avanzar-btn" onclick="marcarTransito(\'' + cod + '\')" ' +
-				  'style="background:var(--teal);color:#fff;border-color:var(--teal);">' +
-				  '🚛 Marcar como en tránsito' +
-				'</button>';
-			}
-			// Recibida: confirmación visual
-			if (d.fase === 3) {
-			  accionHtml =
-				'<div style="font-size:11px;color:var(--teal);font-weight:600;">' +
-				  '✅ Recibido · ' + (d.cantidadReal ? 'Cantidad confirmada: ' + d.cantidadReal + ' ' + d.unidad : 'Entrega verificada') +
-				'</div>';
-			}
+		  // COORDINADOR: asignar punto (fase 0)
+		  var assignHtml = '';
+		  if (isCoord && d.fase === 0) {
+			var opts = DON_PUNTOS.map(function(p){
+			  return '<option value="' + p + '">' + p + '</option>';
+			}).join('');
+			assignHtml =
+			  '<div class="don-assign-row">' +
+				'<select class="don-assign-select" id="donsel_' + cod + '">' +
+				  '<option value="">Asignar punto de recogida…</option>' + opts +
+				'</select>' +
+				'<button class="don-assign-btn" onclick="asignarPunto(\'' + cod + '\')">Asignar</button>' +
+			  '</div>';
 		  }
 
-		  return '<div class="don-row" id="donrow_' + scope + '_' + cod + '" data-estado="' + estado + '">' +
+		  // VOLUNTARIO (mis donaciones): marcar en tránsito (fase 1)
+		  var transitoHtml = '';
+		  if (isMias && d.fase === 1) {
+			transitoHtml =
+			  '<button class="don-avanzar-btn" onclick="marcarTransito(\'' + cod + '\')" ' +
+				'style="background:var(--teal);color:#fff;border-color:var(--teal);">' +
+				'🚛 Marcar como en tránsito' +
+			  '</button>';
+		  }
+
+		  // COORDINADOR: confirmar recepción (fase 2)
+		  var confirmarHtml = '';
+		  if (isCoord && d.fase === 2) {
+			confirmarHtml =
+			  '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">' +
+				'<input id="donReal_' + cod + '" placeholder="Cantidad real recibida" ' +
+				  'style="flex:1;min-width:100px;border:1.5px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;font-family:DM Sans,sans-serif;outline:none;">' +
+				'<button class="don-assign-btn" onclick="confirmarRecepcion(\'' + cod + '\')">✅ Confirmar recepción</button>' +
+			  '</div>';
+		  }
+
+		  // Recibida: confirmación visual
+		  var recibidaHtml = '';
+		  if (d.fase === 3) {
+			recibidaHtml =
+			  '<div style="font-size:11px;color:var(--teal);font-weight:600;">' +
+				'✅ ' + (d.cantidadReal
+				  ? 'Cantidad confirmada: ' + d.cantidadReal + ' ' + d.unidad
+				  : 'Entrega verificada') +
+			  '</div>';
+		  }
+
+		  var rowId = 'donrow_' + (isCoord ? 'coord' : 'mias') + '_' + cod;
+
+		  return '<div class="don-row" id="' + rowId + '" data-estado="' + estado + '">' +
 			'<div class="don-row-header">' +
 			  '<div class="don-row-icon" style="background:' + cat.bg + ';color:' + cat.color + ';">' + cat.icon + '</div>' +
 			  '<div class="don-row-info">' +
@@ -3800,8 +3952,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			  '</div>' +
 			  '<span class="don-estado ' + estado + '">' + DON_FASES[d.fase] + '</span>' +
 			'</div>' +
-			'<div class="don-row-phases">' + fasesHtml + '</div>' +
-			puntoHtml + accionHtml +
+			'<div class="don-fase-phases">' + fasesHtml + '</div>' +
+			puntoHtml + itemsHtml +
+			'<div class="don-row-accion">' + assignHtml + transitoHtml + confirmarHtml + recibidaHtml + '</div>' +
 			'<div class="don-row-code">' + cod + ' · ' + d.ts + (d.fecha ? ' · ' + d.fecha : '') + '</div>' +
 		  '</div>';
 		}
@@ -3812,6 +3965,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		  if (rc) rc.outerHTML = renderDonRowHTML(cod, 'coord');
 		  var rm = document.getElementById('donrow_mias_' + cod);
 		  if (rm) rm.outerHTML = renderDonRowHTML(cod, 'mias');
+		   syncDonTraza(cod);
 		}
 
 		// ── Asignar punto (coordinador, fase 0 → 1) ──
@@ -3821,7 +3975,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		  donaciones[cod].puntoAsignado = sel.value;
 		  donaciones[cod].fase = 1;
 		  _refreshRow(cod);
-		  syncDonTraza(cod);
+		 
 		}
 
 		// ── Marcar en tránsito (voluntario, fase 1 → 2) ──
@@ -3829,7 +3983,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		  if (!donaciones[cod] || donaciones[cod].fase !== 1) return;
 		  donaciones[cod].fase = 2;
 		  _refreshRow(cod);
-		  syncDonTraza(cod);
+		  
 		}
 
 		// ── Confirmar recepción (coordinador, fase 2 → 3) ──
@@ -3838,7 +3992,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		  donaciones[cod].cantidadReal = (input && input.value.trim()) || donaciones[cod].cantidad;
 		  donaciones[cod].fase = 3;
 		  _refreshRow(cod);
-		  syncDonTraza(cod);
+		
 		}
 
 		// ── Filtrar donaciones en panel coordinador ──
@@ -4007,6 +4161,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // ══════════════════════════════════════════════
         // DEMO — 5 tabs (mobile-first)
@@ -4131,7 +4286,6 @@ document.addEventListener('DOMContentLoaded', function() {
           var g = document.getElementById(groupId);
           if (g) g.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
           el.classList.add('active');
-		  console.log("tenemos "+el.classList);
           var isEmergency = el.classList.contains('chip-emergency');
           var notice  = document.getElementById('emergencyNotice');
           var prioRow = document.getElementById('necPrioRow');
@@ -4252,82 +4406,135 @@ document.addEventListener('DOMContentLoaded', function() {
         
         
         window.enviarNecesidad = function() {
-          var btn = document.getElementById('necBtn');
-          btn.textContent = '✓ Enviando...'; btn.style.background = '#085041'; btn.disabled = true;
-          setTimeout(function(){
-            var catEl     = document.querySelector('#necCatChips .chip.active');
-            var isEmerg   = catEl && catEl.classList.contains('chip-emergency');
-            var isVol     = catEl && catEl.classList.contains('chip-volunteer');
-            var isShelter = catEl && catEl.classList.contains('chip-shelter');
-            var prioEl    = document.querySelector('#necPrioRow .prio-btn[class*="active"]');
+		  var btn = document.getElementById('necBtn');
+		  btn.textContent = '✓ Enviando...'; btn.style.background = '#085041'; btn.disabled = true;
+		  setTimeout(function(){
+			var catEl     = document.querySelector('#necCatChips .chip.active');
+			var isEmerg   = catEl && catEl.classList.contains('chip-emergency');
+			var isVol     = catEl && catEl.classList.contains('chip-volunteer');
+			var isShelter = catEl && catEl.classList.contains('chip-shelter');
+			var prioEl    = document.querySelector('#necPrioRow .prio-btn[class*="active"]');
 			var isCheck   = catEl && catEl.classList.contains('chip-checkpoint');
-            var prioText  = isEmerg ? 'Alta 🚨' : (prioEl ? prioEl.textContent : '—');
-        
-            var catLabels = {
-              'chip-emergency':  '🚨 Emergencia',
-              'chip-volunteer':  '🤝 Voluntarios',
-              'chip-checkpoint': '📍 Punto de encuentro',
-              'chip-storage':    '📦 Recogida de kits',
-              'chip-shelter':    '🏠 Refugio / Hospedaje'
-            };
-            var catClass = catEl ? Array.from(catEl.classList).find(function(c){ return catLabels[c]; }) : null;
-            var catText  = catClass ? catLabels[catClass] : (catEl ? catEl.textContent : '—');
-            if (isVol) {
+			var prioText  = isEmerg ? 'Alta 🚨' : (prioEl ? prioEl.textContent : '—');
+
+			var catLabels = {
+			  'chip-emergency':  '🚨 Emergencia',
+			  'chip-volunteer':  '🤝 Voluntarios',
+			  'chip-checkpoint': '📍 Punto de encuentro',
+			  'chip-storage':    '📦 Recogida de kits',
+			  'chip-shelter':    '🏠 Refugio / Hospedaje'
+			};
+			var catClass = catEl ? Array.from(catEl.classList).find(function(c){ return catLabels[c]; }) : null;
+			var catText  = catClass ? catLabels[catClass] : (catEl ? catEl.textContent : '—');
+			if (isVol) {
 			  var volTipoLabels = { oficial:'🛡️ Oficial', tecnico:'🛠️ Técnico', operativo:'🦺 Operativo', ciudadano:'🧹 Ciudadano' };
 			  catText += ' · ' + (_necVolTipo === 'requerir' ? 'Requerir' : 'Ofrecer');
 			  catText += ' · ' + (volTipoLabels[_necVolTipoCard] || _necVolTipoCard);
 			}
 			if (isShelter) catText += ' · ' + (_necShelTipo  === 'solicitud' ? 'Solicitud'  : 'Oferta');
 			if (isCheck)   catText += ' · ' + (_necCheckTipo === 'sanitario'    ? '🏥 Sanitario'  : '📡 Coordinacion');
-        
-            var rows = [
-              ['Ubicación', (document.getElementById('necUbic') || {}).value || '—'],
-              ['Categoría', catText],
-            ];
-        
-            // Prioridad — oculta si ofrece voluntarios
-            if ((!isVol || _necVolTipo !== 'ofrecer') && !isCheck) rows.push(['Prioridad', prioText]);
-        
-            // Personas / capacidad según reglas de visibilidad
-            var persGroup = document.getElementById('necPersonasGroup');
-            if (persGroup && persGroup.style.display !== 'none') {
-              var persLabel = (document.getElementById('necPersonasLabel') || {}).textContent || 'Personas';
-              rows.push([persLabel, (document.getElementById('necPersonas') || {}).value || '—']);
-            }
-            var capGroup = document.getElementById('necVolGroup');
-            if (capGroup && capGroup.style.display !== 'none') {
-              var capLabel = (capGroup.querySelector('label') || {}).textContent || 'Cantidad';
-              rows.push([capLabel, (document.getElementById('necPersonas') || {}).value || '—']);
-            }
-        
-            var summary = document.getElementById('necSummary');
-            if (summary) {
-              summary.innerHTML = rows.map(function(r){
-                var valStyle = isEmerg && r[0]==='Prioridad' ? 'font-weight:600;color:#E24B4A;' : 'font-weight:500;';
-                return '<div class="nec-summary-row"><span style="color:var(--muted);">' + r[0] + '</span><span style="' + valStyle + '">' + r[1] + '</span></div>';
-              }).join('');
-            }
-        
-            // Callback especial: ofrecer voluntarios → punto de encuentro asignado
-            if (isVol && _necVolTipo === 'ofrecer') {
-              window._necCheckpointCallback = true;
-              var extraMsg = document.getElementById('necConfirmExtra');
-              if (!extraMsg) {
-                extraMsg = document.createElement('div');
-                extraMsg.id = 'necConfirmExtra';
-                extraMsg.style.cssText = 'margin-top:8px;font-size:12px;color:#EF9F27;background:#FEF5EC;border-radius:10px;padding:10px;line-height:1.5;';
-                var conf = document.getElementById('necConfirm');
-                if (conf) conf.appendChild(extraMsg);
-              }
-              extraMsg.textContent = '📍 Punto de encuentro asignado automáticamente al finalizar triaje.';
-            }
-        
-            var conf = document.getElementById('necConfirm');
-            if (conf) conf.classList.add('visible');
-            btn.textContent = '✓ Enviada'; btn.style.background = ''; btn.disabled = false;
-            window._necEnviada = true;
-          }, 700);
-        };
+
+			var rows = [
+			  ['Ubicación', (document.getElementById('necUbic') || {}).value || '—'],
+			  ['Categoría', catText],
+			];
+			if ((!isVol || _necVolTipo !== 'ofrecer') && !isCheck) rows.push(['Prioridad', prioText]);
+			var persGroup = document.getElementById('necPersonasGroup');
+			if (persGroup && persGroup.style.display !== 'none') {
+			  var persLabel = (document.getElementById('necPersonasLabel') || {}).textContent || 'Personas';
+			  rows.push([persLabel, (document.getElementById('necPersonas') || {}).value || '—']);
+			}
+
+			var summary = document.getElementById('necSummary');
+			if (summary) {
+			  summary.innerHTML = rows.map(function(r){
+				var valStyle = isEmerg && r[0]==='Prioridad' ? 'font-weight:600;color:#E24B4A;' : 'font-weight:500;';
+				return '<div class="nec-summary-row"><span style="color:var(--muted);">' + r[0] + '</span><span style="' + valStyle + '">' + r[1] + '</span></div>';
+			  }).join('');
+			}
+
+			if (isVol && _necVolTipo === 'ofrecer') {
+			  window._necCheckpointCallback = true;
+			  var extraMsg = document.getElementById('necConfirmExtra');
+			  if (!extraMsg) {
+				extraMsg = document.createElement('div');
+				extraMsg.id = 'necConfirmExtra';
+				extraMsg.style.cssText = 'margin-top:8px;font-size:12px;color:#EF9F27;background:#FEF5EC;border-radius:10px;padding:10px;line-height:1.5;';
+				var conf = document.getElementById('necConfirm');
+				if (conf) conf.appendChild(extraMsg);
+			  }
+			  extraMsg.textContent = '📍 Punto de encuentro asignado automáticamente al finalizar triaje.';
+			}
+
+			var conf = document.getElementById('necConfirm');
+			if (conf) conf.classList.add('visible');
+
+			// ── NUEVO: reactivar botón para nueva necesidad ──
+			btn.textContent = '+ Nueva necesidad';
+			btn.style.background = '';
+			btn.disabled = false;
+			window._necEnviada = true;
+
+			// ── NUEVO: inyectar card dinámica en triaje ──
+			_inyectarCardTriaje(catText, prioText, isEmerg, rows);
+
+		  }, 700);
+		};
+
+		// ── Helper: inyectar nueva card en panel de triaje ──
+		function _inyectarCardTriaje(catText, prioText, isEmerg, rows) {
+		  var valList = document.querySelector('#tab-validacion .val-list');
+		  if (!valList) return;
+
+		  // Contador para IDs únicos
+		  if (!window._necDynCounter) window._necDynCounter = 0;
+		  window._necDynCounter++;
+		  var n = 'dynNec' + window._necDynCounter;
+		  var borderColor = isEmerg ? '#E24B4A' : '#1D9E75';
+		  var iconEmoji   = isEmerg ? '🚨' : '📋';
+		  var iconBg      = isEmerg ? '#FDEDEC' : '#E1F5EE';
+		  var prio = isEmerg
+			? '<span class="d-badge d-badge-urg">🔴 Alta — ' + catText + '</span>'
+			: '<span class="d-badge d-badge-pend">● ' + catText + '</span>';
+
+		  var detailsHtml = rows.map(function(r){
+			return '<div class="val-field">' + r[0] + '<span>' + r[1] + '</span></div>';
+		  }).join('');
+
+		  var card = document.createElement('div');
+		  card.className = 'val-card';
+		  card.id = n;
+		  card.dataset.estado = 'pendiente';
+		  card.style.borderLeft = '3px solid ' + borderColor;
+		  card.style.animation = 'coordSlideIn 0.4s ease both';
+		  card.innerHTML =
+			'<div class="val-header">' +
+			  '<div class="val-header-top">' +
+				'<div class="val-icon" style="background:' + iconBg + ';">' + iconEmoji + '</div>' +
+				'<div class="val-info">' +
+				  '<div class="val-title">' + catText + ' · Nueva solicitud</div>' +
+				  '<div class="val-meta">📍 Recién enviada ' + prio + '</div>' +
+				'</div>' +
+			  '</div>' +
+			  '<div class="val-actions">' +
+				'<button class="val-btn val-btn-ok"     onclick="validarNec(event,\'' + n + '\',\'' + n + 'act\',\'' + n + 'done\',true)">✓ Validar</button>' +
+				'<button class="val-btn val-btn-rej"    onclick="validarNec(event,\'' + n + '\',\'' + n + 'act\',\'' + n + 'done\',false)">✕ Rechazar</button>' +
+				'<button class="val-btn val-btn-more"   onclick="toggleValExpand(\'' + n + 'exp\');event.stopPropagation()">Detalles</button>' +
+				'<button class="val-btn val-btn-cancel" onclick="cerrarNecesidad(\'' + n + '\',event)">⏹ Cancelar</button>' +
+			  '</div>' +
+			'</div>' +
+			'<div class="val-expand" id="' + n + 'exp">' +
+			  '<div class="val-expand-grid">' + detailsHtml + '</div>' +
+			  '<div style="margin-top:6px;padding:7px 10px;background:#E1F5EE;border-radius:8px;font-size:11px;color:#085041;">📬 Recibida ahora — pendiente de validación por coordinador</div>' +
+			  '<div class="val-done-msg" id="' + n + 'done"></div>' +
+			'</div>';
+
+		  // Insertar al principio de la lista
+		  valList.insertBefore(card, valList.firstChild);
+
+		  // Actualizar contador del filtro "Todas"
+		  filtrarVal('todas', document.getElementById('valFiltroTodas'));
+		}
         
         // ── Asignar responsable en triaje ──
         window.asignarResp = function(inputId, displayId) {
@@ -4377,36 +4584,47 @@ document.addEventListener('DOMContentLoaded', function() {
           if (el) el.classList.toggle('open');
         };
 		
-        window.validarNec = function(e, cardId, actId, doneId, ok) {
-          e.stopPropagation();
-          var card   = document.getElementById(cardId);
-          var doneEl = document.getElementById(doneId);
-          // Hide action buttons
-          var actEls = card.querySelectorAll('.val-btn');
-          actEls.forEach(function(b){ b.style.display = 'none'; });
-          if (doneEl) {
-            doneEl.style.display = 'block';
-            if (ok) {
-              doneEl.style.cssText += 'background:#EAFAF1;color:#1D6A3A;';
-              doneEl.textContent = '✓ Validada — publicada en el muro de coordinación';
-              if (card) card.dataset.estado = 'validada';
-              window._necValidada = true;
-            } else {
-              doneEl.style.cssText += 'background:#FDEDEC;color:#922B21;';
-              doneEl.textContent = '✕ Rechazada — solicitante notificado';
-              if (card) card.dataset.estado = 'rechazada';
-            }
-            var badge = card.querySelector('.d-badge');
-            if (badge) {
-              badge.className = 'd-badge ' + (ok ? 'd-badge-ok' : 'nec-badge-rej');
-              badge.textContent = ok ? '✓ Validada' : '✕ Rechazada';
-            }
-            var expandId = doneId.replace('valDone','valExpand');
-            var expEl = document.getElementById(expandId);
-            if (expEl && !expEl.classList.contains('open')) expEl.classList.add('open');
-          }
-		  filtrarVal('todas', document.getElementById('valFiltroTodas'));
-        };
+      window.validarNec = function(e, cardId, actId, doneId, ok) {
+	  e.stopPropagation();
+	  var card   = document.getElementById(cardId);
+	  var doneEl = document.getElementById(doneId);
+
+	  // Ocultar solo validar/rechazar; cancelar lo gestiona el CSS según data-estado
+	  var okBtn  = card.querySelector('.val-btn-ok');
+	  var rejBtn = card.querySelector('.val-btn-rej');
+	  if (okBtn)  okBtn.style.display  = 'none';
+	  if (rejBtn) rejBtn.style.display = 'none';
+
+	  if (doneEl) {
+		doneEl.style.display = 'block';
+		if (ok) {
+		  doneEl.style.cssText += 'background:#EAFAF1;color:#1D6A3A;';
+		  doneEl.textContent = '✓ Validada — publicada en el muro de coordinación';
+		  if (card) card.dataset.estado = 'validada';
+		  window._necValidada = true;
+		  // Mostrar botón cancelar
+		  var cancelBtn = card.querySelector('.val-btn-cancel');
+		  if (cancelBtn) cancelBtn.style.display = 'inline-flex';
+		} else {
+		  doneEl.style.cssText += 'background:#FDEDEC;color:#922B21;';
+		  doneEl.textContent = '✕ Rechazada — solicitante notificado';
+		  if (card) card.dataset.estado = 'rechazada';
+		}
+		var badge = card.querySelector('.d-badge');
+		if (badge) {
+		  badge.className = 'd-badge ' + (ok ? 'd-badge-ok' : 'nec-badge-rej');
+		  badge.textContent = ok ? '✓ Validada' : '✕ Rechazada';
+		}
+		var expandId = doneId.replace('valDone','valExpand').replace('done','exp');
+		var expEl = document.getElementById(expandId);
+		if (!expEl) {
+		  // Fallback para cards dinámicas
+		  expEl = document.getElementById(doneId.replace('done','exp'));
+		}
+		if (expEl && !expEl.classList.contains('open')) expEl.classList.add('open');
+	  }
+	  filtrarVal('todas', document.getElementById('valFiltroTodas'));
+	};
 		
 		window.cerrarNecesidad = function(cardId, e) {
 		  if (e) e.stopPropagation();
@@ -4527,11 +4745,6 @@ document.addEventListener('DOMContentLoaded', function() {
           }, 600);
         };
         
-        // Legacy tab switching kept for any residual onclick calls
-        window.switchTab = function(name) {
-          var map = { emergencia:'necesidad', chat:'muro', kit:'kits' };
-          window.switchDemo(map[name] || name);
-        };
         
         document.addEventListener('DOMContentLoaded', function(){
           if (typeof renderKitItems2 === 'function') renderKitItems2('food');
@@ -4545,7 +4758,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     </script>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         (function() {
         // ── MARKER DATA ──
