@@ -2327,35 +2327,7 @@
 							<button class="val-filter-btn" onclick="filtrarVal('cerrada',this)">Cerradas</button>
                         </div>
                         <div class="val-list">
-
-						  <!-- Card 1 — Emergencia alta prioridad -->
-						  <div class="val-card" id="valCard1" data-estado="pendiente" style="border-left:3px solid #E24B4A;">
-							<div class="val-header">
-							  <div class="val-header-top">
-								<div class="val-icon" style="background:#FDEDEC;">🚨</div>
-								<div class="val-info">
-								  <div class="val-title">Emergencia · C/ Sueca, 22</div>
-								  <div class="val-meta">📍 Ruzafa · 6 personas <span class="d-badge d-badge-urg">🔴 Alta — Emergencia</span></div>
-								</div>
-							  </div>
-							 <div class="val-actions">
-							  <button class="val-btn val-btn-ok"     onclick="validarNec(event,'valCard1','valAct1','valDone1',true)">✓ Validar</button>
-							  <button class="val-btn val-btn-rej"    onclick="validarNec(event,'valCard1','valAct1','valDone1',false)">✕ Rechazar</button>
-							  <button class="val-btn val-btn-more"   onclick="toggleValExpand('valExpand1');event.stopPropagation()">Detalles</button>
-							  <button class="val-btn val-btn-cancel" onclick="cerrarNecesidad('valCard1',event)">⏹ Cancelar</button>
-							</div>
-							</div>
-							<div class="val-expand" id="valExpand1">
-							  <div class="val-expand-grid">
-								<div class="val-field">Descripción<span>Familia con 2 menores y anciano. Sin víveres 2 días.</span></div>
-								<div class="val-field">Prioridad<span style="color:#E24B4A;font-weight:700;">🔴 Alta (automática)</span></div>
-								<div class="val-field">Solicitante<span>Ciudadano</span></div>
-								<div class="val-field">Recibida<span>Hace 2 min</span></div>
-							  </div>
-							  <div style="margin:8px 0 4px;padding:8px 10px;background:#FDEDEC;border-radius:8px;font-size:11px;color:#922B21;">⚠️ Emergencia declarada — prioridad Alta asignada automáticamente</div>
-							  <div class="val-done-msg" id="valDone1"></div>
-							</div>
-						  </div>
+					 
 
 						  <!-- Card 2 — Voluntarios: demanda vs oferta -->
 						  <div class="val-card" id="valCard2" data-estado="pendiente" style="border-left:3px solid #7B5EA7;">
@@ -2383,7 +2355,7 @@
 							</div>
 							<div class="val-expand" id="valExpand2">
 							  <!-- Balance visual demanda / oferta -->
-							  <div class="val-balance">
+							 <!-- <div class="val-balance">
 								<div class="val-balance-block">
 								  <div class="val-balance-num" style="color:#C0392B;">10</div>
 								  <div class="val-balance-label">Requeridos</div>
@@ -2395,10 +2367,11 @@
 								</div>
 								<div class="val-balance-sep">→</div>
 								<span class="val-balance-status deficit">−5 déficit</span>
-							  </div>
+							  </div> -->
 							  <div class="val-expand-grid">
 								<div class="val-field">Tipo<span>🛠️ Voluntario Técnico (electricistas, fontaneros)</span></div>
 								<div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
+								<div class="val-field">Descripción<span>Se necesita voluntario tecnico para labores de electricidad.</span></div>
 								<div class="val-field">Responsable<span id="respAsig2">— Sin asignar</span></div>
 								<div class="val-field">Recibida<span>Hace 5 min</span></div>
 							  </div>
@@ -2437,7 +2410,7 @@
 							</div>
 							</div>
 							<div class="val-expand" id="valExpand3">
-							  <div class="val-balance">
+							 <!-- <div class="val-balance">
 								<div class="val-balance-block">
 								  <div class="val-balance-num" style="color:#C0392B;">5</div>
 								  <div class="val-balance-label">Requeridos</div>
@@ -2449,10 +2422,11 @@
 								</div>
 								<div class="val-balance-sep">→</div>
 								<span class="val-balance-status superavit">+15 disponibles</span>
-							  </div>
+							  </div> -->
 							  <div class="val-expand-grid">
 								<div class="val-field">Tipo<span>🦺 Voluntario Operativo (reparto y logística)</span></div>
 								<div class="val-field">Prioridad<span style="color:#E67E22;">Media</span></div>
+								<div class="val-field">Descripción<span>Se necesita voluntario operativo para distribuir comida y otros enseres.</span></div>
 								<div class="val-field">Responsable de asignación<span id="respAsig3">— Sin asignar</span></div>
 								<div class="val-field">Recibida<span>Hace 8 min</span></div>
 							  </div>
@@ -2488,6 +2462,7 @@
 							  <div class="val-expand-grid">
 								<div class="val-field">Subtipo<span>🏥 Punto médico de atención primaria</span></div>
 								<div class="val-field">Capacidad<span>150 personas</span></div>
+								<div class="val-field">Descripción<span>Punto de encuentro sanitario en  Plaza del Ayuntamiento.</span></div>
 								<div class="val-field">Responsable de apertura<span id="respAsig4">— Sin asignar</span></div>
 								<div class="val-field">Recibida<span>Hace 10 min</span></div>
 							  </div>
@@ -2523,7 +2498,7 @@
 							</div>
 							</div>
 							<div class="val-expand" id="valExpand5">
-							  <div class="val-balance">
+							 <!-- <div class="val-balance">
 								<div class="val-balance-block">
 								  <div class="val-balance-num" style="color:#C0392B;">10</div>
 								  <div class="val-balance-label">Sin hogar</div>
@@ -2535,10 +2510,11 @@
 								</div>
 								<div class="val-balance-sep">→</div>
 								<span class="val-balance-status superavit">+30 plazas libres</span>
-							  </div>
+							  </div> -->
 							  <div class="val-expand-grid">
 								<div class="val-field">Tipo<span>Oferta de espacio · Acceso inmediato</span></div>
 								<div class="val-field">Prioridad<span style="color:#1D9E75;">Baja</span></div>
+								<div class="val-field">Descripción<span>Hostal con capacidad de 40 personas.</span></div>
 								<div class="val-field">Responsable<span id="respAsig5">— Sin asignar</span></div>
 								<div class="val-field">Recibida<span>Hace 20 min</span></div>
 							  </div>
@@ -2582,7 +2558,7 @@
                             </button>
                         </div>
                         <div class="muro-feed" id="muroFeed">
-                            <div class="muro-item" data-tipo="urgente">
+                            <!--<div class="muro-item" data-tipo="urgente">
                                 <div class="muro-dot" style="background:#E24B4A;"></div>
                                 <div class="muro-content">
                                     <div class="muro-title">🚨 Emergencia · C/ Sueca, 22</div>
@@ -2593,7 +2569,7 @@
                                         <button class="muro-claim-btn" onclick="claimMuro(this)">Atender</button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="muro-item" data-tipo="voluntario">
                                 <div class="muro-dot" style="background:#7B5EA7;"></div>
                                 <div class="muro-content">
@@ -4595,6 +4571,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // ══ MAPA DE NECESIDAD ══
         var _necMap = null;
+		var _muroItemsValidados = []; // {cardId, muroEl, mapPin}
         var _necMarker = null;
         
         function _necMakeIcon(color, icon, size) {
@@ -4715,8 +4692,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			if (isCheck)   catText += ' · ' + (_necCheckTipo === 'sanitario'    ? '🏥 Sanitario'  : '📡 Coordinacion');
 
 			var rows = [
-			  ['Ubicación', (document.getElementById('necUbic') || {}).value || '—'],
-			  ['Categoría', catText],
+			  ['Ubicación',    (document.getElementById('necUbic')  || {}).value || '—'],
+			  ['Categoría',    catText],
+			  ['Descripción',  (document.getElementById('necDesc')  || {}).value || '—'],
 			];
 			if ((!isVol || _necVolTipo !== 'ofrecer') && !isCheck) rows.push(['Prioridad', prioText]);
 			var persGroup = document.getElementById('necPersonasGroup');
@@ -4878,56 +4856,163 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 		
       window.validarNec = function(e, cardId, actId, doneId, ok) {
-	  e.stopPropagation();
-	  var card   = document.getElementById(cardId);
-	  var doneEl = document.getElementById(doneId);
+		  e.stopPropagation();
+		  var card   = document.getElementById(cardId);
+		  var doneEl = document.getElementById(doneId);
 
-	  // Ocultar solo validar/rechazar; cancelar lo gestiona el CSS según data-estado
-	  var okBtn  = card.querySelector('.val-btn-ok');
-	  var rejBtn = card.querySelector('.val-btn-rej');
-	  if (okBtn)  okBtn.style.display  = 'none';
-	  if (rejBtn) rejBtn.style.display = 'none';
+		  if (doneEl) {
+			doneEl.style.display = 'block';
+			if (ok) {
+			  doneEl.style.cssText += 'background:#EAFAF1;color:#1D6A3A;';
+			  doneEl.textContent = '✓ Validada — publicada en el muro de coordinación';
+			  card.dataset.estado = 'validada';
 
-	  if (doneEl) {
-		doneEl.style.display = 'block';
-		if (ok) {
-		  doneEl.style.cssText += 'background:#EAFAF1;color:#1D6A3A;';
-		  doneEl.textContent = '✓ Validada — publicada en el muro de coordinación';
-		  if (card) card.dataset.estado = 'validada';
-		  window._necValidada = true;
-		  // Mostrar botón cancelar
-		  var cancelBtn = card.querySelector('.val-btn-cancel');
-		  if (cancelBtn) cancelBtn.style.display = 'inline-flex';
-		} else {
-		  doneEl.style.cssText += 'background:#FDEDEC;color:#922B21;';
-		  doneEl.textContent = '✕ Rechazada — solicitante notificado';
-		  if (card) card.dataset.estado = 'rechazada';
+			  // Ocultar validar/rechazar, mostrar cancelar
+			  var okBtn  = card.querySelector('.val-btn-ok');
+			  var rejBtn = card.querySelector('.val-btn-rej');
+			  var canBtn = card.querySelector('.val-btn-cancel');
+			  if (okBtn)  okBtn.style.display  = 'none';
+			  if (rejBtn) rejBtn.style.display = 'none';
+			  if (canBtn) canBtn.style.display = 'inline-flex';
+
+			  // Leer datos de la card para muro y estado necesidades
+			  var title = (card.querySelector('.val-title') || {}).textContent || '—';
+			  var desc  = '';
+			  var fields = card.querySelectorAll('.val-field');
+			  fields.forEach(function(f) {
+				var label = f.childNodes[0] ? f.childNodes[0].textContent.trim() : '';
+				var val   = (f.querySelector('span') || {}).textContent || '';
+				if (label === 'Descripción') desc = val;
+			  });
+			  // Fallback: leer necDesc si es una card dinámica recién creada
+			  if (!desc) desc = (document.getElementById('necDesc') || {}).value || '';
+
+			  var ubic  = title.split('·')[1] ? title.split('·')[1].trim() : title;
+			  var isEmerg = card.style.borderLeft && card.style.borderLeft.indexOf('#E24B4A') > -1;
+			  var dotColor = isEmerg ? '#E24B4A' : '#1D9E75';
+			  var tagBg    = isEmerg ? '#FDEDEC' : '#EAFAF1';
+			  var tagColor = isEmerg ? '#922B21' : '#1D6A3A';
+			  var tagText  = isEmerg ? '🚨 Emergencia' : '✓ Validada';
+			  var btnText  = isEmerg ? 'Atender' : 'Coordinar';
+
+			  // Publicar en muro
+			 var muroEl = _publicarEnMuro(title, desc, dotColor, tagBg, tagColor, tagText, btnText);
+			  // ── Pin en mapa ──
+			var mapPin  = _añadirPinMapa(title, isEmerg);
+			  // Actualizar estado en panel necesidades (necConfirm)
+			  _actualizarEstadoNecesidad(title, desc);
+			_muroItemsValidados.push({ cardId: cardId, muroEl: muroEl, mapPin: mapPin });
+
+			} else {
+			  doneEl.style.cssText += 'background:#FDEDEC;color:#922B21;';
+			  doneEl.textContent = '✕ Rechazada — solicitante notificado';
+			  card.dataset.estado = 'rechazada';
+			  var actEls = card.querySelectorAll('.val-btn-ok, .val-btn-rej, .val-btn-more, .val-btn-cancel');
+			  actEls.forEach(function(b){ b.style.display = 'none'; });
+			}
+
+			var badge = card.querySelector('.d-badge');
+			if (badge) {
+			  badge.className = 'd-badge ' + (ok ? 'd-badge-ok' : 'nec-badge-rej');
+			  badge.textContent = ok ? '✓ Validada' : '✕ Rechazada';
+			}
+			var expandId = doneId.replace('valDone','valExpand').replace('done','exp');
+			var expEl = document.getElementById(expandId);
+			if (!expEl) expEl = document.getElementById(doneId.replace('done','exp'));
+			if (expEl && !expEl.classList.contains('open')) expEl.classList.add('open');
+		  }
+		  filtrarVal('todas', document.getElementById('valFiltroTodas'));
+		};
+
+		// ── Publica entrada en el muro de coordinación ──
+		function _publicarEnMuro(title, desc, dotColor, tagBg, tagColor, tagText, btnText) {
+		  var feed = document.getElementById('muroFeed');
+		  if (!feed) return;
+		  var item = document.createElement('div');
+		  var tipo = dotColor === '#E24B4A' ? 'urgente' : 'recurso';
+		  item.className = 'muro-item';
+		  item.dataset.tipo = tipo;
+		  item.style.animation = 'coordSlideIn 0.4s ease both';
+		  item.innerHTML =
+			'<div class="muro-dot" style="background:' + dotColor + ';"></div>' +
+			'<div class="muro-content">' +
+			  '<div class="muro-title">' + title + '</div>' +
+			  '<div class="muro-body">' + (desc || 'Sin descripción adicional.') + '</div>' +
+			  '<div class="muro-footer">' +
+				'<span class="muro-time">Recién validada</span>' +
+				'<span class="muro-tag" style="background:' + tagBg + ';color:' + tagColor + ';">' + tagText + '</span>' +
+				'<button class="muro-claim-btn" onclick="claimMuro(this)">' + btnText + '</button>' +
+			  '</div>' +
+			'</div>';
+		  feed.insertBefore(item, feed.firstChild);
+		  return item;  // ← AÑADIR
 		}
-		var badge = card.querySelector('.d-badge');
-		if (badge) {
-		  badge.className = 'd-badge ' + (ok ? 'd-badge-ok' : 'nec-badge-rej');
-		  badge.textContent = ok ? '✓ Validada' : '✕ Rechazada';
+		
+		// ── Añade pin en el mapa de necesidades al validar ──
+		function _añadirPinMapa(catText, isEmerg) {
+		  if (!_necMap || !_necMarker) return;
+
+		  // Color e icono según categoría
+		  var color = '#E24B4A', icono = '!';
+		  if (!isEmerg) {
+			if      (catText.indexOf('Voluntarios') > -1)      { color = '#7B5EA7'; icono = 'V'; }
+			else if (catText.indexOf('Punto')       > -1)      { color = '#EF9F27'; icono = 'P'; }
+			else if (catText.indexOf('Refugio')     > -1)      { color = '#3A7BD5'; icono = 'R'; }
+			else if (catText.indexOf('Recogida')    > -1)      { color = '#1D9E75'; icono = 'K'; }
+			else                                                { color = '#1D9E75'; icono = '✓'; }
+		  }
+
+		  // Posición del marcador activo (donde el usuario pinchó el mapa)
+		  var latlng = _necMarker.getLatLng();
+			var ubic = (document.getElementById('necUbic') || {}).value || 'Ubicación registrada';
+		  // Si es emergencia: usar el icono de pulso, si no: icono circular estático
+		  var newIcon = isEmerg
+			? _necPulseIcon(color)
+			: _necMakeIcon(color, icono, 30);
+
+		  // Añadir nuevo marcador permanente (no reemplaza el existente)
+		   var pin = L.marker(latlng, { icon: newIcon, zIndexOffset: 900 })
+			.bindPopup('<b>' + catText + '</b><br>' + ubic + '<br><span style="color:#1D9E75;font-size:11px;">✓ Validada</span>', { className:'k2-popup', maxWidth:200 })
+			.addTo(_necMap)
+			.openPopup();
+		  _necMap.setView(latlng, 16, { animate: true });
+		  return pin;	  
+		
 		}
-		var expandId = doneId.replace('valDone','valExpand').replace('done','exp');
-		var expEl = document.getElementById(expandId);
-		if (!expEl) {
-		  // Fallback para cards dinámicas
-		  expEl = document.getElementById(doneId.replace('done','exp'));
+
+		// ── Actualiza el estado visible en el panel de necesidades ──
+		function _actualizarEstadoNecesidad(title, desc) {
+		  // Actualizar badge del necConfirm si está visible
+		  var conf = document.getElementById('necConfirm');
+		  if (conf && conf.classList.contains('visible')) {
+			var badge = conf.querySelector('.d-badge');
+			if (badge) {
+			  badge.className = 'd-badge d-badge-ok';
+			  badge.textContent = '✓ Validada';
+			}
+			// Añadir aviso de validación si no existe
+			var yaAviso = document.getElementById('necValidadaMsg');
+			if (!yaAviso) {
+			  var aviso = document.createElement('div');
+			  aviso.id = 'necValidadaMsg';
+			  aviso.style.cssText = 'margin-top:10px;font-size:12px;color:#1D6A3A;background:#EAFAF1;border-radius:10px;padding:10px;line-height:1.5;';
+			  aviso.textContent = '✓ Tu necesidad ha sido validada y publicada en el muro de coordinación.';
+			  conf.appendChild(aviso);
+			}
+		  }
 		}
-		if (expEl && !expEl.classList.contains('open')) expEl.classList.add('open');
-	  }
-	  filtrarVal('todas', document.getElementById('valFiltroTodas'));
-	};
 		
 		window.cerrarNecesidad = function(cardId, e) {
 		  if (e) e.stopPropagation();
 		  var card = document.getElementById(cardId);
 		  if (!card) return;
 		  if (!confirm('¿Marcar esta necesidad como cerrada? Ya no estará activa.')) return;
-		  card.dataset.estado = 'cerrada';
-		  card.style.opacity  = '0.5';
+
+		  card.dataset.estado  = 'cerrada';
+		  card.style.opacity   = '0.5';
 		  card.style.pointerEvents = 'none';
-		  // Badge visual
+
+		  // Badge en triaje
 		  var meta = card.querySelector('.val-meta');
 		  if (meta) {
 			var badge = document.createElement('span');
@@ -4936,17 +5021,56 @@ document.addEventListener('DOMContentLoaded', function() {
 			badge.textContent = '⏹ Cerrada';
 			meta.appendChild(badge);
 		  }
+
 		  // Mensaje en expand
-		  var doneId = cardId.replace('valCard','valDone');
-		  var doneEl = document.getElementById(doneId);
+		  var doneEl = card.querySelector('.val-done-msg');
 		  if (doneEl) {
-			doneEl.style.display = 'block';
 			doneEl.style.cssText = 'display:block;margin-top:8px;padding:8px 10px;background:#f5f5f5;border-radius:8px;font-size:12px;color:#999;';
 			doneEl.textContent = '⏹ Necesidad cerrada — ya no está activa.';
 		  }
+
+		  // ── Eliminar del muro de coordinación y pin del mapa ──
+		  var registro = null;
+		  for (var i = 0; i < _muroItemsValidados.length; i++) {
+			if (_muroItemsValidados[i].cardId === cardId) { registro = _muroItemsValidados[i]; _muroItemsValidados.splice(i,1); break; }
+		  }
+		  if (registro) {
+			// Eliminar item del muro con animación
+			if (registro.muroEl && registro.muroEl.parentNode) {
+			  registro.muroEl.style.transition = 'opacity 0.4s, transform 0.4s';
+			  registro.muroEl.style.opacity    = '0';
+			  registro.muroEl.style.transform  = 'translateX(30px)';
+			  setTimeout(function() { if (registro.muroEl.parentNode) registro.muroEl.parentNode.removeChild(registro.muroEl); }, 420);
+			}
+			// Eliminar pin del mapa
+			if (registro.mapPin && _necMap) {
+			  _necMap.removeLayer(registro.mapPin);
+			}
+		  }
+
+		  // ── Actualizar estado en panel de necesidades ──
+		  var conf = document.getElementById('necConfirm');
+		  if (conf && conf.classList.contains('visible')) {
+			var confBadge = conf.querySelector('.d-badge');
+			if (confBadge) {
+			  confBadge.className = 'd-badge';
+			  confBadge.style.cssText = 'background:#f0f0f0;color:#999;border:1px solid #ddd;';
+			  confBadge.textContent = '⏹ Cancelada';
+			}
+			var validadaMsg = document.getElementById('necValidadaMsg');
+			if (validadaMsg) validadaMsg.remove();
+			var yaAviso = document.getElementById('necCanceladaMsg');
+			if (!yaAviso) {
+			  var aviso = document.createElement('div');
+			  aviso.id = 'necCanceladaMsg';
+			  aviso.style.cssText = 'margin-top:10px;font-size:12px;color:#922B21;background:#FDEDEC;border-radius:10px;padding:10px;line-height:1.5;';
+			  aviso.textContent = '⏹ Tu necesidad ha sido cancelada por el coordinador y ya no está activa.';
+			  conf.appendChild(aviso);
+			}
+		  }
+
 		  filtrarVal('todas', document.getElementById('valFiltroTodas'));
 		};
-
 
         window.filtrarVal = function(estado, btn) {
           document.querySelectorAll('.val-filter-btn').forEach(function(b){ b.classList.remove('active'); });
