@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://sitemaps.org">
+  
+  <!-- Página de Inicio (Cubre #story, #features y #) -->
   <url>
-    <loc>https://kit2help.es/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <loc>https://kit2help.es/index.html</loc>
+    <lastmod>2026-05-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Pantalla Demo -->
+  <url>
+    <loc>https://kit2help.es/demo.html</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Pantalla Mapa Global -->
+  <url>
+    <loc>https://kit2help.es/mapaGlobal.html</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
