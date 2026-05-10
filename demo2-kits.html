@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kit2Help · Kits & Trazabilidad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --teal: #1D9E75;
+      --teal-light: #E1F5EE;
+      --teal-dark: #0E4D38;
+      --orange: #EF9F27;
+      --orange-light: #FEF5EC;
+      --red: #E24B4A;
+      --red-light: #FCEBEB;
+      --blue: #3A7BD5;
+      --blue-light: #EEF4FC;
+      --purple: #7B5EA7;
+      --purple-light: #F5F0FB;
+      --green: #639922;
+      --green-light: #EAF3DE;
+      --dark: #1a1a2e;
+      --muted: #6B7280;
+      --bg: #F7F8FA;
+      --white: #ffffff;
+      --border: #E5E7EB;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      background: var(--dark);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-r {
+      background: #FF5F57;
+    }
+
+    .dot-y {
+      background: #FEBC2E;
+    }
+
+    .dot-g {
+      background: #28C840;
+    }
+
+    .url {
+      margin-left: 8px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: 'DM Sans', sans-serif;
+      flex: 1;
+      text-align: center;
+    }
+
+    .badge-kit {
+      font-size: 10px;
+      background: rgba(29, 158, 117, 0.2);
+      color: #9FE1CB;
+      border: 1px solid rgba(29, 158, 117, 0.3);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-weight: 600;
+    }
+
+    /* NAV */
+    .nav {
+      display: flex;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-tab {
+      flex: 1;
+      padding: 14px 8px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .nav-tab .tab-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .nav-tab.active {
+      color: var(--teal);
+    }
+
+    .nav-tab.active .tab-num {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #fff;
+    }
+
+    .nav-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2.5px;
+      background: var(--teal);
+      border-radius: 2px 2px 0 0;
+    }
+
+    .content {
+      background: var(--white);
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 20px;
+      min-height: 480px;
+    }
+
+    .panel {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .panel-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .panel-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    /* MODE TOGGLE */
+    .mode-toggle {
+      display: flex;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.06);
+      border-radius: var(--radius);
+      padding: 4px;
+      margin-bottom: 16px;
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 8px 0;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+      color: var(--muted);
+      background: transparent;
+    }
+
+    .mode-btn.active {
+      background: var(--teal);
+      color: #fff;
+    }
+
+    /* KIT TYPES */
+    .kit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .kit-type-card {
+      padding: 12px 8px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-align: center;
+      position: relative;
+      transition: all 0.18s;
+      background: var(--white);
+    }
+
+    .kit-type-card:hover {
+      border-color: var(--teal);
+    }
+
+    .kit-type-card.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+
+    .kit-type-card .kit-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--teal);
+      color: #fff;
+      font-size: 9px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .kit-type-card.selected .kit-badge {
+      display: flex;
+    }
+
+    .kit-icon {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .kit-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .kit-desc {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* KIT TYPE COLORS */
+    .kit-food.selected {
+      border-color: #C0392B;
+      background: #FDF3F2;
+    }
+
+    .kit-food.selected .kit-badge {
+      background: #C0392B;
+    }
+
+    .kit-med.selected {
+      border-color: var(--blue);
+      background: var(--blue-light);
+    }
+
+    .kit-med.selected .kit-badge {
+      background: var(--blue);
+    }
+
+    .kit-clothes.selected {
+      border-color: var(--purple);
+      background: var(--purple-light);
+    }
+
+    .kit-clothes.selected .kit-badge {
+      background: var(--purple);
+    }
+
+    .kit-tools.selected {
+      border-color: var(--orange);
+      background: var(--orange-light);
+    }
+
+    .kit-tools.selected .kit-badge {
+      background: var(--orange);
+    }
+
+    /* KIT BUILDER */
+    .kit-builder {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .kit-color-strip {
+      height: 4px;
+    }
+
+    .kit-builder-header {
+      padding: 12px 14px 8px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .kit-builder-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .kit-builder-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .kit-items {
+      padding: 8px 14px;
+    }
+
+    .kit-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .kit-item:last-child {
+      border-bottom: none;
+    }
+
+    .kit-item-emoji {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .kit-item-name {
+      flex: 1;
+      font-size: 13px;
+      color: var(--dark);
+    }
+
+    .kit-qty-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .kit-qty-btn {
+      width: 22px;
+      height: 22px;
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      background: var(--bg);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .kit-qty-btn:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .kit-qty-num {
+      min-width: 24px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .kit-item-del {
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      border: none;
+      background: none;
+    }
+
+    .kit-item-del:hover {
+      color: var(--red);
+      background: var(--red-light);
+    }
+
+    .kit-add-row {
+      display: flex;
+      gap: 6px;
+      padding: 8px 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .d-input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--dark);
+      background: var(--white);
+      outline: none;
+    }
+
+    .d-input:focus {
+      border-color: var(--teal);
+    }
+
+    .kit-add-emoji-btn {
+      padding: 8px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      cursor: pointer;
+      background: var(--bg);
+    }
+
+    .kit-add-btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--teal);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .kit-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .kit-total-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .kit-total-num {
+      font-family: sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--teal);
+    }
+
+    .btn-crear-kit {
+      padding: 9px 18px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--teal);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-crear-kit:hover {
+      background: var(--teal-dark);
+    }
+
+    /* KIT CREATED LIST */
+    .kit-created-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--teal-light);
+      border: 1px solid #9FE1CB;
+      border-radius: var(--radius-sm);
+      margin-bottom: 6px;
+    }
+
+    .kit-created-code {
+      font-family: monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--teal-dark);
+      letter-spacing: 2px;
+    }
+
+    /* VOL KITS */
+    .vol-kit-item {
+      padding: 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.18s;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .vol-kit-item:hover {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+
+    .vol-kit-item.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+
+    .vol-kit-icon {
+      font-size: 24px;
+    }
+
+    .vol-kit-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .vol-kit-cnt {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* QR */
+    .qr-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+    }
+
+    #volQrCanvas {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+    }
+
+    #volQrCanvas img,
+    #volQrCanvas canvas {
+      display: block;
+      /* ✅ elimina espacio inferior del inline */
+    }
+
+    .qr-code-txt {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1D9E75;
+      letter-spacing: 1px;
+      font-family: monospace;
+    }
+
+    /* TRAZA */
+    .traza-header {
+      background: var(--dark);
+      color: #fff;
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 14px 16px;
+    }
+
+    .traza-header-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .traza-header-meta {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 2px;
+    }
+
+    .traza-count-badge {
+      background: var(--teal);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 20px;
+      margin-left: 6px;
+    }
+
+    .dot-pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--red);
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.3
+      }
+    }
+
+    .traza-filters {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .traza-filter-btn {
+      padding: 4px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.6);
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.18s;
+    }
+
+    .traza-filter-btn.active,
+    .traza-filter-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .traza-list {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+
+    .traza-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .traza-item:last-child {
+      border-bottom: none;
+    }
+
+    .traza-code {
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--teal);
+      min-width: 70px;
+    }
+
+    .traza-tipo-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .traza-info {
+      flex: 1;
+    }
+
+    .traza-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .traza-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .traza-status {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-0 {
+      background: var(--orange-light);
+      color: #7D5200;
+    }
+
+    .status-1 {
+      background: var(--blue-light);
+      color: #1C3F7A;
+    }
+
+    .status-2 {
+      background: var(--green-light);
+      color: #3B6D11;
+    }
+
+    .status-cancel {
+      background: var(--red-light);
+      color: var(--red);
+    }
+
+    .traza-progress {
+      display: flex;
+      gap: 3px;
+      margin-top: 6px;
+    }
+
+    .traza-step {
+      flex: 1;
+      height: 3px;
+      border-radius: 3px;
+      background: var(--border);
+    }
+
+    .traza-step.done {
+      background: var(--teal);
+    }
+
+    .traza-step.active {
+      background: var(--orange);
+    }
+
+    .btn-next {
+      margin-top: 20px;
+      text-align: right;
+    }
+
+    .btn-next button {
+      padding: 8px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-next button:hover {
+      background: var(--dark);
+      color: #fff;
+      border-color: var(--dark);
+    }
+
+    /* ✅ Botón atrás */
+    .btn-prev {
+      margin-top: 20px;
+      text-align: left;
+      /* ← alineado a la izquierda */
+    }
+
+    .btn-prev button {
+      padding: 8px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-prev button:hover {
+      background: var(--dark);
+      color: #fff;
+      border-color: var(--dark);
+    }
+
+    /* Boton volver atras */
+    .btn-volver-wrapper {
+      padding: 20px;
+    }
+
+    .btn-volver {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-volver-circulo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background-color: #60ac73;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .btn-volver-texto {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .btn-volver-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #222;
+    }
+
+    @media(max-width:500px) {
+      .kit-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .kit-grid .kit-type-card:nth-child(n+4) {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Botón volver - colócalo ANTES de tu div principal -->
+  <div class="btn-volver-wrapper">
+    <button class="btn-volver" onclick="history.back()">
+
+      <div class="btn-volver-circulo">❮</div>
+
+      <div class="btn-volver-texto">
+        <span class="btn-volver-label">Volver</span>
+      </div>
+
+    </button>
+  </div>
+  <div class="shell">
+    <div class="topbar">
+      <div class="dots">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+      </div>
+      <span class="url">kit2help.es · Gestión de Kits</span>
+      <span class="badge-kit">● activo</span>
+    </div>
+    <nav class="nav">
+      <button class="nav-tab active" onclick="switchTab('kits',this)">
+        <div class="tab-num">1</div><span>Kits</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('traza',this)">
+        <div class="tab-num">2</div><span>Trazabilidad</span>
+      </button>
+    </nav>
+    <div class="content">
+
+      <!-- TAB 1: KITS -->
+      <div class="panel active" id="panel-kits">
+        <div class="panel-title">📦 Gestión de kits</div>
+        <div class="panel-sub">Crea kits como coordinador o recoge uno como voluntario.</div>
+
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="modeCoord" onclick="switchMode('coord')">🦺 Coordinador</button>
+          <button class="mode-btn" id="modeVol" onclick="switchMode('vol')">🤝 Voluntario</button>
+        </div>
+
+        <!-- Vista Coordinador -->
+        <div id="viewCoord">
+          <div
+            style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">
+            Tipo de kit</div>
+          <div class="kit-grid">
+            <div class="kit-type-card kit-food selected"
+              onclick="selKitType(this,'food','🍱','Kit Alimenticio','#C0392B')">
+              <div class="kit-badge">✓</div>
+              <span class="kit-icon">🍱</span>
+              <div class="kit-name">Alimenticio</div>
+              <div class="kit-desc">Agua y comida</div>
+            </div>
+            <div class="kit-type-card kit-med" onclick="selKitType(this,'med','💊','Kit Sanitario','#3A7BD5')">
+              <div class="kit-badge">✓</div>
+              <span class="kit-icon">💊</span>
+              <div class="kit-name">Sanitario</div>
+              <div class="kit-desc">Medicamentos</div>
+            </div>
+            <div class="kit-type-card kit-clothes" onclick="selKitType(this,'clothes','🧥','Kit de Ropa','#7B5EA7')">
+              <div class="kit-badge">✓</div>
+              <span class="kit-icon">🧥</span>
+              <div class="kit-name">Ropa</div>
+              <div class="kit-desc">Abrigo y mantas</div>
+            </div>
+            <div class="kit-type-card kit-tools"
+              onclick="selKitType(this,'tools','🔧','Kit de Herramientas','#EF9F27')">
+              <div class="kit-badge">✓</div>
+              <span class="kit-icon">🔧</span>
+              <div class="kit-name">Herramientas</div>
+              <div class="kit-desc">Equipamiento</div>
+            </div>
+            <div class="kit-type-card" onclick="selKitType(this,'custom','✏️','Kit Personalizado','#7B5EA7')">
+              <div class="kit-badge">✓</div>
+              <span class="kit-icon">✏️</span>
+              <div class="kit-name">Personalizado</div>
+              <div class="kit-desc">Crea tu propio kit</div>
+            </div>
+          </div>
+
+          <div class="kit-builder">
+            <div class="kit-color-strip" id="kitStrip" style="background:#C0392B;"></div>
+            <div class="kit-builder-header">
+              <span class="kit-builder-title" id="kitBuilderTitle">🍱 Kit Alimenticio</span>
+              <span class="kit-builder-sub">Edita cantidades o añade elementos</span>
+            </div>
+            <div class="kit-items" id="kitItemsList"></div>
+            <div class="kit-add-row">
+              <button class="kit-add-emoji-btn" id="kitAddEmoji" onclick="cycleEmoji()">📦</button>
+              <input class="d-input" id="kitAddName" placeholder="Nombre del elemento..." style="flex:1;">
+              <button class="kit-add-btn" onclick="addKitItem()">+</button>
+            </div>
+            <div class="kit-footer">
+              <div>
+                <div class="kit-total-label">Total elementos</div>
+                <div class="kit-total-num" id="kitTotal">0</div>
+              </div>
+              <button class="btn-crear-kit" onclick="crearKit()">Crear kit</button>
+            </div>
+          </div>
+
+          <div id="kitCreatedList"></div>
+        </div>
+
+        <!-- Vista Voluntario -->
+        <div id="viewVol" style="display:none;">
+          <div id="volStep1">
+            <div
+              style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">
+              Kits activos disponibles</div>
+            <div id="volKitList"></div>
+            <div id="volKitEmpty" style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">El
+              coordinador aún no ha creado kits. Espera o cambia a vista coordinador.</div>
+          </div>
+          <div id="volStep2" style="display:none;">
+            <div
+              style="background:var(--teal-light);border:1px solid #9FE1CB;border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;">
+              <div style="font-size:12px;font-weight:600;color:var(--teal-dark);margin-bottom:6px;">👤 Tu nombre</div>
+              <input id="volNombre" class="d-input" placeholder="Ej: Ana García">
+            </div>
+            <div id="volInstructions"
+              style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;">
+            </div>
+            <div
+              style="background:var(--orange-light);border:1px solid #FDDFA0;border-radius:var(--radius);padding:12px 14px;display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;">
+              <div style="font-size:20px;">📍</div>
+              <div>
+                <div style="font-weight:700;font-size:13px;color:#7D5200;margin-bottom:2px;">Punto de recogida más
+                  cercano</div>
+                <div id="volPickup" style="font-size:12px;color:#6B4F10;">Polideportivo Russafa · Av. de la Plata, 52 ·
+                  Abierto 8:00–20:00</div>
+              </div>
+            </div>
+            <button onclick="generarQR()"
+              style="width:100%;padding:12px;border:none;border-radius:var(--radius);background:var(--teal);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'DM Sans',sans-serif;">📲
+              Generar QR del kit</button>
+            <div id="volQrBox" style="display:none;" class="qr-box">
+              <div id="volQrCanvas"></div> <!-- ✅ div, no canvas -->
+              <div class="qr-code-txt" id="volQrCode">KIT-XXXX</div>
+              <div style="font-size:11px;color:var(--muted);">
+                Muestra este código en el punto de recogida
+              </div>
+
+              <div class="btn-nav">
+                <div class="btn-prev">
+                  <button onclick="volGoStep1()">← Elegir otro kit</button>
+                </div>
+                <div class="btn-next">
+                  <button onclick="switchTab('traza', document.querySelectorAll('.nav-tab')[1])">Ver trazabilidad
+                    →</button>
+                </div>
+             </div>
+        </div>          <!-- ✅ cierra volQrBox -->
+      </div>            <!-- ✅ cierra volStep2 -->
+    </div>              <!-- ✅ cierra viewVol -->
+  </div>                <!-- ✅ cierra panel-kits -->
+            <!-- TAB 2: TRAZABILIDAD -->
+            <div class="panel" id="panel-traza">
+              <div class="panel-title">✅ Trazabilidad y entrega verificada</div>
+              <div class="panel-sub">Cada kit — desde la preparación hasta la confirmación de entrega.</div>
+
+              <div class="traza-header">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span class="dot-pulse"></span>
+                  <span class="traza-header-title">Entregas activas</span>
+                  <span class="traza-count-badge" id="trazaCount">0</span>
+                </div>
+                <div class="traza-header-meta">Actualizado en tiempo real</div>
+                <div class="traza-filters">
+                  <button class="traza-filter-btn active" data-filter="all" onclick="filtrarTraza(this)">Todos</button>
+                  <button class="traza-filter-btn" data-filter="0" onclick="filtrarTraza(this)">📦 Preparado</button>
+                  <button class="traza-filter-btn" data-filter="1" onclick="filtrarTraza(this)">🚚 En camino</button>
+                  <button class="traza-filter-btn" data-filter="2" onclick="filtrarTraza(this)">✅ Recibido</button>
+                  <button class="traza-filter-btn" data-filter="cancel" onclick="filtrarTraza(this)">✕
+                    Cancelado</button>
+                </div>
+              </div>
+
+              <div class="traza-list" id="trazaList">
+                <div id="trazaEmpty" style="padding:32px;text-align:center;color:var(--muted);font-size:13px;">Cuando
+                  un voluntario confirme un kit aparecerá aquí</div>
+               </div>
+
+  </div>                <!-- ✅ cierra panel-traza -->
+
+</div>                  <!-- ✅ cierra content -->
+
+          <script>
+            // -------- TABS --------
+            function switchTab(id, btn) {
+              document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+              document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+              document.getElementById('panel-' + id).classList.add('active');
+              if (btn) btn.classList.add('active');
+              else {
+                const m = { kits: 0, traza: 1 };
+                document.querySelectorAll('.nav-tab')[m[id]].classList.add('active');
+              }
+            }
+
+            // -------- MODO --------
+            function switchMode(m) {
+              document.getElementById('modeCoord').className = m === 'coord' ? 'mode-btn active' : 'mode-btn';
+              document.getElementById('modeVol').className = m === 'vol' ? 'mode-btn active' : 'mode-btn';
+              document.getElementById('viewCoord').style.display = m === 'coord' ? 'block' : 'none';
+              document.getElementById('viewVol').style.display = m === 'vol' ? 'block' : 'none';
+              if (m === 'vol') renderVolKits();
+            }
+
+            // -------- KIT TYPES --------
+            const kitDefaults = {
+              food: [{ e: '💧', n: 'Agua 1.5L', q: 6 }, { e: '🥫', n: 'Conservas', q: 4 }, { e: '🍞', n: 'Pan envasado', q: 2 }, { e: '🍫', n: 'Barras energéticas', q: 4 }],
+              med: [{ e: '💊', n: 'Analgésicos', q: 2 }, { e: '🩹', n: 'Vendas y apósitos', q: 10 }, { e: '🧴', n: 'Antiséptico', q: 1 }, { e: '🌡️', n: 'Termómetro', q: 1 }],
+              clothes: [{ e: '🧥', n: 'Abrigo adulto', q: 2 }, { e: '🧤', n: 'Guantes', q: 4 }, { e: '🧢', n: 'Gorro lana', q: 2 }, { e: '🛏️', n: 'Manta térmica', q: 1 }],
+              tools: [{ e: '🔦', n: 'Linterna LED', q: 1 }, { e: '🔋', n: 'Pilas AA', q: 8 }, { e: '🪛', n: 'Destornillador', q: 1 }, { e: '🧰', n: 'Kit primeros aux.', q: 1 }],
+              custom: []
+            };
+            let currentKitType = 'food';
+            let currentColor = '#C0392B';
+            let kitItems = [];
+            const emojiCycle = ['📦', '🛒', '✅', '🎁', '📌', '🔹', '⭐'];
+            let emojiIdx = 0;
+
+            function selKitType(el, tipo, icon, name, color) {
+              document.querySelectorAll('.kit-type-card').forEach(c => c.classList.remove('selected'));
+              el.classList.add('selected');
+              currentKitType = tipo;
+              currentColor = color;
+              document.getElementById('kitStrip').style.background = color;
+              document.getElementById('kitBuilderTitle').textContent = icon + ' ' + name;
+              kitItems = (kitDefaults[tipo] || []).map(i => ({ ...i }));
+              renderKitItems();
+            }
+
+            function renderKitItems() {
+              const list = document.getElementById('kitItemsList');
+              if (!kitItems.length) { list.innerHTML = '<div style="padding:12px;text-align:center;font-size:12px;color:var(--muted);">Añade elementos al kit</div>'; document.getElementById('kitTotal').textContent = '0'; return; }
+              list.innerHTML = kitItems.map((item, i) => `
+    <div class="kit-item">
+      <span class="kit-item-emoji">${item.e}</span>
+      <span class="kit-item-name">${item.n}</span>
+      <div class="kit-qty-ctrl">
+        <button class="kit-qty-btn" onclick="changeQty(${i},-1)">−</button>
+        <span class="kit-qty-num">${item.q}</span>
+        <button class="kit-qty-btn" onclick="changeQty(${i},1)">+</button>
+      </div>
+      <button class="kit-item-del" onclick="delItem(${i})">✕</button>
+    </div>`).join('');
+              document.getElementById('kitTotal').textContent = kitItems.reduce((s, i) => s + i.q, 0);
+            }
+
+            function changeQty(i, d) {
+              kitItems[i].q = Math.max(0, kitItems[i].q + d);
+              if (kitItems[i].q === 0) kitItems.splice(i, 1);
+              renderKitItems();
+            }
+            function delItem(i) { kitItems.splice(i, 1); renderKitItems(); }
+            function cycleEmoji() { emojiIdx = (emojiIdx + 1) % emojiCycle.length; document.getElementById('kitAddEmoji').textContent = emojiCycle[emojiIdx]; }
+            function addKitItem() {
+              const n = document.getElementById('kitAddName').value.trim();
+              if (!n) return;
+              kitItems.push({ e: emojiCycle[emojiIdx], n, q: 1 });
+              document.getElementById('kitAddName').value = '';
+              renderKitItems();
+            }
+
+            const createdKits = [];
+            function crearKit() {
+              if (!kitItems.length) { alert('Añade al menos un elemento al kit.'); return; }
+              const code = 'KIT-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+              const title = document.getElementById('kitBuilderTitle').textContent;
+              const total = kitItems.reduce((s, i) => s + i.q, 0);
+              createdKits.push({ code, title, items: [...kitItems], color: currentColor, total });
+              const list = document.getElementById('kitCreatedList');
+              const div = document.createElement('div');
+              div.className = 'kit-created-item';
+              div.innerHTML = `<div style="flex:1;">
+    <div style="font-size:12px;font-weight:600;color:var(--teal-dark);">${title}</div>
+    <div style="font-size:11px;color:var(--muted);">${total} elementos · Listo para asignar</div>
+  </div>
+  <span class="kit-created-code">${code}</span>
+  <span style="font-size:11px;background:var(--teal-light);color:var(--teal-dark);border:1px solid #9FE1CB;border-radius:20px;padding:2px 8px;font-weight:600;">✓ Creado</span>`;
+              list.prepend(div);
+              addTrazaItem(code, title, currentColor, 0);
+              renderVolKits();
+            }
+
+            // -------- VOL KITS --------
+            function renderVolKits() {
+              const list = document.getElementById('volKitList');
+              const empty = document.getElementById('volKitEmpty');
+              if (!createdKits.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+              empty.style.display = 'none';
+              list.innerHTML = createdKits.map((k, i) => `
+    <div class="vol-kit-item" onclick="selVolKit(${i})">
+      <div class="vol-kit-icon">${k.title.split(' ')[0]}</div>
+      <div>
+        <div class="vol-kit-name">${k.title}</div>
+        <div class="vol-kit-cnt">${k.total} elementos · ${k.code}</div>
+      </div>
+      <div style="margin-left:auto;padding:4px 10px;background:var(--teal-light);color:var(--teal-dark);border-radius:20px;font-size:11px;font-weight:600;border:1px solid #9FE1CB;">Disponible</div>
+    </div>`).join('');
+            }
+
+            let selectedKit = null;
+            function selVolKit(i) {
+              selectedKit = createdKits[i];
+              document.getElementById('volStep1').style.display = 'none';
+              document.getElementById('volStep2').style.display = 'block';
+              const inst = document.getElementById('volInstructions');
+              inst.innerHTML = `<div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:8px;">Contenido: ${selectedKit.title}</div>
+  ${selectedKit.items.map(it => `<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--border);">
+    <span>${it.e} ${it.n}</span><span style="font-weight:600;">${it.q} ud.</span>
+  </div>`).join('')}`;
+            }
+            function volGoStep1() {
+              document.getElementById('volStep1').style.display = 'block';
+              document.getElementById('volStep2').style.display = 'none';
+              document.getElementById('volQrBox').style.display = 'none';
+              renderVolKits();
+            }
+
+            var _qrInstance = null;
+
+            function generarQR() {
+              var nombre = document.getElementById('volNombre').value.trim() || 'Anónimo';
+              if (!selectedKit) return;
+
+              var code = selectedKit.code + '-' + nombre.split(' ')[0].toUpperCase().substr(0, 3);
+              document.getElementById('volQrCode').textContent = code;
+
+              // ✅ URL real que abrirá el QR al escanearlo
+              var url = 'https://kit2help.es/demo2-kits.html?kit=' + encodeURIComponent(code);
+
+              var container = document.getElementById('volQrCanvas');
+              container.innerHTML = '';
+              _qrInstance = null;
+
+              _qrInstance = new QRCode(container, {
+                text: url,              // ✅ URL en lugar del código
+                width: 120,
+                height: 120,
+                colorDark: '#1D9E75',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.M
+              });
+
+              document.getElementById('volQrBox').style.display = 'block';
+              addTrazaItem(code, selectedKit.title, selectedKit.color, 1);
+            }
+
+            // -------- TRAZABILIDAD --------
+            const trazaItems = [];
+            function addTrazaItem(code, title, color, status) {
+              trazaItems.unshift({ code, title, color, status, ts: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) });
+              document.getElementById('trazaCount').textContent = trazaItems.length;
+              renderTraza('all');
+            }
+
+            function renderTraza(filter) {
+              const list = document.getElementById('trazaList');
+              const empty = document.getElementById('trazaEmpty');
+              const filtered = filter === 'all' ? trazaItems : trazaItems.filter(i => String(i.status) === filter || i.status === filter);
+              if (!filtered.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+              empty.style.display = 'none';
+              const statusLabel = { 0: '📦 Preparado', 1: '🚚 En camino', 2: '✅ Recibido', cancel: '✕ Cancelado' };
+              const statusCls = { 0: 'status-0', 1: 'status-1', 2: 'status-2', cancel: 'status-cancel' };
+              const steps = [0, 1, 2];
+              list.innerHTML = filtered.map(it => `
+    <div class="traza-item" data-status="${it.status}">
+      <span class="traza-code">${it.code}</span>
+      <span class="traza-tipo-icon">${it.title.split(' ')[0]}</span>
+      <div class="traza-info">
+        <div class="traza-name">${it.title}</div>
+        <div class="traza-meta">Actualizado · ${it.ts}</div>
+        ${it.status !== 'cancel' ? `<div class="traza-progress">${steps.map(s => `<div class="traza-step ${s < it.status ? 'done' : s === it.status ? 'active' : ''}"></div>`).join('')}</div>` : ''}
+      </div>
+      <span class="traza-status ${statusCls[it.status]}">${statusLabel[it.status]}</span>
+      ${it.status !== 'cancel' && it.status < 2 ? `<button onclick="advanceTraza(${trazaItems.indexOf(it)})" style="padding:5px 10px;border:1.5px solid var(--teal);border-radius:var(--radius-sm);background:var(--teal-light);color:var(--teal-dark);font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:4px;">Avanzar →</button>` : ''}
+    </div>`).join('');
+            }
+
+            function advanceTraza(i) {
+              if (trazaItems[i].status < 2) trazaItems[i].status++;
+              renderTraza('all');
+              document.getElementById('trazaCount').textContent = trazaItems.length;
+            }
+
+            function filtrarTraza(btn) {
+              document.querySelectorAll('.traza-filter-btn').forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+              renderTraza(btn.dataset.filter);
+            }
+
+            // Init
+            selKitType(document.querySelector('.kit-type-card.selected'), 'food', '🍱', 'Kit Alimenticio', '#C0392B');
+
+            document.addEventListener('DOMContentLoaded', function () {
+              var params = new URLSearchParams(window.location.search);
+              var kitCode = params.get('kit'); // "KIT001-ANO"
+
+              if (kitCode) {
+                // Opción A — resaltar el kit en la lista
+                var kitEl = document.querySelector('[data-code="' + kitCode + '"]');
+                if (kitEl) {
+                  kitEl.scrollIntoView({ behavior: 'smooth' });
+                  kitEl.classList.add('kit-highlight');
+                }
+
+                // Opción B — mostrar un mensaje de bienvenida
+                /*var msg = document.getElementById('mensajeBienvenida');
+                if (msg) {
+                  msg.textContent = '👋 Bienvenido, tu kit es: ' + kitCode;
+                  msg.style.display = 'block';
+                }*/
+
+                // Opción C — seleccionar el kit automáticamente
+                // selectKit(kitCode);
+              }
+            });
+          </script>
+</body>
+
+</html>

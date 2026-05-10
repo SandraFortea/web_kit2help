@@ -1,0 +1,2035 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kit2Help · Emergencias</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --red: #E24B4A;
+      --red-light: #FCEBEB;
+      --red-dark: #922B21;
+      --orange: #EF9F27;
+      --orange-light: #FEF5EC;
+      --teal: #1D9E75;
+      --teal-light: #E1F5EE;
+      --purple: #7B5EA7;
+      --purple-light: #F5F0FB;
+      --blue: #3A7BD5;
+      --blue-light: #EEF4FC;
+      --dark: #1a1a2e;
+      --muted: #6B7280;
+      --bg: #F7F8FA;
+      --white: #ffffff;
+      --border: #E5E7EB;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    /* SHELL */
+    .shell {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .topbar {
+      background: var(--dark);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+
+    .dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-r {
+      background: #FF5F57;
+    }
+
+    .dot-y {
+      background: #FEBC2E;
+    }
+
+    .dot-g {
+      background: #28C840;
+    }
+
+    .url {
+      margin-left: 8px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: 'DM Sans', sans-serif;
+      flex: 1;
+      text-align: center;
+    }
+
+    .badge-live {
+      font-size: 10px;
+      background: rgba(226, 75, 74, 0.2);
+      color: var(--red);
+      border: 1px solid rgba(226, 75, 74, 0.3);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-weight: 600;
+    }
+
+    /* NAV TABS */
+    .nav {
+      display: flex;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-tab {
+      flex: 1;
+      padding: 14px 8px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .nav-tab .tab-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .nav-tab.active {
+      color: var(--red);
+    }
+
+    .nav-tab.active .tab-num {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .nav-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2.5px;
+      background: var(--red);
+      border-radius: 2px 2px 0 0;
+    }
+
+    .nav-tab:hover:not(.active) {
+      color: var(--dark);
+    }
+
+    /* CONTENT */
+    .content {
+      background: var(--white);
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 20px;
+      min-height: 480px;
+    }
+
+    .panel {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    /* PANEL HEADERS */
+    .panel-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .panel-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    /* FORM */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .nec-ubic-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .nec-ubic-wrapper .d-input {
+      width: 100%;
+      padding-right: 44px;
+      /* ✅ espacio para el botón */
+      box-sizing: border-box;
+    }
+
+    .nec-ubic-btn {
+      position: absolute;
+      right: 6px;
+      background: #c2e1fa;
+      border: none;
+      border-radius: 7px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.18s;
+      flex-shrink: 0;
+    }
+
+    .nec-ubic-btn:hover {
+      background: #157a5a;
+    }
+
+    .d-input,
+    .d-textarea,
+    .d-select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--dark);
+      background: var(--white);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .d-input:focus,
+    .d-textarea:focus,
+    .d-select:focus {
+      border-color: var(--red);
+    }
+
+    .d-textarea {
+      resize: vertical;
+    }
+
+    /* CHIPS */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .chip {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      transition: all 0.18s;
+      user-select: none;
+    }
+
+    .chip:hover {
+      border-color: var(--dark);
+      color: var(--dark);
+    }
+
+    .chip-emergency.sel {
+      background: var(--red-light);
+      border-color: var(--red);
+      color: var(--red-dark);
+    }
+
+    .chip-checkpoint.sel {
+      background: var(--orange-light);
+      border-color: var(--orange);
+      color: #7D5200;
+    }
+
+    .chip-storage.sel {
+      background: var(--teal-light);
+      border-color: var(--teal);
+      color: #0E4D38;
+    }
+
+    .chip-volunteer.sel {
+      background: var(--purple-light);
+      border-color: var(--purple);
+      color: #4A2D7A;
+    }
+
+    .chip-shelter.sel {
+      background: var(--blue-light);
+      border-color: var(--blue);
+      color: #1C3F7A;
+    }
+
+    /* PRIORITY */
+    .prio-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .prio-btn {
+      flex: 1;
+      padding: 8px 6px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--bg);
+      color: var(--muted);
+      transition: all 0.18s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .prio-btn.low.sel {
+      background: #EEF4FC;
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .prio-btn.mid.sel {
+      background: var(--orange-light);
+      border-color: var(--orange);
+      color: #7D5200;
+    }
+
+    .prio-btn.high.sel {
+      background: var(--red-light);
+      border-color: var(--red);
+      color: var(--red-dark);
+    }
+
+    /* EMERGENCY NOTICE */
+    .emerg-notice {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      background: var(--red-light);
+      border: 1px solid rgba(226, 75, 74, 0.3);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--red-dark);
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    /* SUB ROWS */
+    .sub-row {
+      display: none;
+      margin-top: 10px;
+      padding: 12px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .sub-row.show {
+      display: block;
+    }
+
+    .sub-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    /* VOL TYPE GRID */
+    .vol-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .vol-card {
+      padding: 8px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: var(--white);
+      transition: all 0.18s;
+    }
+
+    .vol-card.sel {
+      border-color: var(--purple);
+      background: var(--purple-light);
+    }
+
+    .vol-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .vol-icon {
+      font-size: 16px;
+    }
+
+    .vol-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .vol-desc {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* BTN PRIMARY */
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius);
+      background: var(--red);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+
+    .btn-primary:hover {
+      background: #c83a39;
+    }
+
+    /* CONFIRM CARD */
+    .confirm-card {
+      background: var(--teal-light);
+      border: 1px solid #9FE1CB;
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-top: 14px;
+      display: none;
+    }
+
+    .confirm-card.show {
+      display: block;
+    }
+
+    .confirm-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0E4D38;
+      margin-bottom: 4px;
+    }
+
+    .confirm-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      background: var(--orange-light);
+      color: #7D5200;
+      border: 1px solid var(--orange);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-weight: 600;
+      float: right;
+    }
+
+    /* TRIAJE */
+    .val-filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .val-filter-btn {
+      padding: 6px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      background: var(--bg);
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.18s;
+    }
+
+    .val-filter-btn.active {
+      background: var(--dark);
+      border-color: var(--dark);
+      color: #fff;
+    }
+
+    .val-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+
+    .val-card:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .val-header {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .val-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .val-info {
+      flex: 1;
+    }
+
+    .val-title-txt {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .val-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .val-actions {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .val-btn {
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.18s;
+      white-space: nowrap;
+    }
+
+    .val-btn-ok {
+      background: #EAF3DE;
+      border-color: #639922;
+      color: #3B6D11;
+    }
+
+    .val-btn-ok:hover {
+      background: #639922;
+      color: #fff;
+    }
+
+    .val-btn-rej {
+      background: var(--red-light);
+      border-color: var(--red);
+      color: var(--red-dark);
+    }
+
+    .val-btn-rej:hover {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .val-btn-more {
+      background: var(--bg);
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .val-btn-more:hover {
+      border-color: var(--dark);
+      color: var(--dark);
+    }
+
+    .val-expand {
+      display: none;
+      padding: 12px 14px;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .val-expand.show {
+      display: block;
+    }
+
+    .val-expand-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .val-field {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .val-field span {
+      display: block;
+      font-size: 12px;
+      color: var(--dark);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .val-done {
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      margin-top: 8px;
+      display: none;
+    }
+
+    .val-done.ok {
+      background: #EAF3DE;
+      color: #3B6D11;
+      border: 1px solid #C0DD97;
+    }
+
+    .val-done.rej {
+      background: var(--red-light);
+      color: var(--red-dark);
+      border: 1px solid #F7C1C1;
+    }
+
+    .val-done.show {
+      display: block;
+    }
+
+    /* MURO */
+    .muro-filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .muro-filter-btn {
+      padding: 6px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      background: var(--bg);
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.18s;
+    }
+
+    .muro-filter-btn.active {
+      background: var(--dark);
+      border-color: var(--dark);
+      color: #fff;
+    }
+
+    .mf-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .muro-item {
+      display: flex;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      transition: box-shadow 0.2s;
+    }
+
+    .muro-item:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .muro-dot-side {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .muro-body-txt {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 3px 0 8px;
+    }
+
+    .muro-footer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .muro-time {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .muro-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .muro-claim-btn {
+      margin-left: auto;
+      padding: 5px 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.18s;
+    }
+
+    /* NEXT BUTTON */
+    .btn-next {
+      margin-top: 20px;
+      text-align: right;
+    }
+
+    .btn-next button {
+      padding: 8px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-next button:hover {
+      background: var(--dark);
+      color: #fff;
+      border-color: var(--dark);
+    }
+
+    /* ══ MÓVIL ══ */
+    @media (max-width: 768px) {
+
+      .nec-layout {
+        flex-direction: column;
+        /* apila form y mapa */
+        gap: 12px;
+      }
+
+      .nec-map-col {
+        flex: none;
+        width: 100%;
+        order: -1;
+        /* mapa arriba del form en móvil */
+      }
+
+      .nec-form {
+        width: 100%;
+      }
+
+      /* ✅ Botón toggle visible solo en móvil */
+      .nec-map-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        padding: 11px;
+        border-radius: 12px;
+        border: 1.5px solid rgba(29, 158, 117, 0.25);
+        background: #fff;
+        color: #1D9E75;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.18s, border-color 0.18s;
+        box-sizing: border-box;
+      }
+
+      .nec-map-toggle:hover,
+      .nec-map-toggle.open {
+        background: #f0faf6;
+        border-color: #1D9E75;
+        color: #085041;
+      }
+
+      /* En móvil el mapa empieza oculto, se abre con el toggle */
+      .nec-map-box {
+        display: none;
+        height: 220px;
+      }
+
+      .nec-map-box.open {
+        display: block;
+      }
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:500px) {
+
+      .nec-map-box.open {
+        height: 175px;
+      }
+
+      .nec-map-toggle {
+        font-size: 13px;
+        padding: 10px;
+      }
+    }
+
+    /* ══ LAYOUT NECESIDAD MAPA══ */
+    .nec-layout {
+      display: flex;
+      flex-direction: row;
+      /* desktop: form | mapa en fila */
+      gap: 20px;
+      align-items: flex-start;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .nec-form {
+      flex: 1;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    .nec-map-col {
+      flex: 0 0 380px;
+      /* ancho fijo en desktop */
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-sizing: border-box;
+    }
+
+    .nec-confirm {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ══ TOGGLE — oculto en desktop, el mapa siempre visible ══ */
+    .nec-map-toggle {
+      display: none;
+    }
+
+    /* ══ MAPA BOX ══ */
+    .nec-map-box {
+      position: relative;
+      /* ✅ necesario para los hijos absolute */
+      width: 100%;
+      height: 320px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-sizing: border-box;
+      border: 1.5px solid rgba(29, 158, 117, 0.2);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+      display: block !important;
+      /* siempre visible en desktop */
+    }
+
+    /* El div de Leaflet ocupa todo el box */
+    #necMap {
+      position: absolute;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 1;
+    }
+
+    /* Badge "Mapa en vivo" */
+    .emap-header {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    /*Controles de zoom*/
+.nec-map-controls {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nec-map-ctrl {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(29, 158, 117, 0.25);
+  background: rgba(255, 255, 255, 0.95);
+  color: #1D9E75;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: background 0.18s, border-color 0.18s;
+  line-height: 1;
+}
+
+.nec-map-ctrl:hover {
+  background: #1D9E75;
+  color: #fff;
+  border-color: #1D9E75;
+}
+
+/* Separación visual antes del botón fullscreen */
+.nec-map-ctrl--full {
+  margin-top: 4px;
+  font-size: 18px;
+}
+    .emap-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1D9E75;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    .rdot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #e24b4a;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.2;
+      }
+    }
+
+
+    .vol-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .val-expand-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .val-actions {
+      gap: 4px;
+    }
+
+    .val-btn {
+      font-size: 10px;
+      padding: 4px 8px;
+    }
+
+    .nav-tab span {
+      font-size: 10px;
+    }
+
+    /* Boton volver atras */
+    .btn-volver-wrapper {
+      padding: 20px;
+    }
+
+    .btn-volver {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-volver-circulo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background-color: #60ac73;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .btn-volver-texto {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .btn-volver-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #222;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <!-- Botón volver - colócalo ANTES de tu div principal -->
+  <div class="btn-volver-wrapper">
+    <button class="btn-volver" onclick="history.back()">
+
+      <div class="btn-volver-circulo">❮</div>
+
+      <div class="btn-volver-texto">
+        <span class="btn-volver-label">Volver</span>
+      </div>
+
+    </button>
+  </div>
+
+
+  <div class="shell">
+    <div class="topbar">
+      <div class="dots">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+      </div>
+      <span class="url">kit2help.es · Emergencias</span>
+      <span class="badge-live">● en vivo</span>
+    </div>
+    <nav class="nav">
+      <button class="nav-tab active" onclick="switchTab('necesidad',this)">
+        <div class="tab-num">1</div><span>Necesidad</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('triaje',this)">
+        <div class="tab-num">2</div><span>Triaje</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('muro',this)">
+        <div class="tab-num">3</div><span>Panel Global</span>
+      </button>
+    </nav>
+    <div class="content">
+
+      <!-- TAB 1: NECESIDAD -->
+      <div class="panel active" id="panel-necesidad">
+        <div class="panel-title">📝 Activar necesidad</div>
+        <div class="panel-sub">Reporta una necesidad de forma estructurada para que llegue al coordinador correcto.
+        </div>
+
+
+        <div class="form-group">
+          <label>Ubicación</label>
+          <div class="nec-ubic-wrapper">
+            <input class="d-input" id="necUbic" type="text" placeholder="Escribe una dirección...">
+            <button class="nec-ubic-btn" onclick="_necGeocode()">🔍</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Categoría</label>
+          <div class="chips" id="necCats">
+            <div class="chip chip-emergency sel" onclick="selCat(this,'emergency')">🚨 Emergencia</div>
+            <div class="chip chip-checkpoint" onclick="selCat(this,'checkpoint')">📍 Punto de encuentro</div>
+            <div class="chip chip-storage" onclick="selCat(this,'storage')">📦 Recogida de kits</div>
+            <div class="chip chip-volunteer" onclick="selCat(this,'volunteer')">🤝 Voluntarios</div>
+            <div class="chip chip-shelter" onclick="selCat(this,'shelter')">🏠 Refugio / Hospedaje</div>
+          </div>
+          <div class="emerg-notice" id="emergNotice">🚨 Emergencia: se asignará prioridad <strong
+              style="margin-left:4px;">Alta</strong> automáticamente</div>
+
+          <!-- Sub: Voluntarios -->
+          <div class="sub-row" id="subVol">
+            <div class="sub-label">¿Qué tipo de acción?</div>
+            <div class="chips">
+              <div class="chip chip-volunteer sel" id="volReq" onclick="selVolAccion('requerir')">Requerir voluntarios
+              </div>
+              <div class="chip chip-volunteer" id="volOfe" onclick="selVolAccion('ofrecer')">Ofrecer voluntarios</div>
+            </div>
+            <div class="sub-label" style="margin-top:10px;">Tipo de voluntario</div>
+            <div class="vol-grid">
+              <div class="vol-card sel" onclick="selVolTipo(this)">
+                <div class="vol-dot" style="background:#1A56DB;"></div>
+                <div class="vol-icon">🛡️</div>
+                <div>
+                  <div class="vol-name">Oficial</div>
+                  <div class="vol-desc">Protección Civil, Cruz Roja</div>
+                </div>
+              </div>
+              <div class="vol-card" onclick="selVolTipo(this)">
+                <div class="vol-dot" style="background:#E67E22;"></div>
+                <div class="vol-icon">🛠️</div>
+                <div>
+                  <div class="vol-name">Técnico</div>
+                  <div class="vol-desc">Electricistas, fontaneros</div>
+                </div>
+              </div>
+              <div class="vol-card" onclick="selVolTipo(this)">
+                <div class="vol-dot" style="background:#27AE60;"></div>
+                <div class="vol-icon">🦺</div>
+                <div>
+                  <div class="vol-name">Operativo</div>
+                  <div class="vol-desc">Reparto, logística, transporte</div>
+                </div>
+              </div>
+              <div class="vol-card" onclick="selVolTipo(this)">
+                <div class="vol-dot" style="background:#95A5A6;"></div>
+                <div class="vol-icon">🧹</div>
+                <div>
+                  <div class="vol-name">Ciudadano</div>
+                  <div class="vol-desc">Limpieza, apoyo general</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sub: Punto de encuentro -->
+          <div class="sub-row" id="subCheck">
+            <div class="sub-label">Tipo de punto</div>
+            <div class="chips">
+              <div class="chip chip-checkpoint sel" onclick="selCheckTipo(this)">🏥 Sanitario</div>
+              <div class="chip chip-checkpoint" onclick="selCheckTipo(this)">🤝 Coordinación</div>
+            </div>
+          </div>
+
+          <!-- Sub: Refugio -->
+          <div class="sub-row" id="subShel">
+            <div class="sub-label">Tipo de solicitud</div>
+            <div class="chips">
+              <div class="chip chip-shelter sel" onclick="selShelTipo(this)">Solicitar plaza</div>
+              <div class="chip chip-shelter" onclick="selShelTipo(this)">Ofrecer espacio</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" id="prioGroup">
+          <label>Prioridad</label>
+          <div class="prio-row">
+            <button class="prio-btn low" onclick="selPrio(this,'low')">Baja</button>
+            <button class="prio-btn mid" onclick="selPrio(this,'mid')">Media</button>
+            <button class="prio-btn high sel" onclick="selPrio(this,'high')">Alta</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Personas afectadas</label>
+          <input class="d-input" id="necPersonas" type="number" value="6" min="1">
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea class="d-textarea" id="necDesc"
+            rows="2">Familia con 2 menores y un anciano. Sin víveres desde hace 2 días.</textarea>
+        </div>
+
+        <button class="btn-primary" onclick="enviarNec()">Enviar necesidad</button>
+
+
+
+        <div class="confirm-card" id="necConfirm">
+          <span class="confirm-badge">● Pendiente validación</span>
+          <div class="confirm-title">✅ Necesidad registrada</div>
+          <div style="font-size:12px;color:#0E4D38;margin-top:8px;" id="necSummary"></div>
+          <div
+            style="margin-top:10px;font-size:12px;color:var(--muted);background:var(--white);border-radius:var(--radius-sm);padding:10px;line-height:1.5;">
+            📬 Entrando en panel de triaje. Un coordinador la revisará pronto.
+          </div>
+        </div>
+
+
+        <!-- Map + confirm -->
+        <div class="nec-map-col">
+          <button class="nec-map-toggle" id="necMapToggle" onclick="toggleNecMap()">🗺️ Ver
+            mapa</button>
+          <div class="nec-map-box" id="necMapBox">
+            <div class="emap-header"
+              style="position:absolute;top:12px;left:12px;right:12px;z-index:20;pointer-events:none;">
+              <div class="emap-badge">
+                <div class="rdot"></div>Mapa en vivo
+              </div>
+            </div>
+             <!-- ✅ Controles zoom + pantalla completa -->
+  <div class="nec-map-controls">
+    <button class="nec-map-ctrl" onclick="_necZoomIn()" title="Acercar">＋</button>
+    <button class="nec-map-ctrl" onclick="_necZoomOut()" title="Alejar">－</button>
+    <button class="nec-map-ctrl nec-map-ctrl--full" onclick="_necFullscreen()" title="Pantalla completa">⛶</button>
+  </div>
+            <div id="necMap" style="width:100%;height:100%;position:absolute;inset:0;z-index:1;"></div>
+          </div>
+        </div>
+
+
+
+        <div class="btn-next"><button onclick="switchTab('triaje', document.querySelectorAll('.nav-tab')[1])">Ver en
+            triaje →</button></div>
+      </div>
+
+      <!-- TAB 2: TRIAJE -->
+      <div class="panel" id="panel-triaje">
+        <div class="panel-title">🔎 Panel de validación y triaje</div>
+        <div class="panel-sub">Revisa, prioriza y valida cada solicitud antes de publicarla en el muro de coordinación.
+        </div>
+
+        <div class="val-filters">
+          <button class="val-filter-btn active" onclick="filtrarVal('todas',this)">Todas (5)</button>
+          <button class="val-filter-btn" onclick="filtrarVal('pendiente',this)">Pendientes</button>
+          <button class="val-filter-btn" onclick="filtrarVal('validada',this)">Validadas</button>
+          <button class="val-filter-btn" onclick="filtrarVal('cerrada',this)">Cerradas</button>
+        </div>
+
+        <div id="valList">
+          <!-- Card 1: Emergencia dinámica -->
+          <div class="val-card" id="vc1" data-estado="pendiente" style="border-left:3px solid var(--red);">
+            <div class="val-header">
+              <div style="display:flex;align-items:center;gap:10px;flex:1;">
+                <div class="val-icon" style="background:var(--red-light);">🚨</div>
+                <div class="val-info">
+                  <div class="val-title-txt">Emergencia · C/ Sueca, 22</div>
+                  <div class="val-meta">📍 Ruzafa · <span style="color:var(--red);font-weight:600;">Alta
+                      prioridad</span> · 6 personas</div>
+                </div>
+              </div>
+              <div class="val-actions">
+                <button class="val-btn val-btn-ok" onclick="validarCard('vc1','vd1',true)">✓ Validar</button>
+                <button class="val-btn val-btn-rej" onclick="validarCard('vc1','vd1',false)">✕ Rechazar</button>
+                <button class="val-btn val-btn-more" onclick="toggleExpand('ve1')">Detalles</button>
+              </div>
+            </div>
+            <div class="val-expand" id="ve1">
+              <div class="val-expand-grid">
+                <div class="val-field">Tipo<span>🚨 Emergencia crítica</span></div>
+                <div class="val-field">Prioridad<span style="color:var(--red);">Alta</span></div>
+                <div class="val-field">Descripción<span>Familia con menores y anciano. Sin víveres 2 días.</span></div>
+                <div class="val-field">Recibida<span>Hace 2 min</span></div>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <input class="d-input" id="ri1" placeholder="Nombre del coordinador..."
+                  style="font-size:12px;padding:7px 10px;">
+                <button onclick="asignarResp('ri1','ra1')"
+                  style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:12px;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;">Asignar</button>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px;">Responsable: <strong id="ra1">— Sin
+                  asignar</strong></div>
+              <div class="val-done" id="vd1"></div>
+            </div>
+          </div>
+
+          <!-- Card 2: Voluntarios técnico -->
+          <div class="val-card" id="vc2" data-estado="pendiente" style="border-left:3px solid var(--purple);">
+            <div class="val-header">
+              <div style="display:flex;align-items:center;gap:10px;flex:1;">
+                <div class="val-icon" style="background:var(--purple-light);">🛠️</div>
+                <div class="val-info">
+                  <div class="val-title-txt">Voluntarios · Zona Ruzafa <span
+                      style="font-size:10px;border:1px solid #E67E22;color:#E67E22;border-radius:20px;padding:1px 6px;margin-left:4px;">🛠️
+                      Técnico</span></div>
+                  <div class="val-meta">📍 Ruzafa · Media prioridad</div>
+                </div>
+              </div>
+              <div class="val-actions">
+                <button class="val-btn val-btn-ok" onclick="validarCard('vc2','vd2',true)">✓ Validar</button>
+                <button class="val-btn val-btn-rej" onclick="validarCard('vc2','vd2',false)">✕ Rechazar</button>
+                <button class="val-btn val-btn-more" onclick="toggleExpand('ve2')">Detalles</button>
+              </div>
+            </div>
+            <div class="val-expand" id="ve2">
+              <div class="val-expand-grid">
+                <div class="val-field">Tipo<span>🛠️ Voluntario Técnico</span></div>
+                <div class="val-field">Prioridad<span style="color:var(--orange);">Media</span></div>
+                <div class="val-field">Descripción<span>Se necesita voluntario técnico para labores de
+                    electricidad.</span></div>
+                <div class="val-field">Recibida<span>Hace 5 min</span></div>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <input class="d-input" id="ri2" placeholder="Nombre del coordinador..."
+                  style="font-size:12px;padding:7px 10px;">
+                <button onclick="asignarResp('ri2','ra2')"
+                  style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:12px;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;">Asignar</button>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px;">Responsable: <strong id="ra2">— Sin
+                  asignar</strong></div>
+              <div class="val-done" id="vd2"></div>
+            </div>
+          </div>
+
+          <!-- Card 3: Voluntarios operativo -->
+          <div class="val-card" id="vc3" data-estado="pendiente" style="border-left:3px solid var(--purple);">
+            <div class="val-header">
+              <div style="display:flex;align-items:center;gap:10px;flex:1;">
+                <div class="val-icon" style="background:var(--purple-light);">🦺</div>
+                <div class="val-info">
+                  <div class="val-title-txt">Voluntarios · Campus Blasco Ibáñez <span
+                      style="font-size:10px;border:1px solid #27AE60;color:#27AE60;border-radius:20px;padding:1px 6px;margin-left:4px;">🦺
+                      Operativo</span></div>
+                  <div class="val-meta">📍 Benimaclet · Media prioridad</div>
+                </div>
+              </div>
+              <div class="val-actions">
+                <button class="val-btn val-btn-ok" onclick="validarCard('vc3','vd3',true)">✓ Validar</button>
+                <button class="val-btn val-btn-rej" onclick="validarCard('vc3','vd3',false)">✕ Rechazar</button>
+                <button class="val-btn val-btn-more" onclick="toggleExpand('ve3')">Detalles</button>
+              </div>
+            </div>
+            <div class="val-expand" id="ve3">
+              <div class="val-expand-grid">
+                <div class="val-field">Tipo<span>🦺 Voluntario Operativo</span></div>
+                <div class="val-field">Prioridad<span style="color:var(--orange);">Media</span></div>
+                <div class="val-field">Descripción<span>Se necesita voluntario operativo para distribuir comida.</span>
+                </div>
+                <div class="val-field">Recibida<span>Hace 8 min</span></div>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <input class="d-input" id="ri3" placeholder="Nombre del coordinador..."
+                  style="font-size:12px;padding:7px 10px;">
+                <button onclick="asignarResp('ri3','ra3')"
+                  style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:12px;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;">Asignar</button>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px;">Responsable: <strong id="ra3">— Sin
+                  asignar</strong></div>
+              <div class="val-done" id="vd3"></div>
+            </div>
+          </div>
+
+          <!-- Card 4: Punto de encuentro -->
+          <div class="val-card" id="vc4" data-estado="pendiente" style="border-left:3px solid var(--orange);">
+            <div class="val-header">
+              <div style="display:flex;align-items:center;gap:10px;flex:1;">
+                <div class="val-icon" style="background:var(--orange-light);">📍</div>
+                <div class="val-info">
+                  <div class="val-title-txt">Punto de encuentro · Plaza del Ayuntamiento</div>
+                  <div class="val-meta">📍 Centro · 🏥 Médico · Baja prioridad</div>
+                </div>
+              </div>
+              <div class="val-actions">
+                <button class="val-btn val-btn-ok" onclick="validarCard('vc4','vd4',true)">✓ Validar</button>
+                <button class="val-btn val-btn-rej" onclick="validarCard('vc4','vd4',false)">✕ Rechazar</button>
+                <button class="val-btn val-btn-more" onclick="toggleExpand('ve4')">Detalles</button>
+              </div>
+            </div>
+            <div class="val-expand" id="ve4">
+              <div class="val-expand-grid">
+                <div class="val-field">Subtipo<span>🏥 Punto médico de atención primaria</span></div>
+                <div class="val-field">Capacidad<span>150 personas</span></div>
+                <div class="val-field">Descripción<span>Punto sanitario en Plaza del Ayuntamiento.</span></div>
+                <div class="val-field">Recibida<span>Hace 10 min</span></div>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <input class="d-input" id="ri4" placeholder="Nombre del responsable..."
+                  style="font-size:12px;padding:7px 10px;">
+                <button onclick="asignarResp('ri4','ra4')"
+                  style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:12px;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;">Asignar</button>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px;">Responsable: <strong id="ra4">— Sin
+                  asignar</strong></div>
+              <div class="val-done" id="vd4"></div>
+            </div>
+          </div>
+
+          <!-- Card 5: Refugio -->
+          <div class="val-card" id="vc5" data-estado="pendiente" style="border-left:3px solid var(--blue);">
+            <div class="val-header">
+              <div style="display:flex;align-items:center;gap:10px;flex:1;">
+                <div class="val-icon" style="background:var(--blue-light);">🏠</div>
+                <div class="val-info">
+                  <div class="val-title-txt">Refugio / Hospedaje · C/ Colón, 40</div>
+                  <div class="val-meta">📍 Eixample · Baja prioridad</div>
+                </div>
+              </div>
+              <div class="val-actions">
+                <button class="val-btn val-btn-ok" onclick="validarCard('vc5','vd5',true)">✓ Validar</button>
+                <button class="val-btn val-btn-rej" onclick="validarCard('vc5','vd5',false)">✕ Rechazar</button>
+                <button class="val-btn val-btn-more" onclick="toggleExpand('ve5')">Detalles</button>
+              </div>
+            </div>
+            <div class="val-expand" id="ve5">
+              <div class="val-expand-grid">
+                <div class="val-field">Tipo<span>Oferta de espacio · Acceso inmediato</span></div>
+                <div class="val-field">Prioridad<span style="color:var(--teal);">Baja</span></div>
+                <div class="val-field">Descripción<span>Hostal con capacidad de 40 personas.</span></div>
+                <div class="val-field">Recibida<span>Hace 20 min</span></div>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <input class="d-input" id="ri5" placeholder="Nombre del responsable..."
+                  style="font-size:12px;padding:7px 10px;">
+                <button onclick="asignarResp('ri5','ra5')"
+                  style="padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:12px;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;">Asignar</button>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px;">Responsable: <strong id="ra5">— Sin
+                  asignar</strong></div>
+              <div class="val-done" id="vd5"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-next"><button onclick="switchTab('muro', document.querySelectorAll('.nav-tab')[2])">Ver en panel
+            global →</button></div>
+      </div>
+
+      <!-- TAB 3: MURO -->
+      <div class="panel" id="panel-muro">
+        <div class="panel-title">📢 Panel Global</div>
+        <div class="panel-sub">Información validada, priorizada y lista para actuar. Sin ruido.</div>
+
+        <div class="muro-filters">
+          <button class="muro-filter-btn active" onclick="filtrarMuro('todas',this)"><span class="mf-dot"
+              style="background:var(--teal);"></span>Todas</button>
+          <button class="muro-filter-btn" onclick="filtrarMuro('urgente',this)"><span class="mf-dot"
+              style="background:var(--red);"></span>Urgentes</button>
+          <button class="muro-filter-btn" onclick="filtrarMuro('recurso',this)"><span class="mf-dot"
+              style="background:var(--teal);"></span>Recursos</button>
+          <button class="muro-filter-btn" onclick="filtrarMuro('info',this)"><span class="mf-dot"
+              style="background:var(--orange);"></span>Avisos</button>
+          <button class="muro-filter-btn" onclick="filtrarMuro('voluntario',this)"><span class="mf-dot"
+              style="background:var(--purple);"></span>Voluntarios</button>
+        </div>
+
+        <div id="muroFeed">
+          <div class="muro-item" data-tipo="voluntario">
+            <div class="muro-dot-side" style="background:var(--purple);"></div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:var(--dark);">🤝 Voluntarios disponibles · Campus Blasco
+                Ibáñez</div>
+              <div class="muro-body-txt">20 voluntarios con vehículo 4×4. Buscan coordinador de zona. Resp.: Miguel R.
+              </div>
+              <div class="muro-footer">
+                <span class="muro-time">Hace 5 min · Validado</span>
+                <span class="muro-tag" style="background:var(--purple-light);color:#4A2D7A;">Voluntarios</span>
+                <button class="muro-claim-btn" onclick="claimMuro(this)"
+                  style="background:var(--purple);color:#fff;">Coordinar</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="muro-item" data-tipo="info">
+            <div class="muro-dot-side" style="background:var(--orange);"></div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:var(--dark);">📍 Punto de encuentro · Plaza del
+                Ayuntamiento</div>
+              <div class="muro-body-txt">Abierto para coordinar voluntarios. Capacidad 150 personas. Resp.: Elena M.
+              </div>
+              <div class="muro-footer">
+                <span class="muro-time">Hace 10 min · Validado</span>
+                <span class="muro-tag" style="background:var(--orange-light);color:#7D5200;">Punto de encuentro</span>
+                <button class="muro-claim-btn" onclick="claimMuro(this)"
+                  style="background:var(--orange);color:#fff;">Registrarse</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="muro-item" data-tipo="recurso">
+            <div class="muro-dot-side" style="background:var(--teal);"></div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:var(--dark);">📦 Recogida de kits · Polideportivo Russafa
+              </div>
+              <div class="muro-body-txt">Almacén habilitado. Acepta kits alimenticios, sanitarios y de ropa. Abierto
+                8:00–20:00.</div>
+              <div class="muro-footer">
+                <span class="muro-time">Hace 15 min · Validado</span>
+                <span class="muro-tag" style="background:var(--teal-light);color:#0E4D38;">Recogida kits</span>
+                <button class="muro-claim-btn" onclick="claimMuro(this)"
+                  style="background:var(--teal);color:#fff;">Llevar kits</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="muro-item" data-tipo="info">
+            <div class="muro-dot-side" style="background:var(--blue);"></div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:var(--dark);">🏠 Refugio disponible · C/ Colón, 40</div>
+              <div class="muro-body-txt">30 plazas de hospedaje. Familias y personas mayores con prioridad. Resp.: Ana
+                G.</div>
+              <div class="muro-footer">
+                <span class="muro-time">Hace 20 min · Validado</span>
+                <span class="muro-tag" style="background:var(--blue-light);color:#1C3F7A;">Refugio</span>
+                <button class="muro-claim-btn" onclick="claimMuro(this)"
+                  style="background:var(--blue);color:#fff;">Derivar persona</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item dinámico: aparece cuando se valida la emergencia en triaje -->
+          <div class="muro-item" data-tipo="urgente" id="muroEmergDin"
+            style="display:none;border:1.5px solid rgba(226,75,74,0.3);background:var(--red-light);">
+            <div class="muro-dot-side" style="background:var(--red);"></div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:var(--red-dark);">🚨 Emergencia · C/ Sueca, 22</div>
+              <div class="muro-body-txt" style="color:var(--red-dark);">Familia 2 menores+anciano. Sin víveres 2 días. 6
+                personas. Prioridad Alta.</div>
+              <div class="muro-footer">
+                <span class="muro-time" style="color:var(--red);">Recién validada ·</span>
+                <span class="muro-tag" style="background:rgba(226,75,74,0.15);color:var(--red-dark);">🚨 Nueva</span>
+                <button class="muro-claim-btn" onclick="claimMuro(this)"
+                  style="background:var(--red);color:#fff;">Atender</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    function switchTab(id, btn) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('panel-' + id).classList.add('active');
+      if (btn) btn.classList.add('active');
+      else {
+        const tabs = { necesidad: 0, triaje: 1, muro: 2 };
+        document.querySelectorAll('.nav-tab')[tabs[id]].classList.add('active');
+      }
+    }
+
+    // Cat chips
+    let catActual = 'emergency';
+    function selCat(el, tipo) {
+      document.querySelectorAll('#necCats .chip').forEach(c => {
+        c.className = c.className.replace(/\s*sel/g, '');
+      });
+      el.classList.add('sel');
+      catActual = tipo;
+      document.getElementById('emergNotice').style.display = tipo === 'emergency' ? 'flex' : 'none';
+      document.getElementById('subVol').classList.toggle('show', tipo === 'volunteer');
+      document.getElementById('subCheck').classList.toggle('show', tipo === 'checkpoint');
+      document.getElementById('subShel').classList.toggle('show', tipo === 'shelter');
+      const prioGroup = document.getElementById('prioGroup');
+      if (tipo === 'emergency') {
+        document.querySelectorAll('.prio-btn').forEach(b => b.classList.remove('sel'));
+        document.querySelector('.prio-btn.high').classList.add('sel');
+        prioGroup.style.opacity = '0.5'; prioGroup.style.pointerEvents = 'none';
+      } else {
+        prioGroup.style.opacity = '1'; prioGroup.style.pointerEvents = 'auto';
+      }
+    }
+
+    function selVolAccion(tipo) {
+      document.getElementById('volReq').className = tipo === 'requerir' ? 'chip chip-volunteer sel' : 'chip chip-volunteer';
+      document.getElementById('volOfe').className = tipo === 'ofrecer' ? 'chip chip-volunteer sel' : 'chip chip-volunteer';
+    }
+
+    function selVolTipo(el) {
+      document.querySelectorAll('.vol-card').forEach(c => c.classList.remove('sel'));
+      el.classList.add('sel');
+    }
+
+    function selCheckTipo(el) {
+      document.querySelectorAll('#subCheck .chip').forEach(c => c.classList.remove('sel'));
+      el.classList.add('sel');
+    }
+
+    function selShelTipo(el) {
+      document.querySelectorAll('#subShel .chip').forEach(c => c.classList.remove('sel'));
+      el.classList.add('sel');
+    }
+
+
+    function selPrio(el, nivel) {
+      document.querySelectorAll('.prio-btn').forEach(b => b.classList.remove('sel'));
+      el.classList.add('sel');
+    }
+
+    function enviarNec() {
+      const ubic = document.getElementById('necUbic').value || 'C/ Sueca, 22';
+      const personas = document.getElementById('necPersonas').value || '6';
+      const desc = document.getElementById('necDesc').value;
+      const confirm = document.getElementById('necConfirm');
+      const summary = document.getElementById('necSummary');
+      summary.innerHTML = `<strong>Categoría:</strong> ${catActual === 'emergency' ? '🚨 Emergencia' : catActual} · <strong>Ubicación:</strong> ${ubic} · <strong>Personas:</strong> ${personas}<br><em style="color:var(--muted)">${desc.substring(0, 80)}…</em>`;
+      confirm.classList.add('show');
+      document.getElementById('muroEmergDin').style.display = 'flex';
+      const btn = document.querySelector('.btn-primary');
+      btn.textContent = '✓ Enviada'; btn.style.background = '#27AE60'; btn.disabled = true;
+    }
+
+    // Triaje
+    function toggleExpand(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('show');
+    }
+
+    function validarCard(cardId, doneId, ok) {
+      const card = document.getElementById(cardId);
+      const done = document.getElementById(doneId);
+      const estado = ok ? 'validada' : 'cerrada';
+      card.dataset.estado = estado;
+      done.textContent = ok ? '✓ Necesidad validada y publicada en el muro.' : '✕ Necesidad rechazada.';
+      done.className = 'val-done show ' + (ok ? 'ok' : 'rej');
+      card.querySelector('.val-actions').querySelectorAll('.val-btn-ok,.val-btn-rej').forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
+      if (ok && cardId === 'vc1') {
+        document.getElementById('muroEmergDin').style.display = 'flex';
+      }
+    }
+
+    function asignarResp(inputId, spanId) {
+      const val = document.getElementById(inputId).value.trim();
+      if (val) { document.getElementById(spanId).textContent = val; document.getElementById(inputId).value = ''; }
+    }
+
+    function filtrarVal(tipo, btn) {
+      document.querySelectorAll('.val-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('#valList .val-card').forEach(card => {
+        card.style.display = (tipo === 'todas' || card.dataset.estado === tipo) ? 'block' : 'none';
+      });
+    }
+
+    // Muro
+    function filtrarMuro(tipo, btn) {
+      document.querySelectorAll('.muro-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('#muroFeed .muro-item').forEach(item => {
+        item.style.display = (tipo === 'todas' || item.dataset.tipo === tipo) ? 'flex' : 'none';
+      });
+    }
+
+    function claimMuro(btn) {
+      btn.textContent = '✓ Asignado';
+      btn.style.background = '#27AE60';
+      btn.disabled = true;
+    }
+
+    // ══ MAPA DE NECESIDAD ══
+    var _necMap = null;
+    var _necMarker = null;
+
+    // ── Iconos ──
+    function _necMakeIcon(color, icon, size) {
+      var fs = Math.round(size * 0.42);
+      return L.divIcon({
+        className: '',
+        html:
+          '<div style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;background:' + color + ';' +
+          'display:flex;align-items:center;justify-content:center;font-size:' + fs + 'px;font-weight:700;' +
+          'color:#fff;box-shadow:0 3px 10px rgba(0,0,0,0.35);border:2px solid rgba(255,255,255,0.35);">' + icon + '</div>',
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size / 2],
+        popupAnchor: [0, -(size / 2 + 8)]
+      });
+    }
+
+    function _necPinIcon(color) {
+      color = color || '#E24B4A';
+      return L.divIcon({
+        className: '',
+        html:
+          '<div style="position:relative;width:28px;height:36px;">' +
+          '<div style="width:28px;height:28px;border-radius:50% 50% 50% 0;background:' + color + ';' +
+          'transform:rotate(-45deg);box-shadow:0 3px 10px rgba(0,0,0,0.35);border:2px solid rgba(255,255,255,0.4);"></div>' +
+          '<div style="position:absolute;top:6px;left:6px;width:16px;height:16px;border-radius:50%;' +
+          'background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;font-size:9px;">📍</div>' +
+          '</div>',
+        iconSize: [28, 36],
+        iconAnchor: [14, 36],
+        popupAnchor: [0, -38]
+      });
+    }
+
+    function _necPulseIcon(color) {
+      return L.divIcon({
+        className: '',
+        html:
+          '<div style="position:relative;width:40px;height:40px;">' +
+          '<div style="position:absolute;inset:0;border-radius:50%;background:' + color + ';opacity:0.18;animation:necPulseRing 1.8s ease-out infinite;"></div>' +
+          '<div style="position:absolute;inset:6px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,0.4);">🚨</div>' +
+          '</div>',
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+        popupAnchor: [0, -26]
+      });
+    }
+
+    // Animación pulse
+    (function () {
+      var s = document.createElement('style');
+      s.textContent = '@keyframes necPulseRing{0%{transform:scale(1);opacity:0.22}70%{transform:scale(2.2);opacity:0}100%{transform:scale(2.2);opacity:0}}';
+      document.head.appendChild(s);
+    })();
+
+
+    // ── Geocodificación directa ──
+
+    function _necGeocode() {
+      var el = document.getElementById('necUbic');
+      if (!el || !el.value.trim()) return;
+
+      var query = el.value.trim();
+
+      fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(query) + '&limit=1&countrycodes=es')
+        .then(function (r) { return r.json(); })
+        .then(function (results) {
+          if (!results || results.length === 0) {
+            alert('No se encontró la dirección. Intenta ser más específico.');
+            return;
+          }
+
+          var result = results[0];
+          var latlng = {
+            lat: parseFloat(result.lat),
+            lng: parseFloat(result.lon)
+          };
+
+          // ✅ Mover el marker
+          if (_necMarker) {
+            _necMarker.setLatLng([latlng.lat, latlng.lng]);
+            _necMarker.setIcon(_necPinIcon('#E24B4A'));
+            _necMarker.setPopupContent(
+              '<b>📍 Ubicación seleccionada</b><br>' +
+              '<span style="font-size:11px;color:#1D9E75;">' + result.display_name + '</span>'
+            );
+            _necMarker.openPopup();
+          }
+
+          // ✅ Centrar el mapa
+          if (_necMap) {
+            _necMap.setView([latlng.lat, latlng.lng], 17, { animate: true });
+          }
+
+          // ✅ Geocodificación inversa para limpiar el label
+          _necReverseGeocode(latlng, _necActualizarPopup);
+        })
+        .catch(function () {
+          alert('Error al buscar la dirección. Comprueba tu conexión.');
+        });
+    }
+
+    // ── Geocodificación inversa ──
+    function _necReverseGeocode(latlng, callback) {
+      fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + latlng.lat + '&lon=' + latlng.lng)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var addr = data.address;
+
+          var road = addr.road || addr.pedestrian || addr.footway || addr.street || '';
+          var number = addr.house_number ? ' ' + addr.house_number : '';
+          var suburb = addr.suburb || addr.neighbourhood || addr.quarter || '';
+
+          // ✅ Añadir ciudad
+          var city = addr.city || addr.town || addr.village || addr.municipality || '';
+
+          var parts = [];
+          if (road) parts.push(road + number);
+          if (suburb) parts.push(suburb);
+          if (city) parts.push(city);              // ✅ ciudad al final
+
+          var label = parts.length
+            ? parts.join(', ')
+            : (data.display_name || (latlng.lat.toFixed(5) + ', ' + latlng.lng.toFixed(5)));
+
+          var el = document.getElementById('necUbic');
+          if (el) el.value = label;
+          if (typeof callback === 'function') callback(label);
+        })
+        .catch(function () {
+          var fallback = latlng.lat.toFixed(5) + ', ' + latlng.lng.toFixed(5);
+          var el = document.getElementById('necUbic');
+          if (el) el.value = fallback;
+          if (typeof callback === 'function') callback(fallback);
+        });
+    }
+
+    // ── Actualiza popup y campo necUbic ──
+    function _necActualizarPopup(texto) {
+      if (!texto || !_necMarker) return;
+      _necMarker.setPopupContent(
+        '<b>📍 Ubicación seleccionada</b><br>' +
+        '<span style="font-size:11px;color:#1D9E75;">' + texto + '</span>'
+      );
+      var el = document.getElementById('necUbic');
+      if (el) el.value = texto;
+    }
+
+    // ── Inicializar mapa ──  ✅ TODOS los .on() van aquí dentro
+    function initNecMap() {
+      var el = document.getElementById('necMap');
+      if (!el) return;
+      if (_necMap) { _necMap.invalidateSize(); return; }
+
+      _necMap = L.map('necMap', {
+        zoomControl: false,
+        attributionControl: false,
+        scrollWheelZoom: false,
+        dragging: true,
+        doubleClickZoom: false
+      }).setView([39.4617, -0.3854], 16);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(_necMap);
+
+      // Marcadores de contexto
+      var ctx = [
+        { lat: 39.4641, lng: -0.3879, color: '#1D9E75', icon: 'K', tip: '<b>📦 Recogida de kits</b><br>Polideportivo Russafa' },
+        { lat: 39.4598, lng: -0.3831, color: '#7B5EA7', icon: 'V', tip: '<b>🤝 Voluntarios</b><br>12 activos' },
+        { lat: 39.4633, lng: -0.3808, color: '#EF9F27', icon: 'P', tip: '<b>📍 Punto de encuentro</b><br>Pl. Ayuntamiento' },
+        { lat: 39.4589, lng: -0.3869, color: '#3A7BD5', icon: 'R', tip: '<b>🏠 Refugio</b><br>C/ Colón 40 · 30 plazas' }
+      ];
+      ctx.forEach(function (m) {
+        L.marker([m.lat, m.lng], { icon: _necMakeIcon(m.color, m.icon, 26) })
+          .bindPopup(m.tip, { className: 'k2-popup', maxWidth: 180 })
+          .addTo(_necMap);
+      });
+
+      // ✅ Crear marker PRIMERO
+      _necMarker = L.marker([39.4617, -0.3854], {
+        icon: _necPinIcon('#E24B4A'),
+        zIndexOffset: 1000,
+        draggable: true
+      })
+        .bindPopup('<b>📍 Ubicación seleccionada</b><br><span style="font-size:11px;color:#555;">Cargando dirección...</span>',
+          { className: 'k2-popup', maxWidth: 220 })
+        .addTo(_necMap);
+
+      // ✅ Eventos DESPUÉS de crear el marker
+      _necMarker.on('dragend', function () {
+        var ll = _necMarker.getLatLng();
+        _necMarker.setPopupContent(
+          '<b>📍 Ubicación seleccionada</b><br>' +
+          '<span style="font-size:11px;color:#1D9E75;">Obteniendo dirección...</span>'
+        );
+        _necMarker.openPopup();
+        _necReverseGeocode(ll, _necActualizarPopup);
+      });
+
+      // ✅ Click en mapa DESPUÉS de crear el marker
+      _necMap.on('click', function (e) {
+        _necMarker.setLatLng(e.latlng);
+        _necMarker.setIcon(_necPinIcon('#E24B4A'));
+        _necMarker.setPopupContent(
+          '<b>📍 Ubicación seleccionada</b><br>' +
+          '<span style="font-size:11px;color:#1D9E75;">Obteniendo dirección...</span>'
+        );
+        _necMarker.openPopup();
+        _necReverseGeocode(e.latlng, _necActualizarPopup);
+      });
+
+      // Cargar dirección inicial
+      _necReverseGeocode({ lat: 39.4617, lng: -0.3854 }, _necActualizarPopup);
+    }
+
+    // ── Toggle mapa ──
+    window.toggleNecMap = function () {
+      var box = document.getElementById('necMapBox');
+      var btn = document.getElementById('necMapToggle');
+      if (!box || !btn) return;
+      var isOpen = box.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+      btn.textContent = isOpen ? '🗺️ Ocultar mapa' : '🗺️ Ver mapa';
+      if (isOpen) {
+        setTimeout(function () {
+          if (_necMap) { _necMap.invalidateSize(); }
+          else { initNecMap(); }
+        }, 150);
+      }
+    };
+
+    // funciones para amplificar el mapa desde fuera del módulo
+    function _necZoomIn() {
+  if (_necMap) _necMap.zoomIn();
+}
+
+function _necZoomOut() {
+  if (_necMap) _necMap.zoomOut();
+}
+
+/*
+function _necFullscreen() {
+  var ll   = _necMap ? _necMap.getCenter() : { lat: 39.4617, lng: -0.3854 };
+  var zoom = _necMap ? _necMap.getZoom()   : 16;
+  var url  = 'https://www.openstreetmap.org/#map=' + zoom + '/' + ll.lat.toFixed(5) + '/' + ll.lng.toFixed(5);
+  window.open(url, '_blank');
+}*/
+
+function _necFullscreen() {
+  if (!_necMap) return;
+
+  var ll   = _necMap.getCenter();
+  var zoom = _necMap.getZoom();
+  var pin  = _necMarker ? _necMarker.getLatLng() : null;
+
+  // Construye los datos del estado actual
+  var params = new URLSearchParams({
+    lat:  ll.lat.toFixed(6),
+    lng:  ll.lng.toFixed(6),
+    zoom: zoom,
+    pinLat: pin ? pin.lat.toFixed(6) : ll.lat.toFixed(6),
+    pinLng: pin ? pin.lng.toFixed(6) : ll.lng.toFixed(6)
+  });
+
+  window.open('nec-mapa-fullscreen.html?' + params.toString(), '_blank');
+}
+
+    // ── Overrides externos ──
+    var _origSwitchDemoNec = window.switchDemo;
+    window.switchDemo = function (tab) {
+      _origSwitchDemoNec && _origSwitchDemoNec(tab);
+      if (tab === 'necesidad') {
+        setTimeout(function () {
+          initNecMap();
+          if (_necMap) _necMap.invalidateSize();
+        }, 200);
+      }
+    };
+
+    var _origEnviarNec = window.enviarNecesidad;
+    window.enviarNecesidad = function () {
+      if (_necMarker) {
+        var me = _necMarker.getElement ? _necMarker.getElement() : null;
+        if (me) {
+          me.style.filter = 'brightness(2) drop-shadow(0 0 8px #E24B4A)';
+          setTimeout(function () { if (me) me.style.filter = ''; }, 700);
+        }
+      }
+      _origEnviarNec && _origEnviarNec();
+    };
+
+    // ✅ En desktop el mapa carga directamente sin toggle
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.innerWidth > 768) {
+        setTimeout(function () {
+          initNecMap();
+          if (_necMap) _necMap.invalidateSize();
+        }, 200);
+      }
+    });
+  </script>
+</body>
+
+</html>

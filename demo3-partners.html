@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kit2Help · Partners Oficiales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1A56DB;--blue-light:#EEF4FC;--blue-dark:#0C3484;
+  --teal:#1D9E75;--teal-light:#E1F5EE;--teal-dark:#0E4D38;
+  --orange:#EF9F27;--orange-light:#FEF5EC;
+  --red:#E24B4A;--red-light:#FCEBEB;
+  --green:#639922;--green-light:#EAF3DE;
+  --dark:#1a1a2e;--muted:#6B7280;--bg:#F7F8FA;
+  --white:#ffffff;--border:#E5E7EB;
+  --radius:12px;--radius-sm:8px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+.shell{max-width:1300px;margin:0 auto;padding:16px;}
+
+/* TOPBAR */
+.topbar{background:var(--dark);border-radius:var(--radius) var(--radius) 0 0;padding:10px 16px;display:flex;align-items:center;gap:8px;}
+.dots{display:flex;gap:5px;}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dot-r{background:#FF5F57;}.dot-y{background:#FEBC2E;}.dot-g{background:#28C840;}
+.url{margin-left:8px;font-size:12px;color:rgba(255,255,255,0.5);font-family:'DM Sans',sans-serif;flex:1;text-align:center;}
+.badge-partner{font-size:10px;background:rgba(26,86,219,0.25);color:#93B8F7;border:1px solid rgba(26,86,219,0.4);border-radius:20px;padding:2px 8px;font-weight:600;}
+
+/* NAV */
+.nav{display:flex;background:var(--white);border-bottom:1px solid var(--border);}
+.nav-tab{flex:1;padding:14px 8px;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px;transition:all 0.2s;position:relative;}
+.nav-tab .tab-num{width:22px;height:22px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.nav-tab.active{color:var(--blue);}
+.nav-tab.active .tab-num{background:var(--blue);border-color:var(--blue);color:#fff;}
+.nav-tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2.5px;background:var(--blue);border-radius:2px 2px 0 0;}
+
+.content{background:var(--white);border-radius:0 0 var(--radius) var(--radius);padding:20px;min-height:480px;}
+.panel{display:none;animation:fadeIn 0.25s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.panel-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.panel-sub{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.5;}
+
+/* MODE TOGGLE */
+.mode-toggle{display:flex;gap:4px;background:rgba(0,0,0,0.06);border-radius:var(--radius);padding:4px;margin-bottom:16px;}
+.mode-btn{flex:1;padding:8px 0;border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;color:var(--muted);background:transparent;}
+.mode-btn.active{background:var(--blue);color:#fff;}
+
+/* FORM */
+.form-group{margin-bottom:12px;}
+.form-label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;}
+.d-input,.d-select{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);background:var(--white);outline:none;transition:border-color 0.2s;}
+.d-input:focus,.d-select:focus{border-color:var(--blue);}
+
+/* SECTION HEADER */
+.section-header{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin:14px 0 8px;}
+
+/* ARTICULOS GRID */
+.art-grid{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:8px;}
+@media(max-width:480px){.art-grid{grid-template-columns:1fr 1fr;gap:6px;}}
+
+/* TABLA ARTÍCULOS */
+.don-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px;}
+.don-table th{background:var(--bg);font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;padding:6px 8px;text-align:left;border-bottom:1px solid var(--border);}
+.don-table td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.don-table tr:last-child td{border-bottom:none;}
+.del-art-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 6px;border-radius:4px;}
+.del-art-btn:hover{background:var(--red-light);color:var(--red);}
+
+/* BUTTONS */
+.btn-add-art{width:100%;padding:9px;border:1.5px dashed var(--blue);border-radius:var(--radius-sm);background:transparent;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px;}
+.btn-add-art:hover{background:var(--blue-light);}
+.btn-primary{width:100%;padding:12px;border:none;border-radius:var(--radius);background:var(--blue);color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;}
+.btn-primary:hover{background:var(--blue-dark);}
+
+/* CONFIRM */
+.confirm-box{background:var(--teal-light);border:1px solid #9FE1CB;border-radius:var(--radius);padding:14px;display:none;margin-top:12px;}
+.confirm-box.show{display:block;}
+.confirm-code{font-family:monospace;font-size:24px;font-weight:700;color:var(--teal);letter-spacing:4px;margin:6px 0;}
+
+/* QR */
+.qr-mini{display:block;margin:6px auto;}
+
+/* PANEL COORDINADOR - CARDS */
+.don-filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.don-filter-btn{padding:5px 12px;border:1.5px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;background:var(--bg);color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.18s;}
+.don-filter-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+.don-card-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;}
+.don-card-header{padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;}
+.don-card-header:hover{background:var(--bg);}
+.don-card-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--blue-light);}
+.don-card-info{flex:1;}
+.don-card-title{font-size:13px;font-weight:600;color:var(--dark);}
+.don-card-meta{font-size:11px;color:var(--muted);}
+.don-card-status{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.st-pend{background:var(--orange-light);color:#7D5200;}
+.st-asig{background:var(--blue-light);color:var(--blue-dark);}
+.st-transit{background:rgba(99,153,34,0.15);color:#3B6D11;}
+.st-recib{background:var(--teal-light);color:var(--teal-dark);}
+
+.don-card-expand{display:none;padding:12px 14px;background:var(--bg);border-top:1px solid var(--border);}
+.don-card-expand.show{display:block;}
+.don-field{font-size:11px;color:var(--muted);margin-bottom:6px;}
+.don-field span{display:block;font-size:12px;color:var(--dark);font-weight:500;margin-top:1px;}
+
+.assign-row{display:flex;gap:6px;margin-top:8px;}
+.btn-assign{padding:7px 12px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius-sm);font-size:12px;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;}
+.btn-advance{padding:7px 12px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:12px;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;}
+
+/* MIS DONACIONES */
+.mia-item{border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.mia-code{font-family:monospace;font-size:13px;font-weight:700;color:var(--blue-dark);min-width:80px;}
+.mia-info{flex:1;}
+.mia-name{font-size:12px;font-weight:600;color:var(--dark);}
+.mia-meta{font-size:11px;color:var(--muted);}
+
+/* TRAZABILIDAD */
+.traza-header{background:var(--dark);color:#fff;border-radius:var(--radius) var(--radius) 0 0;padding:14px 16px;}
+.traza-header-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;}
+.traza-count-badge{background:var(--blue);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:20px;margin-left:6px;}
+.traza-filter-btn{padding:4px 10px;border:1px solid rgba(255,255,255,0.2);border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;transition:all 0.18s;}
+.traza-filter-btn.active,.traza-filter-btn:hover{background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.4);}
+.traza-filters{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px;}
+.dot-pulse{width:8px;height:8px;background:var(--orange);border-radius:50%;display:inline-block;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.traza-list{background:var(--white);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);}
+.traza-item{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.traza-item:last-child{border-bottom:none;}
+.traza-code{font-family:monospace;font-size:12px;font-weight:700;color:var(--blue);min-width:80px;}
+.traza-info{flex:1;}
+.traza-name{font-size:12px;font-weight:600;color:var(--dark);}
+.traza-meta{font-size:11px;color:var(--muted);}
+.traza-progress{display:flex;gap:3px;margin-top:5px;}
+.traza-step{flex:1;height:3px;border-radius:3px;background:var(--border);}
+.traza-step.done{background:var(--teal);}
+.traza-step.active{background:var(--orange);}
+.traza-status{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
+
+.btn-next{margin-top:20px;text-align:right;}
+.btn-next button{padding:8px 18px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--white);color:var(--dark);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.18s;}
+.btn-next button:hover{background:var(--dark);color:#fff;border-color:var(--dark);}
+
+  /* Boton volver atras */
+    .btn-volver-wrapper {
+      padding: 20px;
+    }
+
+    .btn-volver {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-volver-circulo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background-color: #60ac73;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .btn-volver-texto {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .btn-volver-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #222;
+    }
+</style>
+</head>
+<body>
+  <!-- Botón volver - colócalo ANTES de tu div principal -->
+  <div class="btn-volver-wrapper">
+    <button class="btn-volver" onclick="history.back()">
+
+      <div class="btn-volver-circulo">❮</div>
+
+      <div class="btn-volver-texto">
+        <span class="btn-volver-label">Volver</span>
+      </div>
+
+    </button>
+  </div>
+<div class="shell">
+  <div class="topbar">
+    <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+    <span class="url">kit2help.es · Partners Oficiales</span>
+    <span class="badge-partner">🚛 Logística</span>
+  </div>
+  <nav class="nav">
+    <button class="nav-tab active" onclick="switchTab('donaciones',this)">
+      <div class="tab-num">1</div><span>Donaciones</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('traza',this)">
+      <div class="tab-num">2</div><span>Trazabilidad</span>
+    </button>
+  </nav>
+  <div class="content">
+
+    <!-- TAB 1: DONACIONES -->
+    <div class="panel active" id="panel-donaciones">
+      <div class="panel-title">🚛 Donaciones logísticas</div>
+      <div class="panel-sub">Registra, coordina y hace seguimiento de envíos de materiales de empresas y organizaciones.</div>
+
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="modeReg" onclick="switchMode('registro')">📋 Registrar donación</button>
+        <button class="mode-btn" id="modePanel" onclick="switchMode('panel')">🗂️ Coordinador</button>
+        <button class="mode-btn" id="modeMias" onclick="switchMode('mias')">📦 Mis donaciones</button>
+      </div>
+
+      <!-- REGISTRO -->
+      <div id="viewRegistro">
+        <div class="form-group">
+          <label class="form-label">Empresa donante</label>
+          <input id="donEmpresa" class="d-input" placeholder="Ej: Logística Norte S.L.">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo de transporte</label>
+          <select id="donTransporte" class="d-select">
+            <option value="camion">🚛 Camión propio</option>
+            <option value="furgoneta">🚐 Furgoneta propia</option>
+            <option value="recogida">📍 Necesita recogida en almacén</option>
+          </select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="form-group">
+            <label class="form-label">Disponibilidad</label>
+            <input id="donFecha" class="d-input" placeholder="Ej: Mañana, 9:00–14:00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ubicación de origen</label>
+            <input id="donOrigen" class="d-input" placeholder="Ej: Polígono Norte, Valencia">
+          </div>
+        </div>
+
+        <div class="section-header">Artículos a donar</div>
+        <div class="art-grid">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Descripción</label>
+            <input id="donDesc" class="d-input" placeholder="Ej: Agua embotellada 1.5L">
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Cantidad</label>
+            <input id="donCantidad" class="d-input" type="number" min="1" placeholder="20">
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Unidad</label>
+            <select id="donUnidad" class="d-select">
+              <option>Palés</option><option>Cajas</option><option>Kg</option><option>Litros</option><option>Unidades</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Categoría</label>
+            <select id="donCategoria" class="d-select">
+              <option value="">Categ.</option>
+              <option>🍱 Alimentación</option><option>🧴 Higiene</option><option>🧥 Ropa</option>
+              <option>🔧 Herramientas</option><option>💧 Agua</option><option>📦 Otro</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-add-art" onclick="donAgregarArt()">+ Añadir artículo a la lista</button>
+
+        <div id="donTablaWrap" style="display:none;margin-bottom:10px;">
+          <table class="don-table">
+            <thead><tr><th>Artículo</th><th>Cant.</th><th>Unidad</th><th>Cat.</th><th></th></tr></thead>
+            <tbody id="donTbody"></tbody>
+          </table>
+        </div>
+        <div id="donEmptyMsg" style="display:none;padding:10px;text-align:center;font-size:12px;color:var(--muted);background:var(--bg);border-radius:var(--radius-sm);margin-bottom:10px;">Añade al menos un artículo para registrar la donación</div>
+
+        <button class="btn-primary" onclick="registrarDon()">Registrar donación</button>
+
+        <div class="confirm-box" id="donConfirm">
+          <div style="font-weight:700;font-size:13px;color:var(--teal-dark);margin-bottom:4px;">✅ Donación registrada</div>
+          <div style="font-size:11px;color:var(--muted);">Código asignado:</div>
+          <div class="confirm-code" id="donCodigo">—</div>
+          <canvas id="donQrCanvas" class="qr-mini" width="80" height="80"></canvas>
+          <div style="font-size:11px;color:var(--muted);">El coordinador recibirá la solicitud y asignará un punto de recogida.</div>
+        </div>
+      </div>
+
+      <!-- PANEL COORDINADOR -->
+      <div id="viewPanel" style="display:none;">
+        <div class="don-filters">
+          <button class="don-filter-btn active" data-filter="all" onclick="filtrarDon(this)">Todas</button>
+          <button class="don-filter-btn" data-filter="pendiente" onclick="filtrarDon(this)">⏳ Pendiente</button>
+          <button class="don-filter-btn" data-filter="asignada" onclick="filtrarDon(this)">📍 Asignada</button>
+          <button class="don-filter-btn" data-filter="transito" onclick="filtrarDon(this)">🚛 En tránsito</button>
+          <button class="don-filter-btn" data-filter="recibida" onclick="filtrarDon(this)">✅ Recibida</button>
+        </div>
+        <div id="donPanelList">
+          <div id="donPanelEmpty" style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">No hay donaciones registradas aún</div>
+        </div>
+      </div>
+
+      <!-- MIS DONACIONES -->
+      <div id="viewMias" style="display:none;">
+        <div id="donMiasList">
+          <div id="donMiasEmpty" style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Todavía no has registrado ninguna donación</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: TRAZABILIDAD -->
+    <div class="panel" id="panel-traza">
+      <div class="panel-title">📊 Trazabilidad de donaciones</div>
+      <div class="panel-sub">Seguimiento completo de cada envío logístico, desde el registro hasta la recepción.</div>
+
+      <div class="traza-header">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="dot-pulse"></span>
+          <span class="traza-header-title">Donaciones activas</span>
+          <span class="traza-count-badge" id="trazaCount">0</span>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;">Actualizado en tiempo real</div>
+        <div class="traza-filters">
+          <button class="traza-filter-btn active" data-filter="all" onclick="filtrarTraza(this)">Todos</button>
+          <button class="traza-filter-btn" data-filter="pendiente" onclick="filtrarTraza(this)">⏳ Pendiente</button>
+          <button class="traza-filter-btn" data-filter="asignada" onclick="filtrarTraza(this)">📍 Asignada</button>
+          <button class="traza-filter-btn" data-filter="transito" onclick="filtrarTraza(this)">🚛 Tránsito</button>
+          <button class="traza-filter-btn" data-filter="recibida" onclick="filtrarTraza(this)">✅ Recibida</button>
+        </div>
+      </div>
+
+      <div class="traza-list" id="trazaList">
+        <div id="trazaEmpty" style="padding:32px;text-align:center;color:var(--muted);font-size:13px;">Las donaciones registradas aparecerán aquí con su estado en tiempo real</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// TABS
+function switchTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  else {const m={donaciones:0,traza:1};document.querySelectorAll('.nav-tab')[m[id]].classList.add('active');}
+}
+
+// MODE
+function switchMode(m) {
+  ['Reg','Panel','Mias'].forEach(k=>{
+    const b=document.getElementById('mode'+k);
+    if(b) b.className='mode-btn'+(b.id==='mode'+k.charAt(0).toUpperCase()+k.slice(1)&&m===k.toLowerCase()?'':b.id==='modeReg'&&m==='registro'?' active':b.id==='modePanel'&&m==='panel'?' active':b.id==='modeMias'&&m==='mias'?' active':'');
+  });
+  document.getElementById('modeReg').className='mode-btn'+(m==='registro'?' active':'');
+  document.getElementById('modePanel').className='mode-btn'+(m==='panel'?' active':'');
+  document.getElementById('modeMias').className='mode-btn'+(m==='mias'?' active':'');
+  document.getElementById('viewRegistro').style.display=m==='registro'?'block':'none';
+  document.getElementById('viewPanel').style.display=m==='panel'?'block':'none';
+  document.getElementById('viewMias').style.display=m==='mias'?'block':'none';
+  if(m==='panel') renderPanel();
+  if(m==='mias') renderMias();
+}
+
+// ARTÍCULOS
+let artList=[];
+function donAgregarArt() {
+  const desc=document.getElementById('donDesc').value.trim();
+  const cant=document.getElementById('donCantidad').value;
+  const uni=document.getElementById('donUnidad').value;
+  const cat=document.getElementById('donCategoria').value||'📦 Otro';
+  if(!desc){document.getElementById('donEmptyMsg').style.display='block';return;}
+  artList.push({desc,cant:cant||'1',uni,cat});
+  document.getElementById('donDesc').value='';
+  document.getElementById('donCantidad').value='';
+  document.getElementById('donEmptyMsg').style.display='none';
+  renderArtTabla();
+}
+
+function renderArtTabla() {
+  const wrap=document.getElementById('donTablaWrap');
+  const tbody=document.getElementById('donTbody');
+  if(!artList.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  tbody.innerHTML=artList.map((a,i)=>`<tr>
+    <td>${a.desc}</td><td>${a.cant}</td><td>${a.uni}</td><td>${a.cat}</td>
+    <td><button class="del-art-btn" onclick="delArt(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function delArt(i){artList.splice(i,1);renderArtTabla();}
+
+// DONACIONES DATA
+const donaciones=[];
+function registrarDon() {
+  const empresa=document.getElementById('donEmpresa').value.trim();
+  const transporte=document.getElementById('donTransporte').value;
+  const fecha=document.getElementById('donFecha').value;
+  const origen=document.getElementById('donOrigen').value;
+  if(!empresa){alert('Indica el nombre de la empresa.');return;}
+  if(!artList.length){document.getElementById('donEmptyMsg').style.display='block';return;}
+  const codigo='DON-'+Math.random().toString(36).substr(2,5).toUpperCase();
+  const don={codigo,empresa,transporte,fecha,origen,items:[...artList],estado:'pendiente',ts:new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}),punto:'—'};
+  donaciones.push(don);
+  // Confirm UI
+  document.getElementById('donCodigo').textContent=codigo;
+  drawQR('donQrCanvas',codigo,'#1A56DB');
+  document.getElementById('donConfirm').classList.add('show');
+  const btn=document.querySelector('.btn-primary');
+  btn.textContent='✓ Registrada';btn.style.background='#27AE60';btn.disabled=true;
+  // Actualizar traza
+  renderTraza('all');
+  document.getElementById('trazaCount').textContent=donaciones.length;
+  artList=[];renderArtTabla();
+}
+
+function drawQR(canvasId,code,color) {
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const w=canvas.width;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,w,w);
+  ctx.fillStyle=color||'#1A56DB';
+  const pat=code.split('').map(c=>c.charCodeAt(0));
+  const sz=Math.floor(w/10);
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    if((pat[(r*8+c)%pat.length]+r+c)%2===0)ctx.fillRect(sz/2+c*sz,sz/2+r*sz,sz-1,sz-1);
+  }
+}
+
+// PANEL COORDINADOR
+function renderPanel(filter) {
+  const list=document.getElementById('donPanelList');
+  const empty=document.getElementById('donPanelEmpty');
+  const shown=filter&&filter!=='all'?donaciones.filter(d=>d.estado===filter):donaciones;
+  if(!shown.length){list.innerHTML='<div id="donPanelEmpty" style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">No hay donaciones'+(filter&&filter!=='all'?' con estado "'+filter+'"':'')+' aún</div>';return;}
+  const statusCls={pendiente:'st-pend',asignada:'st-asig',transito:'st-transit',recibida:'st-recib'};
+  const statusLabel={pendiente:'⏳ Pendiente',asignada:'📍 Asignada',transito:'🚛 En tránsito',recibida:'✅ Recibida'};
+  list.innerHTML=shown.map((d,origIdx)=>{
+    const i=donaciones.indexOf(d);
+    return `<div class="don-card-item" data-estado="${d.estado}">
+      <div class="don-card-header" onclick="toggleDonExpand('dexp${i}')">
+        <div class="don-card-icon">🚛</div>
+        <div class="don-card-info">
+          <div class="don-card-title">${d.empresa}</div>
+          <div class="don-card-meta">${d.transporte==='camion'?'🚛 Camión propio':d.transporte==='furgoneta'?'🚐 Furgoneta':'📍 Recogida en almacén'} · ${d.items.length} artículo(s) · ${d.codigo}</div>
+        </div>
+        <span class="don-card-status ${statusCls[d.estado]||'st-pend'}">${statusLabel[d.estado]||'⏳ Pendiente'}</span>
+      </div>
+      <div class="don-card-expand" id="dexp${i}">
+        <div class="don-field">Origen<span>${d.origen||'—'}</span></div>
+        <div class="don-field">Disponibilidad<span>${d.fecha||'—'}</span></div>
+        <div class="don-field">Punto de recogida asignado<span id="punto${i}">${d.punto||'—'}</span></div>
+        <div class="don-field">Artículos
+          ${d.items.map(it=>`<span>• ${it.desc} · ${it.cant} ${it.uni} ${it.cat}</span>`).join('')}
+        </div>
+        <div class="assign-row">
+          <input class="d-input" id="puntoInput${i}" placeholder="Asignar punto de recogida..." style="flex:1;font-size:12px;padding:7px 10px;">
+          <button class="btn-assign" onclick="asignarPunto(${i})">Asignar</button>
+          ${d.estado!=='recibida'?`<button class="btn-advance" onclick="avanzarEstado(${i})">Avanzar →</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleDonExpand(id){
+  const el=document.getElementById(id);
+  if(el)el.classList.toggle('show');
+}
+function asignarPunto(i){
+  const val=document.getElementById('puntoInput'+i).value.trim();
+  if(val){donaciones[i].punto=val;if(donaciones[i].estado==='pendiente')donaciones[i].estado='asignada';renderPanel();renderTraza();}
+}
+function avanzarEstado(i){
+  const order=['pendiente','asignada','transito','recibida'];
+  const idx=order.indexOf(donaciones[i].estado);
+  if(idx<3){donaciones[i].estado=order[idx+1];renderPanel();renderTraza();document.getElementById('trazaCount').textContent=donaciones.filter(d=>d.estado!=='recibida').length;}
+}
+
+function filtrarDon(btn){
+  document.querySelectorAll('.don-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPanel(btn.dataset.filter);
+}
+
+// MIS DONACIONES
+function renderMias(){
+  const list=document.getElementById('donMiasList');
+  if(!donaciones.length){list.innerHTML='<div id="donMiasEmpty" style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Todavía no has registrado ninguna donación</div>';return;}
+  const stLabel={pendiente:'⏳ Pendiente',asignada:'📍 Asignada',transito:'🚛 En tránsito',recibida:'✅ Recibida'};
+  const stCls={pendiente:'st-pend',asignada:'st-asig',transito:'st-transit',recibida:'st-recib'};
+  list.innerHTML=donaciones.map(d=>`
+    <div class="mia-item">
+      <span class="mia-code">${d.codigo}</span>
+      <div class="mia-info">
+        <div class="mia-name">${d.empresa}</div>
+        <div class="mia-meta">${d.items.length} artículo(s) · Registrada ${d.ts}${d.punto&&d.punto!=='—'?' · Punto: '+d.punto:''}</div>
+      </div>
+      <span class="don-card-status ${stCls[d.estado]||'st-pend'}">${stLabel[d.estado]||'⏳ Pendiente'}</span>
+    </div>`).join('');
+}
+
+// TRAZABILIDAD
+function renderTraza(filter) {
+  const list=document.getElementById('trazaList');
+  const empty=document.getElementById('trazaEmpty');
+  const all=filter&&filter!=='all'?donaciones.filter(d=>d.estado===filter):donaciones;
+  if(!all.length){list.innerHTML='<div style="padding:32px;text-align:center;color:var(--muted);font-size:13px;">No hay donaciones'+(filter&&filter!=='all'?' en este estado':'')+' aún</div>';return;}
+  const order=['pendiente','asignada','transito','recibida'];
+  const statusLabel={pendiente:'⏳ Pendiente',asignada:'📍 Asignada',transito:'🚛 En tránsito',recibida:'✅ Recibida'};
+  const stCls={pendiente:'st-pend',asignada:'st-asig',transito:'st-transit',recibida:'st-recib'};
+  list.innerHTML=all.map(d=>{
+    const si=order.indexOf(d.estado);
+    return `<div class="traza-item" data-estado="${d.estado}">
+      <span class="traza-code">${d.codigo}</span>
+      <div style="flex:1;">
+        <div class="traza-name">🚛 ${d.empresa}</div>
+        <div class="traza-meta">${d.items.length} artículo(s)${d.punto&&d.punto!=='—'?' · '+d.punto:''} · ${d.ts}</div>
+        <div class="traza-progress">${order.map((_,s)=>`<div class="traza-step ${s<si?'done':s===si?'active':''}"></div>`).join('')}</div>
+      </div>
+      <span class="traza-status ${stCls[d.estado]||'st-pend'}">${statusLabel[d.estado]}</span>
+    </div>`;
+  }).join('');
+}
+
+function filtrarTraza(btn){
+  document.querySelectorAll('.traza-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTraza(btn.dataset.filter);
+}
+</script>
+</body>
+</html>
