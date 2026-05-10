@@ -37,14 +37,37 @@
         <a href="mapaGlobal.html" onclick="toggleMenu()">Impacto</a>
         <button class="mob-cta" onclick="abrirQuienesSomos();toggleMenu()">¿Quiénes somos?</button>
     </div>
-    <div id="demo">
-        <div class="inner">
-            <div class="label reveal">03 — Demo interactiva</div>
+     <!-- FEATURES -->
+  <section id="features">
+     <div class="label reveal">03 — Demos interactivas</div>
             <h2 class="section-title reveal reveal-delay-1">Pruébalo tú mismo</h2>
-            <p class="section-sub reveal reveal-delay-2">Una demo virtual que simula funcionalidades conectadas,
-                mostrando el
-                recorrido completo: desde la detección de una necesidad hasta la entrega verificada.</p>
+            <p class="section-sub reveal reveal-delay-2">Una plataforma, tres demos. Desde la detección de la necesidad hasta la rendición de cuentas, cada módulo se conecta con el siguiente.</p>
 
+    <div class="features-grid">
+      <div class="feature-card reveal" onclick="window.location.href='demo1-emergencias.html'">
+		<div class="feature-icon">📢</div>	  
+		<div class="card-icon purple"><i class="ti ti-heart-handshake" aria-hidden="true"></i></div>
+        <h3>Demo 1 - Emergencia</h3>
+        <p>Del primer aviso al despliegue coordinado: registro, triaje y activación de la respuesta.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1" onclick="window.location.href='demo2-kits.html'">
+		<div class="feature-icon">📦</div>
+        <div class="card-icon teal"><i class="ti ti-package" aria-hidden="true"></i></div>
+        <h3>Demo 2 - Kits</h3>
+        <p>Del almacén a la entrega verificada: configuración, asignación y trazabilidad de kits.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2"  onclick="window.location.href='demo3-partners.html'">
+        <div class="feature-icon">🚚</div>
+        <h3>Demo 3 - Partners Oficiales</h3>
+        <p>De la donación al impacto medible: gestión, trazabilidad y rendición de cuentas para partners oficiales.</p>
+      </div>
+     
+    </div>
+  </section>
+  
+    <div id="demo" class="hidden">
+       <!-- <div class="inner">-->
+          
             <div class="demo-shell reveal">
                 <div class="demo-topbar">
                     <div class="dot dot-red"></div>
@@ -952,7 +975,7 @@
                 </div>
                 </demo-content>
             </div> <!--/demo-shell -->
-        </div> <!--/inner -->
+       <!-- </div> /inner -->
 
     </div> <!--/demo -->
 
