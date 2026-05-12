@@ -1294,7 +1294,7 @@ function crearKit() {
   `;
   list.prepend(div);
 
-  addTrazaItem(code, title, currentColor, 0);
+  //addTrazaItem(code, title, currentColor, 0);
   renderVolKits();
 }
 
@@ -1415,7 +1415,7 @@ function renderVolKits() {
         });
 
         document.getElementById('volQrBox').style.display = 'block';
-        addTrazaItem(code, selectedKit.title, selectedKit.color, 1);
+        addTrazaItem(code, selectedKit.title, selectedKit.color, 0);
       }
 
       // -------- TRAZABILIDAD --------
@@ -1426,27 +1426,46 @@ function renderVolKits() {
         renderTraza('all');
       }
 
+
       function renderTraza(filter) {
-        const list = document.getElementById('trazaList');
-        const empty = document.getElementById('trazaEmpty');
-        const filtered = filter === 'all' ? trazaItems : trazaItems.filter(i => String(i.status) === filter || i.status === filter);
-        if (!filtered.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
-        empty.style.display = 'none';
+            const list = document.getElementById('trazaList');
+            if (!list) return; // ✅ guard por si el panel no está en el DOM
+
+            const filtered = filter === 'all' 
+              ? trazaItems 
+              : trazaItems.filter(i => String(i.status) === filter || i.status === filter);
+
+            // ✅ Si no hay items, mostrar mensaje vacío directamente en la lista
+            if (!filtered.length) {
+              list.innerHTML = '<div id="trazaEmpty" style="padding:32px;text-align:center;color:var(--muted);font-size:13px;">Cuando un voluntario confirme un kit aparecerá aquí</div>';
+              return;
+            }
+
         const statusLabel = { 0: '📦 Preparado', 1: '🚚 En camino', 2: '✅ Recibido', cancel: '✕ Cancelado' };
-        const statusCls = { 0: 'status-0', 1: 'status-1', 2: 'status-2', cancel: 'status-cancel' };
+        const statusCls   = { 0: 'status-0', 1: 'status-1', 2: 'status-2', cancel: 'status-cancel' };
         const steps = [0, 1, 2];
+
         list.innerHTML = filtered.map(it => `
-    <div class="traza-item" data-status="${it.status}">
-      <span class="traza-code">${it.code}</span>
-      <span class="traza-tipo-icon">${it.title.split(' ')[0]}</span>
-      <div class="traza-info">
-        <div class="traza-name">${it.title}</div>
-        <div class="traza-meta">Actualizado · ${it.ts}</div>
-        ${it.status !== 'cancel' ? `<div class="traza-progress">${steps.map(s => `<div class="traza-step ${s < it.status ? 'done' : s === it.status ? 'active' : ''}"></div>`).join('')}</div>` : ''}
-      </div>
-      <span class="traza-status ${statusCls[it.status]}">${statusLabel[it.status]}</span>
-      ${it.status !== 'cancel' && it.status < 2 ? `<button onclick="advanceTraza(${trazaItems.indexOf(it)})" style="padding:5px 10px;border:1.5px solid var(--teal);border-radius:var(--radius-sm);background:var(--teal-light);color:var(--teal-dark);font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:4px;">Avanzar →</button>` : ''}
-    </div>`).join('');
+          <div class="traza-item" data-status="${it.status}">
+            <span class="traza-code">${it.code}</span>
+            <span class="traza-tipo-icon">${it.title.split(' ')[0]}</span>
+            <div class="traza-info">
+              <div class="traza-name">${it.title}</div>
+              <div class="traza-meta">Actualizado · ${it.ts}</div>
+              ${it.status !== 'cancel' 
+                ? `<div class="traza-progress">${steps.map(s => 
+                    `<div class="traza-step ${s < it.status ? 'done' : s === it.status ? 'active' : ''}"></div>`
+                  ).join('')}</div>` 
+                : ''}
+            </div>
+            <span class="traza-status ${statusCls[it.status] || ''}">${statusLabel[it.status] || ''}</span>
+            ${it.status !== 'cancel' && it.status < 2 
+              ? `<button onclick="advanceTraza(${trazaItems.indexOf(it)})" 
+                  style="padding:5px 10px;border:1.5px solid var(--teal);border-radius:var(--radius-sm);
+                          background:var(--teal-light);color:var(--teal-dark);font-size:11px;font-weight:600;
+                          cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:4px;">Avanzar →</button>` 
+              : ''}
+          </div>`).join('');
       }
 
       function advanceTraza(i) {
@@ -1455,36 +1474,28 @@ function renderVolKits() {
         document.getElementById('trazaCount').textContent = trazaItems.length;
       }
 
-      function filtrarTraza(btn) {
+     function filtrarTraza(btn) {
         document.querySelectorAll('.traza-filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        renderTraza(btn.dataset.filter);
+        renderTraza(btn.dataset.filter); // ✅ renderTraza ya maneja el caso vacío internamente
       }
 
       // Init
       selKitType(document.querySelector('.kit-type-card.selected'), 'food', '🍱', 'Kit Alimenticio', '#C0392B');
 
+      // ✅ Al cargar la página, comprobar si viene de un escaneo QR
       document.addEventListener('DOMContentLoaded', function () {
         var params = new URLSearchParams(window.location.search);
-        var kitCode = params.get('kit'); // "KIT001-ANO"
-
+        var kitCode = params.get('kit');
         if (kitCode) {
-          // Opción A — resaltar el kit en la lista
-          var kitEl = document.querySelector('[data-code="' + kitCode + '"]');
-          if (kitEl) {
-            kitEl.scrollIntoView({ behavior: 'smooth' });
-            kitEl.classList.add('kit-highlight');
+          // Extraer el código base (KIT-AB12 de KIT-AB12-ANA)
+          var baseCode = kitCode.split('-').slice(0, 2).join('-');
+          var existing = trazaItems.find(i => i.code === baseCode);
+          if (existing) {
+            existing.status = 1; // En camino
+            existing.ts = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            renderTraza('all');
           }
-
-          // Opción B — mostrar un mensaje de bienvenida
-          /*var msg = document.getElementById('mensajeBienvenida');
-          if (msg) {
-            msg.textContent = '👋 Bienvenido, tu kit es: ' + kitCode;
-            msg.style.display = 'block';
-          }*/
-
-          // Opción C — seleccionar el kit automáticamente
-          // selectKit(kitCode);
         }
       });
     </script>
