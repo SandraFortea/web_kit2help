@@ -853,6 +853,38 @@
         width: 100%;
       }
 
+      
+
+      .nec-map-toggle:hover,
+      .nec-map-toggle.open {
+        background: #f0faf6;
+        border-color: #1D9E75;
+        color: #085041;
+      }
+
+      /* En móvil el mapa empieza oculto, se abre con el toggle */
+      /* ✅ Añade esto */
+      #necMap {
+        position: absolute;
+        inset: 0;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 220px;
+        /* ✅ altura mínima garantizada */
+        z-index: 1;
+      }
+
+     .nec-map-box {
+        height: 100%;
+        min-height: 100%;
+        display: none; /* oculto hasta que se pulse toggle */
+      }
+
+      .nec-map-box.open {
+        display: block !important;
+        height: 220px !important;
+      }
+
       /* ✅ Botón toggle visible solo en móvil */
       .nec-map-toggle {
         display: flex;
@@ -871,35 +903,51 @@
         transition: background 0.18s, border-color 0.18s;
         box-sizing: border-box;
       }
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:500px) {
+
+      
+      .nec-map-toggle {
+        display: flex;
+        /* ✅ visible en móvil */
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        padding: 11px;
+        border-radius: 12px;
+        border: 1.5px solid rgba(29, 158, 117, 0.25);
+        background: #fff;
+        color: #1D9E75;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.18s, border-color 0.18s;
+        box-sizing: border-box;
+      }
+
+     .nec-map-box {
+      position: relative;
+        width: 100%;
+        height: 220px;
+        /* ✅ altura fija, no auto ni % */
+        min-height: 220px;
+       
+      display: none; /* oculto hasta que se pulse toggle */
+    }
+
+    .nec-map-box.open {
+      display: block !important;
+      height: 220px !important;
+    }
 
       .nec-map-toggle:hover,
       .nec-map-toggle.open {
         background: #f0faf6;
         border-color: #1D9E75;
         color: #085041;
-      }
-
-      /* En móvil el mapa empieza oculto, se abre con el toggle */
-      .nec-map-box {
-        display: none;
-        height: 220px;
-      }
-
-      .nec-map-box.open {
-        display: block;
-      }
-    }
-
-    /* RESPONSIVE */
-    @media(max-width:500px) {
-
-      .nec-map-box.open {
-        height: 175px;
-      }
-
-      .nec-map-toggle {
-        font-size: 13px;
-        padding: 10px;
       }
     }
 
@@ -934,16 +982,12 @@
       box-sizing: border-box;
     }
 
-    /* ══ TOGGLE — oculto en desktop, el mapa siempre visible ══ */
-    .nec-map-toggle {
-      display: none;
-    }
-
+@media (min-width: 769px) {
     /* ══ MAPA BOX ══ */
     .nec-map-box {
       position: relative;
       /* ✅ necesario para los hijos absolute */
-      width: 100%;
+       width: 100%;
       height: 320px;
       border-radius: 14px;
       overflow: hidden;
@@ -954,6 +998,12 @@
       /* siempre visible en desktop */
     }
 
+    .nec-map-toggle {
+
+      display: none;
+      /* oculto en desktop */
+     }
+
     /* El div de Leaflet ocupa todo el box */
     #necMap {
       position: absolute;
@@ -962,6 +1012,8 @@
       height: 100% !important;
       z-index: 1;
     }
+}
+  
 
     /* Badge "Mapa en vivo" */
     .emap-header {
@@ -974,45 +1026,46 @@
     }
 
     /*Controles de zoom*/
-.nec-map-controls {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+    .nec-map-controls {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
-.nec-map-ctrl {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  border: 1.5px solid rgba(29, 158, 117, 0.25);
-  background: rgba(255, 255, 255, 0.95);
-  color: #1D9E75;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  transition: background 0.18s, border-color 0.18s;
-  line-height: 1;
-}
+    .nec-map-ctrl {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(29, 158, 117, 0.25);
+      background: rgba(255, 255, 255, 0.95);
+      color: #1D9E75;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      transition: background 0.18s, border-color 0.18s;
+      line-height: 1;
+    }
 
-.nec-map-ctrl:hover {
-  background: #1D9E75;
-  color: #fff;
-  border-color: #1D9E75;
-}
+    .nec-map-ctrl:hover {
+      background: #1D9E75;
+      color: #fff;
+      border-color: #1D9E75;
+    }
 
-/* Separación visual antes del botón fullscreen */
-.nec-map-ctrl--full {
-  margin-top: 4px;
-  font-size: 18px;
-}
+    /* Separación visual antes del botón fullscreen */
+    .nec-map-ctrl--full {
+      margin-top: 4px;
+      font-size: 18px;
+    }
+
     .emap-badge {
       display: inline-flex;
       align-items: center;
@@ -1107,6 +1160,7 @@
       font-weight: 600;
       color: #222;
     }
+
   </style>
 </head>
 
@@ -1264,18 +1318,6 @@
         <button class="btn-primary" onclick="enviarNec()">Enviar necesidad</button>
 
 
-
-        <div class="confirm-card" id="necConfirm">
-          <span class="confirm-badge">● Pendiente validación</span>
-          <div class="confirm-title">✅ Necesidad registrada</div>
-          <div style="font-size:12px;color:#0E4D38;margin-top:8px;" id="necSummary"></div>
-          <div
-            style="margin-top:10px;font-size:12px;color:var(--muted);background:var(--white);border-radius:var(--radius-sm);padding:10px;line-height:1.5;">
-            📬 Entrando en panel de triaje. Un coordinador la revisará pronto.
-          </div>
-        </div>
-
-
         <!-- Map + confirm -->
         <div class="nec-map-col">
           <button class="nec-map-toggle" id="necMapToggle" onclick="toggleNecMap()">🗺️ Ver
@@ -1287,15 +1329,30 @@
                 <div class="rdot"></div>Mapa en vivo
               </div>
             </div>
-             <!-- ✅ Controles zoom + pantalla completa -->
-  <div class="nec-map-controls">
-    <button class="nec-map-ctrl" onclick="_necZoomIn()" title="Acercar">＋</button>
-    <button class="nec-map-ctrl" onclick="_necZoomOut()" title="Alejar">－</button>
-    <button class="nec-map-ctrl nec-map-ctrl--full" onclick="_necFullscreen()" title="Pantalla completa">⛶</button>
-  </div>
+            <!-- ✅ Controles zoom + pantalla completa -->
+            <div class="nec-map-controls">
+              <button class="nec-map-ctrl" onclick="_necZoomIn()" title="Acercar">＋</button>
+              <button class="nec-map-ctrl" onclick="_necZoomOut()" title="Alejar">－</button>
+              <button class="nec-map-ctrl nec-map-ctrl--full" onclick="_necFullscreen()"
+                title="Pantalla completa">⛶</button>
+            </div>
             <div id="necMap" style="width:100%;height:100%;position:absolute;inset:0;z-index:1;"></div>
           </div>
         </div>
+
+
+
+
+        <div class="confirm-card" id="necConfirm">
+          <span class="confirm-badge">● Pendiente validación</span>
+          <div class="confirm-title">✅ Necesidad registrada</div>
+          <div style="font-size:12px;color:#0E4D38;margin-top:8px;" id="necSummary"></div>
+          <div
+            style="margin-top:10px;font-size:12px;color:var(--muted);background:var(--white);border-radius:var(--radius-sm);padding:10px;line-height:1.5;">
+            📬 Entrando en panel de triaje. Un coordinador la revisará pronto.
+          </div>
+        </div>
+
 
 
 
@@ -1317,7 +1374,7 @@
         </div>
 
         <div id="valList">
-          <!-- Card 1: Emergencia dinámica -->
+          <!-- Card 1: Emergencia dinámica 
           <div class="val-card" id="vc1" data-estado="pendiente" style="border-left:3px solid var(--red);">
             <div class="val-header">
               <div style="display:flex;align-items:center;gap:10px;flex:1;">
@@ -1351,9 +1408,9 @@
                   asignar</strong></div>
               <div class="val-done" id="vd1"></div>
             </div>
-          </div>
+          </div>-->
 
-          <!-- Card 2: Voluntarios técnico -->
+          <!-- Card 2: Voluntarios técnico 
           <div class="val-card" id="vc2" data-estado="pendiente" style="border-left:3px solid var(--purple);">
             <div class="val-header">
               <div style="display:flex;align-items:center;gap:10px;flex:1;">
@@ -1389,9 +1446,9 @@
                   asignar</strong></div>
               <div class="val-done" id="vd2"></div>
             </div>
-          </div>
+          </div>-->
 
-          <!-- Card 3: Voluntarios operativo -->
+          <!-- Card 3: Voluntarios operativo 
           <div class="val-card" id="vc3" data-estado="pendiente" style="border-left:3px solid var(--purple);">
             <div class="val-header">
               <div style="display:flex;align-items:center;gap:10px;flex:1;">
@@ -1427,9 +1484,9 @@
                   asignar</strong></div>
               <div class="val-done" id="vd3"></div>
             </div>
-          </div>
+          </div>-->
 
-          <!-- Card 4: Punto de encuentro -->
+          <!-- Card 4: Punto de encuentro 
           <div class="val-card" id="vc4" data-estado="pendiente" style="border-left:3px solid var(--orange);">
             <div class="val-header">
               <div style="display:flex;align-items:center;gap:10px;flex:1;">
@@ -1462,7 +1519,7 @@
                   asignar</strong></div>
               <div class="val-done" id="vd4"></div>
             </div>
-          </div>
+          </div>-->
 
           <!-- Card 5: Refugio -->
           <div class="val-card" id="vc5" data-estado="pendiente" style="border-left:3px solid var(--blue);">
@@ -1510,7 +1567,7 @@
         <div class="panel-sub">Información validada, priorizada y lista para actuar. Sin ruido.</div>
 
         <div class="muro-filters">
-          <button class="muro-filter-btn active" onclick="filtrarMuro('todas',this)"><span class="mf-dot"
+          <button class="muro-filter-btn" onclick="filtrarMuro('todas',this)"><span class="mf-dot"
               style="background:var(--teal);"></span>Todas</button>
           <button class="muro-filter-btn" onclick="filtrarMuro('urgente',this)"><span class="mf-dot"
               style="background:var(--red);"></span>Urgentes</button>
@@ -1523,7 +1580,7 @@
         </div>
 
         <div id="muroFeed">
-          <div class="muro-item" data-tipo="voluntario">
+          <!--<div class="muro-item" data-tipo="voluntario">
             <div class="muro-dot-side" style="background:var(--purple);"></div>
             <div style="flex:1;">
               <div style="font-size:13px;font-weight:600;color:var(--dark);">🤝 Voluntarios disponibles · Campus Blasco
@@ -1584,7 +1641,7 @@
                   style="background:var(--blue);color:#fff;">Derivar persona</button>
               </div>
             </div>
-          </div>
+          </div>-->
 
           <!-- Item dinámico: aparece cuando se valida la emergencia en triaje -->
           <div class="muro-item" data-tipo="urgente" id="muroEmergDin"
@@ -1715,11 +1772,15 @@
 
     // Muro
     function filtrarMuro(tipo, btn) {
-      document.querySelectorAll('.muro-filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('#muroFeed .muro-item').forEach(item => {
-        item.style.display = (tipo === 'todas' || item.dataset.tipo === tipo) ? 'flex' : 'none';
-      });
+       document.querySelectorAll('.muro-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('#muroFeed .muro-item').forEach(item => {
+          if (tipo === 'todas' || item.dataset.tipo === tipo) {
+            item.style.display = ''; // ✅ elimina el inline, deja que mande el CSS
+          } else {
+            item.style.display = 'none';
+          }
+        });
     }
 
     function claimMuro(btn) {
@@ -1884,6 +1945,12 @@
       if (!el) return;
       if (_necMap) { _necMap.invalidateSize(); return; }
 
+      // ✅ Guard suavizado: solo abortar si el div está completamente oculto
+      //    (display:none da offsetParent === null, más fiable que medir píxeles)
+      if (el.offsetParent === null && window.innerWidth <= 900) return;
+
+      if (_necMap) { _necMap.invalidateSize(); return; }
+
       _necMap = L.map('necMap', {
         zoomControl: false,
         attributionControl: false,
@@ -1891,6 +1958,7 @@
         dragging: true,
         doubleClickZoom: false
       }).setView([39.4617, -0.3854], 16);
+
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(_necMap);
 
@@ -1949,52 +2017,67 @@
       var box = document.getElementById('necMapBox');
       var btn = document.getElementById('necMapToggle');
       if (!box || !btn) return;
+
       var isOpen = box.classList.toggle('open');
       btn.classList.toggle('open', isOpen);
       btn.textContent = isOpen ? '🗺️ Ocultar mapa' : '🗺️ Ver mapa';
+
       if (isOpen) {
         setTimeout(function () {
-          if (_necMap) { _necMap.invalidateSize(); }
-          else { initNecMap(); }
-        }, 150);
+          if (!_necMap) {
+            // ✅ El div ya tiene clase .open y tamaño real en este tick,
+            //    pero saltamos el guard de offsetWidth forzando visibilidad
+            var el = document.getElementById('necMap');
+            if (el) {
+              // Forzar reflow antes de que Leaflet mida el contenedor
+              el.style.display = 'block';
+            }
+            initNecMap();
+            setTimeout(function () {
+              if (_necMap) _necMap.invalidateSize();
+            }, 300);
+          } else {
+            _necMap.invalidateSize();
+          }
+        }, 200);
       }
     };
 
     // funciones para amplificar el mapa desde fuera del módulo
     function _necZoomIn() {
-  if (_necMap) _necMap.zoomIn();
-}
+      if (_necMap) _necMap.zoomIn();
+    }
 
-function _necZoomOut() {
-  if (_necMap) _necMap.zoomOut();
-}
+    function _necZoomOut() {
+      if (_necMap) _necMap.zoomOut();
+    }
 
-/*
-function _necFullscreen() {
-  var ll   = _necMap ? _necMap.getCenter() : { lat: 39.4617, lng: -0.3854 };
-  var zoom = _necMap ? _necMap.getZoom()   : 16;
-  var url  = 'https://www.openstreetmap.org/#map=' + zoom + '/' + ll.lat.toFixed(5) + '/' + ll.lng.toFixed(5);
-  window.open(url, '_blank');
-}*/
+    /*
+    function _necFullscreen() {
+      var ll   = _necMap ? _necMap.getCenter() : { lat: 39.4617, lng: -0.3854 };
+      var zoom = _necMap ? _necMap.getZoom()   : 16;
+      var url  = 'https://www.openstreetmap.org/#map=' + zoom + '/' + ll.lat.toFixed(5) + '/' + ll.lng.toFixed(5);
+      window.open(url, '_blank');
+    }*/
 
-function _necFullscreen() {
-  if (!_necMap) return;
+    function _necFullscreen() {
+      if (!_necMap) return;
 
-  var ll   = _necMap.getCenter();
-  var zoom = _necMap.getZoom();
-  var pin  = _necMarker ? _necMarker.getLatLng() : null;
+      var ll = _necMap.getCenter();
+      var zoom = _necMap.getZoom();
+      var pin = _necMarker ? _necMarker.getLatLng() : null;
 
-  // Construye los datos del estado actual
-  var params = new URLSearchParams({
-    lat:  ll.lat.toFixed(6),
-    lng:  ll.lng.toFixed(6),
-    zoom: zoom,
-    pinLat: pin ? pin.lat.toFixed(6) : ll.lat.toFixed(6),
-    pinLng: pin ? pin.lng.toFixed(6) : ll.lng.toFixed(6)
-  });
+      // Construye los datos del estado actual
+      var params = new URLSearchParams({
+        lat: ll.lat.toFixed(6),
+        lng: ll.lng.toFixed(6),
+        zoom: zoom,
+        pinLat: pin ? pin.lat.toFixed(6) : ll.lat.toFixed(6),
+        pinLng: pin ? pin.lng.toFixed(6) : ll.lng.toFixed(6)
+      });
 
-  window.open('nec-mapa-fullscreen.html?' + params.toString(), '_blank');
-}
+      window.open('nec-mapa-fullscreen.html?' + params.toString(), '_blank');
+    }
 
     // ── Overrides externos ──
     var _origSwitchDemoNec = window.switchDemo;
@@ -2005,6 +2088,13 @@ function _necFullscreen() {
           initNecMap();
           if (_necMap) _necMap.invalidateSize();
         }, 200);
+      }
+      // ✅ Añadido aquí, en el mismo override
+      if (tab === 'muro') {
+        setTimeout(function () {
+          var btnTodas = document.querySelector('#tab-muro .muro-filter-btn');
+          if (btnTodas) filtrarMuro('todas', btnTodas);
+        }, 50); // pequeño delay para que el panel ya esté visible
       }
     };
 
@@ -2022,12 +2112,17 @@ function _necFullscreen() {
 
     // ✅ En desktop el mapa carga directamente sin toggle
     document.addEventListener('DOMContentLoaded', function () {
-      if (window.innerWidth > 768) {
+      // ✅ Un solo bloque, breakpoint igual que el CSS (900px)
+      if (window.innerWidth > 900) {
+        // Desktop: el div del mapa ya es visible, inicializar directamente
         setTimeout(function () {
           initNecMap();
           if (_necMap) _necMap.invalidateSize();
-        }, 200);
+        }, 300);
       }
+      // ✅ Móvil: NO inicializar aquí.
+      // El div está display:none hasta que el usuario pulse el toggle.
+      // toggleNecMap() se encarga de mostrarlo y luego llamar a initNecMap().
     });
   </script>
 </body>
