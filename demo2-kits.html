@@ -560,49 +560,49 @@
     }
 
     .kit-created-badge {
-  font-size: 11px;
-  background: var(--teal-light);
-  color: var(--teal-dark);
-  border: 1px solid #9FE1CB;
-  border-radius: 20px;
-  padding: 2px 8px;
-  font-weight: 600;
-  white-space: nowrap;
-}
+      font-size: 11px;
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      border: 1px solid #9FE1CB;
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
 
-.kit-created-badge--cancel {
-  background: #fde8e8;
-  color: #c0392b;
-  border-color: #f5c0c0;
-}
+    .kit-created-badge--cancel {
+      background: #fde8e8;
+      color: #c0392b;
+      border-color: #f5c0c0;
+    }
 
-.kit-created-cancel-btn {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1.5px solid #f5c0c0;
-  background: #fde8e8;
-  color: #c0392b;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background 0.18s, border-color 0.18s;
-}
+    .kit-created-cancel-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1.5px solid #f5c0c0;
+      background: #fde8e8;
+      color: #c0392b;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.18s, border-color 0.18s;
+    }
 
-.kit-created-cancel-btn:hover {
-  background: #c0392b;
-  color: #fff;
-  border-color: #c0392b;
-}
+    .kit-created-cancel-btn:hover {
+      background: #c0392b;
+      color: #fff;
+      border-color: #c0392b;
+    }
 
-.kit-created-cancelado {
-  opacity: 0.5;
-  pointer-events: none;
-}
+    .kit-created-cancelado {
+      opacity: 0.5;
+      pointer-events: none;
+    }
 
     /* VOL KITS */
     .vol-kit-item {
@@ -643,33 +643,34 @@
     }
 
     .vol-kit-cancel-btn {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1.5px solid #f5c0c0;
-  background: #fde8e8;
-  color: #c0392b;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background 0.18s, border-color 0.18s;
-}
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1.5px solid #f5c0c0;
+      background: #fde8e8;
+      color: #c0392b;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.18s, border-color 0.18s;
+    }
 
-.vol-kit-cancel-btn:hover {
-  background: #c0392b;
-  color: #fff;
-  border-color: #c0392b;
-}
+    .vol-kit-cancel-btn:hover {
+      background: #c0392b;
+      color: #fff;
+      border-color: #c0392b;
+    }
 
-.vol-kit-cancelado {
-  opacity: 0.5;
-  pointer-events: none;  /* ✅ no se puede clickar */
-  cursor: default;
-}
+    .vol-kit-cancelado {
+      opacity: 0.5;
+      pointer-events: none;
+      /* ✅ no se puede clickar */
+      cursor: default;
+    }
 
     /* QR */
     .qr-box {
@@ -786,11 +787,11 @@
     }
 
     .traza-item {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
     }
 
     .traza-item:last-child {
@@ -806,12 +807,35 @@
     }
 
     .traza-tipo-icon {
-      font-size: 18px;
+      font-size: 20px;
       flex-shrink: 0;
     }
 
     .traza-info {
       flex: 1;
+      min-width: 0;
+      /* ✅ evita que el texto desborde */
+    }
+
+    /* Agrupa status + botón */
+   .traza-item-actions {
+  display: flex;
+  flex-direction: row; /* ✅ misma fila en desktop también */
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+    .traza-advance-btn {
+      padding: 5px 10px;
+      border: 1.5px solid var(--teal);
+      border-radius: var(--radius-sm);
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
     }
 
     .traza-name {
@@ -992,6 +1016,42 @@
         font-size: 11px;
         letter-spacing: 1px;
       }
+    }
+
+    /* ✅ En móvil el item se parte en dos filas */
+    @media (max-width: 500px) {
+      .traza-item {
+        flex-wrap: wrap;
+      }
+
+      .traza-item-actions {
+    width: 100%;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+
+  /* ✅ status ocupa todo el espacio sobrante */
+ .traza-item-actions .traza-status {
+  flex: 1; /* ✅ ocupa el espacio sobrante */
+  text-align: center;
+  white-space: nowrap;
+}
+
+  /* ✅ botón tamaño fijo, no crece */
+ .traza-advance-btn {
+  flex-shrink: 0; /* ✅ tamaño fijo, no encoge */
+  white-space: nowrap;
+  padding: 5px 10px;
+  border: 1.5px solid var(--teal);
+  border-radius: var(--radius-sm);
+  background: var(--teal-light);
+  color: var(--teal-dark);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
     }
   </style>
 </head>
@@ -1269,21 +1329,21 @@
       const createdKits = [];
 
 
-function crearKit() {
-  if (!kitItems.length) { alert('Añade al menos un elemento al kit.'); return; }
+      function crearKit() {
+        if (!kitItems.length) { alert('Añade al menos un elemento al kit.'); return; }
 
-  const code  = 'KIT-' + Math.random().toString(36).substr(2, 4).toUpperCase();
-  const title = document.getElementById('kitBuilderTitle').textContent;
-  const total = kitItems.reduce((s, i) => s + i.q, 0);
-  const idx   = createdKits.length;
+        const code = 'KIT-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+        const title = document.getElementById('kitBuilderTitle').textContent;
+        const total = kitItems.reduce((s, i) => s + i.q, 0);
+        const idx = createdKits.length;
 
-  createdKits.push({ code, title, items: [...kitItems], color: currentColor, total, cancelado: false });
+        createdKits.push({ code, title, items: [...kitItems], color: currentColor, total, cancelado: false });
 
-  const list = document.getElementById('kitCreatedList');
-  const div  = document.createElement('div');
-  div.className  = 'kit-created-item';
-  div.id         = 'kitCreated-' + code;
-  div.innerHTML  = `
+        const list = document.getElementById('kitCreatedList');
+        const div = document.createElement('div');
+        div.className = 'kit-created-item';
+        div.id = 'kitCreated-' + code;
+        div.innerHTML = `
     <div style="flex:1;min-width:0;">
       <div style="font-size:12px;font-weight:600;color:var(--teal-dark);">${title}</div>
       <div style="font-size:11px;color:var(--muted);">${total} elementos · Listo para asignar</div>
@@ -1292,61 +1352,61 @@ function crearKit() {
     <span class="kit-created-badge">✓ Creado</span>
     <button class="kit-created-cancel-btn" onclick="cancelarKit(${idx}, this)">✕</button>
   `;
-  list.prepend(div);
+        list.prepend(div);
 
-  //addTrazaItem(code, title, currentColor, 0);
-  renderVolKits();
-}
+        //addTrazaItem(code, title, currentColor, 0);
+        renderVolKits();
+      }
 
       // -------- VOL KITS --------
 
       // -------- CANCELAR KIT --------
-function cancelarKit(idx, btnEl) {
-  if (!confirm('¿Cancelar este kit?')) return;
+      function cancelarKit(idx, btnEl) {
+        if (!confirm('¿Cancelar este kit?')) return;
 
-  createdKits[idx].cancelado = true;
+        createdKits[idx].cancelado = true;
 
-  // ✅ Actualiza el item en kitCreatedList
-  var item = btnEl.closest('.kit-created-item');
-  if (item) {
-    item.classList.add('kit-created-cancelado');
-    item.querySelector('.kit-created-badge').textContent  = '✕ Cancelado';
-    item.querySelector('.kit-created-badge').className    = 'kit-created-badge kit-created-badge--cancel';
-    btnEl.style.display = 'none'; // ✅ oculta el botón tras cancelar
-  }
+        // ✅ Actualiza el item en kitCreatedList
+        var item = btnEl.closest('.kit-created-item');
+        if (item) {
+          item.classList.add('kit-created-cancelado');
+          item.querySelector('.kit-created-badge').textContent = '✕ Cancelado';
+          item.querySelector('.kit-created-badge').className = 'kit-created-badge kit-created-badge--cancel';
+          btnEl.style.display = 'none'; // ✅ oculta el botón tras cancelar
+        }
 
-  // ✅ Actualiza trazabilidad
-  var code  = createdKits[idx].code;
-  var traza = trazaItems.find(function(t) { return t.code === code; });
-  if (traza) {
-    traza.status = 'cancel';
-    renderTraza(currentFilter || 'all');
-    var count = trazaItems.filter(function(t) { return t.status !== 'cancel'; }).length;
-    var badge = document.getElementById('trazaCount');
-    if (badge) badge.textContent = count;
-  }
+        // ✅ Actualiza trazabilidad
+        var code = createdKits[idx].code;
+        var traza = trazaItems.find(function (t) { return t.code === code; });
+        if (traza) {
+          traza.status = 'cancel';
+          renderTraza(currentFilter || 'all');
+          var count = trazaItems.filter(function (t) { return t.status !== 'cancel'; }).length;
+          var badge = document.getElementById('trazaCount');
+          if (badge) badge.textContent = count;
+        }
 
-  renderVolKits();
-}
+        renderVolKits();
+      }
 
-// -------- VOL KITS --------
-function renderVolKits() {
-  var list  = document.getElementById('volKitList');
-  var empty = document.getElementById('volKitEmpty');
-  if (!list) return;
+      // -------- VOL KITS --------
+      function renderVolKits() {
+        var list = document.getElementById('volKitList');
+        var empty = document.getElementById('volKitEmpty');
+        if (!list) return;
 
-  var activos = createdKits.filter(function(k) { return !k.cancelado; });
+        var activos = createdKits.filter(function (k) { return !k.cancelado; });
 
-  if (!activos.length) {
-    list.innerHTML = '';
-    if (empty) empty.style.display = 'block';
-    return;
-  }
+        if (!activos.length) {
+          list.innerHTML = '';
+          if (empty) empty.style.display = 'block';
+          return;
+        }
 
-  if (empty) empty.style.display = 'none';
+        if (empty) empty.style.display = 'none';
 
-  list.innerHTML = createdKits.map(function(k, i) {
-    if (k.cancelado) return `
+        list.innerHTML = createdKits.map(function (k, i) {
+          if (k.cancelado) return `
       <div class="vol-kit-item vol-kit-cancelado">
         <div class="vol-kit-icon">${k.title.split(' ')[0]}</div>
         <div>
@@ -1356,7 +1416,7 @@ function renderVolKits() {
         <div style="margin-left:auto;padding:4px 10px;background:#fde8e8;color:#c0392b;border-radius:20px;font-size:11px;font-weight:600;border:1px solid #f5c0c0;">✕ Cancelado</div>
       </div>`;
 
-    return `
+          return `
       <div class="vol-kit-item" onclick="selVolKit(${i})">
         <div class="vol-kit-icon">${k.title.split(' ')[0]}</div>
         <div>
@@ -1368,8 +1428,8 @@ function renderVolKits() {
          
         </div>
       </div>`;
-  }).join('');
-}
+        }).join('');
+      }
 
       let selectedKit = null;
       function selVolKit(i) {
@@ -1428,44 +1488,44 @@ function renderVolKits() {
 
 
       function renderTraza(filter) {
-            const list = document.getElementById('trazaList');
-            if (!list) return; // ✅ guard por si el panel no está en el DOM
+        const list = document.getElementById('trazaList');
+        if (!list) return; // ✅ guard por si el panel no está en el DOM
 
-            const filtered = filter === 'all' 
-              ? trazaItems 
-              : trazaItems.filter(i => String(i.status) === filter || i.status === filter);
+        const filtered = filter === 'all'
+          ? trazaItems
+          : trazaItems.filter(i => String(i.status) === filter || i.status === filter);
 
-            // ✅ Si no hay items, mostrar mensaje vacío directamente en la lista
-            if (!filtered.length) {
-              list.innerHTML = '<div id="trazaEmpty" style="padding:32px;text-align:center;color:var(--muted);font-size:13px;">Cuando un voluntario confirme un kit aparecerá aquí</div>';
-              return;
-            }
+        // ✅ Si no hay items, mostrar mensaje vacío directamente en la lista
+        if (!filtered.length) {
+          list.innerHTML = '<div id="trazaEmpty" style="padding:32px;text-align:center;color:var(--muted);font-size:13px;">Cuando un voluntario confirme un kit aparecerá aquí</div>';
+          return;
+        }
 
         const statusLabel = { 0: '📦 Preparado', 1: '🚚 En camino', 2: '✅ Recibido', cancel: '✕ Cancelado' };
-        const statusCls   = { 0: 'status-0', 1: 'status-1', 2: 'status-2', cancel: 'status-cancel' };
+        const statusCls = { 0: 'status-0', 1: 'status-1', 2: 'status-2', cancel: 'status-cancel' };
         const steps = [0, 1, 2];
 
         list.innerHTML = filtered.map(it => `
-          <div class="traza-item" data-status="${it.status}">
-            <span class="traza-code">${it.code}</span>
-            <span class="traza-tipo-icon">${it.title.split(' ')[0]}</span>
-            <div class="traza-info">
-              <div class="traza-name">${it.title}</div>
-              <div class="traza-meta">Actualizado · ${it.ts}</div>
-              ${it.status !== 'cancel' 
-                ? `<div class="traza-progress">${steps.map(s => 
-                    `<div class="traza-step ${s < it.status ? 'done' : s === it.status ? 'active' : ''}"></div>`
-                  ).join('')}</div>` 
-                : ''}
-            </div>
-            <span class="traza-status ${statusCls[it.status] || ''}">${statusLabel[it.status] || ''}</span>
-            ${it.status !== 'cancel' && it.status < 2 
-              ? `<button onclick="advanceTraza(${trazaItems.indexOf(it)})" 
-                  style="padding:5px 10px;border:1.5px solid var(--teal);border-radius:var(--radius-sm);
-                          background:var(--teal-light);color:var(--teal-dark);font-size:11px;font-weight:600;
-                          cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:4px;">Avanzar →</button>` 
-              : ''}
-          </div>`).join('');
+  <div class="traza-item" data-status="${it.status}">
+    <span class="traza-tipo-icon">${it.title.split(' ')[0]}</span>
+    <div class="traza-info">
+      <div class="traza-name">${it.title}</div>
+      <div class="traza-meta">
+        <span class="traza-code">${it.code}</span> · Actualizado · ${it.ts}
+      </div>
+      ${it.status !== 'cancel'
+            ? `<div class="traza-progress">${steps.map(s =>
+              `<div class="traza-step ${s < it.status ? 'done' : s === it.status ? 'active' : ''}"></div>`
+            ).join('')}</div>`
+            : ''}
+    </div>
+    <div class="traza-item-actions">
+      <span class="traza-status ${statusCls[it.status] || ''}">${statusLabel[it.status] || ''}</span>
+      ${it.status !== 'cancel' && it.status < 2
+            ? `<button class="traza-advance-btn" onclick="advanceTraza(${trazaItems.indexOf(it)})">Avanzar →</button>`
+            : ''}
+    </div>
+  </div>`).join('');
       }
 
       function advanceTraza(i) {
@@ -1474,7 +1534,7 @@ function renderVolKits() {
         document.getElementById('trazaCount').textContent = trazaItems.length;
       }
 
-     function filtrarTraza(btn) {
+      function filtrarTraza(btn) {
         document.querySelectorAll('.traza-filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         renderTraza(btn.dataset.filter); // ✅ renderTraza ya maneja el caso vacío internamente
