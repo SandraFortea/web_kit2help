@@ -25,4 +25,36 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- Pantalla Demo Activar-->
+  <url>
+    <loc>https://kit2help.es/demo1-emergencias.html</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Pantalla Demo activar mapa completo  -->
+  <url>
+    <loc>https://kit2help.es/nec-mapa-fullscreen.html</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Pantalla Demo Kits -->
+  <url>
+    <loc>https://kit2help.es/demo2-kits.html</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Pantalla Demo Logistica/donacion-->
+  <url>
+    <loc>https://kit2help.es/demo3-partners.html</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
