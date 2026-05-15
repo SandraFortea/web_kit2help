@@ -1873,44 +1873,65 @@
 
           console.log(`Card ${cardId} titulo como ${titulo}.`);
 
-          var muro = document.getElementById('muroEmergDin')
-            ? document.getElementById('muroEmergDin').parentNode
-            : null;
+
+
+          var muro = document.getElementById('muroFeed');
 
           if (muro) {
+
+            // ✅ Config dinámica según tipo
+            var tipoConfig = {
+              'Emergencia': { color: 'var(--red)', colorLight: 'var(--red-light)', tag: '🚨 Emergencia', btn: 'Atender', textColor: 'var(--red-dark)' },
+              'Necesidad': { color: 'var(--teal)', colorLight: 'var(--teal-light)', tag: '📋 Necesidad', btn: 'Atender', textColor: 'var(--teal-dark)' },
+              'Refugio': { color: 'var(--blue)', colorLight: 'var(--blue-light)', tag: '🏠 Refugio', btn: 'Derivar persona', textColor: '#1C3F7A' },
+              'Voluntario': { color: 'var(--purple)', colorLight: 'var(--purple-light)', tag: '🤝 Voluntario', btn: 'Asignar', textColor: 'var(--purple-dark)' },
+              'Alimentacion': { color: 'var(--orange)', colorLight: 'var(--orange-light)', tag: '🍱 Alimentación', btn: 'Gestionar', textColor: 'var(--orange-dark)' },
+              'default': { color: 'var(--teal)', colorLight: 'var(--teal-light)', tag: '📋 Necesidad', btn: 'Atender', textColor: 'var(--teal-dark)' }
+            };
+
+            console.log('tipo', tipo);
+            var cfg = tipoConfig[tipo] || tipoConfig['default'];
+
             var nuevaCard = document.createElement('div');
             nuevaCard.className = 'muro-item';
             nuevaCard.dataset.tipo = tipo;
-            nuevaCard.style.cssText = 'border:1.5px solid rgba(29,158,117,0.3);background:var(--teal-light);';
+            nuevaCard.style.cssText = 'border:1.5px solid ' + cfg.color + ';background:' + cfg.colorLight + ';opacity:0;transition:opacity 0.4s ease;';
+
             nuevaCard.innerHTML = `
-        <div class="muro-dot-side" style="background:var(--teal);"></div>
-        <div style="flex:1;">
-          <div style="font-size:13px;font-weight:600;color:var(--teal-dark);">${icono} ${titulo}</div>
-          <div class="muro-body-txt" style="color:var(--teal-dark);">${meta}</div>
-          <div class="muro-footer">
-            <span class="muro-time" style="color:var(--teal);">Recién validada ·</span>
-            <span class="muro-tag" style="background:rgba(29,158,117,0.15);color:var(--teal-dark);">✓ Validada</span>
-            <button class="muro-claim-btn" onclick="claimMuro(this)"
-              style="background:var(--teal);color:#fff;">Atender</button>
-          </div>
-        </div>`;
-            muro.prepend(nuevaCard); // ✅ añade al principio del muro
+    <div class="muro-dot-side" style="background:${cfg.color};"></div>
+    <div style="flex:1;">
+      <div style="font-size:13px;font-weight:600;color:${cfg.textColor};">${icono} ${titulo}</div>
+      <div class="muro-body-txt" style="color:${cfg.textColor};opacity:0.85;">${meta}</div>
+      <div class="muro-footer">
+        <span class="muro-time" style="color:${cfg.color};">Recién validada ·</span>
+        <span class="muro-tag" style="background:${cfg.colorLight};color:${cfg.textColor};">${cfg.tag}</span>
+        <button class="muro-claim-btn" onclick="claimMuro(this)"
+          style="background:${cfg.color};color:#fff;">${cfg.btn}</button>
+      </div>
+    </div>`;
+
+            // ✅ Inserta en #muroFeed
+            var feed = document.getElementById('muroFeed');
+            if (feed) {
+              feed.prepend(nuevaCard);
+            } else {
+              muro.prepend(nuevaCard);
+            }
+
+            // ✅ Animación de entrada
+            requestAnimationFrame(function () {
+              requestAnimationFrame(function () {
+                nuevaCard.style.opacity = '1';
+              });
+            });
           }
-
-
-
-          // Muestra también el item estático si es vc1
-          /* if (cardId === 'vc1') {
-             var din = document.getElementById('muroEmergDin');
-             if (din) din.style.display = 'flex';
-           }*/
 
           // ✅ 3 — Genera pin en el mapa
           var ubicacion = document.getElementById('necUbic')
             ? document.getElementById('necUbic').value
             : '';
 
-          console.log('ubicacion para pin:', ubicacion);
+
 
           if (typeof _necAddPinValidado === 'function') {
             console.log('tipo para pin:', tipo, 'ubicación para pin:', ubicacion);
@@ -1983,10 +2004,11 @@
 
       //Función para añadir el pin al mapa:
       function _necAddPinValidado(tipo, ubicacion) {
+
         if (!_necMap || !_necMarker) return;
 
         // ✅ Mismo sistema que ctx — letra + color + _necMakeIcon()
-       var tipoConfig = {
+        var tipoConfig = {
           // alimentacion: { color: '#C0392B', icon: 'A', label: '🍱 Alimentación' },
           // sanitaria: { color: '#3A7BD5', icon: 'S', label: '💊 Sanitaria' },
           //  ropa: { color: '#7B5EA7', icon: 'R', label: '🧥 Ropa' },
@@ -2001,6 +2023,7 @@
         var cfg = tipoConfig[tipo] || tipoConfig['default'];
         var latlng = _necMarker.getLatLng();
 
+
         var pin = L.marker([latlng.lat, latlng.lng], {
           icon: _necMakeIcon(cfg.color, cfg.icon, 26), // ✅ mismo que ctx
           zIndexOffset: 900
@@ -2013,7 +2036,11 @@
           )
           .addTo(_necMap);
 
+
         pin.openPopup();
+        // ✅ Guarda icon y color en el marker ANTES del push
+        pin._necIcon = cfg.icon;
+        pin._necColor = cfg.color;
         _necPinsValidados.push(pin);
 
         _necMap.setView([latlng.lat, latlng.lng], 16, { animate: true });
@@ -2021,6 +2048,7 @@
 
       // ── Iconos ──
       function _necMakeIcon(color, icon, size) {
+
         var fs = Math.round(size * 0.42);
         return L.divIcon({
           className: '',
@@ -2283,49 +2311,47 @@
       var _necMapModal = null; // mapa del modal
 
       function _necFullscreen() {
-        if (!_necMap) return;
+  if (!_necMap) return;
 
-        var ll = _necMap.getCenter();
-        var zoom = _necMap.getZoom();
-        var pin = _necMarker ? _necMarker.getLatLng() : null;
+  var ll   = _necMap.getCenter();
+  var zoom = _necMap.getZoom();
+  var pin  = _necMarker ? _necMarker.getLatLng() : null;
 
-        // ✅ Serializa pins validados dinámicos
-        var pinsData = _necPinsValidados.map(function (p) {
-          var latlng = p.getLatLng();
-          var popup = p.getPopup() ? p.getPopup().getContent() : '';
-          var iconHtml = p.options.icon.options.html || '';
-          var colorMatch = iconHtml.match(/background:([^;'"]+)/);
-          var iconMatch = iconHtml.match(/'>([^<]{1,3})<\/div>/);
-          return {
-            lat: latlng.lat,
-            lng: latlng.lng,
-            popup: popup,
-            color: colorMatch ? colorMatch[1].trim() : '#1D9E75',
-            icon: iconMatch ? iconMatch[1].trim() : 'N'
-          };
-        });
+  // ✅ Datos del mapa
+  var mapData = {
+    lat:    ll.lat,
+    lng:    ll.lng,
+    zoom:   zoom,
+    pinLat: pin ? pin.lat : ll.lat,
+    pinLng: pin ? pin.lng : ll.lng,
 
-        // ✅ Pins de contexto fijos (siempre los mismos)
-        var ctxData = [
-          { lat: 39.4641, lng: -0.3879, color: '#1D9E75', icon: 'K', tip: '<b>📦 Recogida de kits</b><br>Polideportivo Russafa' },
-          { lat: 39.4598, lng: -0.3831, color: '#7B5EA7', icon: 'V', tip: '<b>🤝 Voluntarios</b><br>12 activos' },
-          { lat: 39.4633, lng: -0.3808, color: '#EF9F27', icon: 'P', tip: '<b>📍 Punto de encuentro</b><br>Pl. Ayuntamiento' },
-          { lat: 39.4589, lng: -0.3869, color: '#3A7BD5', icon: 'R', tip: '<b>🏠 Refugio</b><br>C/ Colón 40 · 30 plazas' }
-        ];
+    // ✅ Pins validados como array simple
+    pins: _necPinsValidados.map(function(p) {
+      var latlng = p.getLatLng();
+      return {
+        lat:   latlng.lat,
+        lng:   latlng.lng,
+        icon:  p._necIcon  || 'N',
+        color: p._necColor || '#E24B4A',
+        popup: p.getPopup() ? p.getPopup().getContent() : ''
+      };
+    }),
 
-        var params = new URLSearchParams({
-          lat: ll.lat.toFixed(6),
-          lng: ll.lng.toFixed(6),
-          zoom: zoom,
-          pinLat: pin ? pin.lat.toFixed(6) : ll.lat.toFixed(6),
-          pinLng: pin ? pin.lng.toFixed(6) : ll.lng.toFixed(6),
-          pins: JSON.stringify(pinsData),   // ✅ pins validados dinámicos
-          ctx: JSON.stringify(ctxData)     // ✅ pins contexto fijos
-        });
+    // ✅ Pins contexto fijos
+    ctx: [
+      { lat: 39.4641, lng: -0.3879, color: '#1D9E75', icon: 'K', tip: '<b>📦 Recogida de kits</b><br>Polideportivo Russafa' },
+      { lat: 39.4598, lng: -0.3831, color: '#7B5EA7', icon: 'V', tip: '<b>🤝 Voluntarios</b><br>12 activos' },
+      { lat: 39.4633, lng: -0.3808, color: '#EF9F27', icon: 'P', tip: '<b>📍 Punto de encuentro</b><br>Pl. Ayuntamiento' },
+      { lat: 39.4589, lng: -0.3869, color: '#3A7BD5', icon: 'R', tip: '<b>🏠 Refugio</b><br>C/ Colón 40 · 30 plazas' }
+    ]
+  };
 
-        window.open('nec-mapa-fullscreen.html?' + params.toString(), '_blank');
-      }
+  // ✅ Guarda en sessionStorage
+  sessionStorage.setItem('necMapData', JSON.stringify(mapData));
 
+  // ✅ Abre sin parámetros en URL
+  window.open('nec-mapa-fullscreen.html', '_blank');
+}
 
       // ── Overrides externos ──
       var _origSwitchDemoNec = window.switchDemo;
